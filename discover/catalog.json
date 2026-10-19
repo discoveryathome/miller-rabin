@@ -1,0 +1,279 @@
+{
+  "schema": "discover-catalog/v0",
+  "priority_revision": 1,
+  "assessed_on": "2026-10-19",
+  "priority_log": "discover/priority-log.md",
+  "status": "Research suggestions, not reservations. Check live claims and open PRs.",
+  "tracks": [
+    {
+      "id": "explicit-bound",
+      "weight": 40,
+      "useful_outcome": "A written, checkable proof of Lemma T1 under H(theta) with explicit constants, plus a claim file that verify/check.py explicit accepts. That turns 'deterministic Miller-Rabin is in P' into an actual algorithm.",
+      "tasks": [
+        {
+          "id": "first-explicit-t1",
+          "question": "Under H(7/8), what explicit constants (w1, alpha, beta, gamma, delta, y_min) make Lemma T1 provable, and what C, D, n0 follow?",
+          "starting_points": [
+            "docs/template-T1.md",
+            "Bach, Explicit bounds for primality testing and related problems, Math. Comp. 55 (1990) 355-380, https://doi.org/10.1090/S0025-5718-1990-1023756-8",
+            "tests/fixtures/synthetic-explicit-pass.json"
+          ],
+          "methods": [
+            "Follow Bach's GRH proof step by step, replacing each use of Re rho = 1/2 by Re rho <= theta; keep every constant explicit; loose constants are fine for a first result."
+          ],
+          "acceptance_gate": "A proof (Markdown or LaTeX under research/<package>/) of Lemma T1 with exactly the constants in a candidates/*.json claim that verify/check.py explicit passes; the maintainer's review of the proof.",
+          "first_step": {
+            "command": [
+              "python3",
+              "verify/check.py",
+              "explicit",
+              "tests/fixtures/synthetic-explicit-pass.json"
+            ],
+            "expected": "PASS   tests/fixtures/synthetic-explicit-pass.json",
+            "inspect": "Shows the claim format that a real T1 proof must fill in. The constants in this fixture are made up.",
+            "scope": "Positive control: the explicit-bound check runs."
+          },
+          "bottleneck_link": "No explicit C exists anywhere; until one does, the corollary is an existence statement, not an algorithm.",
+          "scope_change_triggers": [
+            "A step in Bach's proof uses GRH beyond the location of zeros (e.g. a density or pair-correlation input): report it, since the template may need to change."
+          ],
+          "overlap_terms": [
+            "Lemma T1",
+            "Bach",
+            "explicit formula",
+            "witness bound"
+          ]
+        },
+        {
+          "id": "zero-sum-inputs",
+          "question": "What are the best explicit bounds, valid for every conductor q <= n, on sum over nontrivial zeros rho of L(s, chi) of |w-hat(rho)| for a fixed smooth weight w, in the form a ln q + b?",
+          "starting_points": [
+            "Trudgian, An improved upper bound for the error in the zero-counting formulae for Dirichlet L-functions and Dedekind zeta-functions, Math. Comp. 84 (2015)",
+            "Bennett, Martin, O'Bryant, Rechnitzer, Explicit bounds for primes in arithmetic progressions, Illinois J. Math. 62 (2018)",
+            "McCurley, Explicit estimates for the error term in the prime number theorem for arithmetic progressions, Math. Comp. 42 (1984)"
+          ],
+          "methods": [
+            "Literature extraction: state each explicit zero-counting theorem exactly, with hypotheses and constants, and derive the a ln q + b bound by partial summation for one or two standard weights."
+          ],
+          "acceptance_gate": "A note under research/<package>/ quoting each theorem exactly with its source, and the derived (a, b) with the derivation; one independent recheck.",
+          "first_step": {
+            "command": [
+              "python3",
+              "-m",
+              "unittest",
+              "discover",
+              "-s",
+              "tests"
+            ],
+            "expected": "OK",
+            "scope": "Positive control: the verifier's self-tests, including the required rejections, pass."
+          },
+          "bottleneck_link": "These constants feed alpha and beta in T1, which dominate C.",
+          "overlap_terms": [
+            "zero counting",
+            "N(T, chi)",
+            "Trudgian"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "verify-premise",
+      "weight": 25,
+      "useful_outcome": "Each assumption in discover/frontier.json is confirmed, narrowed or refuted with a source, so nothing downstream rests on an unchecked claim.",
+      "tasks": [
+        {
+          "id": "preprint-scope",
+          "question": "Does OpenAI's quasi-Riemann statement (paper and Lean file) cover every modulus and every Dirichlet character, uniformly, as H(theta) in docs/template-T1.md requires? (Assumption A2.)",
+          "starting_points": [
+            "https://github.com/openai/math (preprints/The-Quasi-Riemann-Hypothesis-September-30-2026/paper.pdf; lean/ComparatorChallenges/DirichletSevenEighths.lean; lean/docs/003.md)",
+            "docs/template-T1.md"
+          ],
+          "methods": [
+            "Read the main theorem and the Lean statement; quote both exactly; compare them with H(theta) clause by clause (moduli, primitive vs imprimitive, the pole at s = 1)."
+          ],
+          "acceptance_gate": "A note quoting the statements exactly, with file paths and commit, and a clause-by-clause verdict.",
+          "first_step": {
+            "command": [
+              "python3",
+              "verify/check.py",
+              "exponent",
+              "candidates/exponent-openai-7-8.json"
+            ],
+            "expected": "mr_exponent_exact: 10",
+            "scope": "Positive control: exponent recomputation for theta = 7/8."
+          },
+          "bottleneck_link": "If the statement is narrower than H(theta), the whole project needs an extra lemma first.",
+          "overlap_terms": [
+            "OpenAI",
+            "quasi-Riemann",
+            "Lean",
+            "A2"
+          ]
+        },
+        {
+          "id": "bach-uses-only-zero-location",
+          "question": "Does Bach's 1990 GRH argument for the 2 (ln n)^2 bound use GRH only through Re rho = 1/2, so that replacing it by Re rho <= theta gives Lemma T1 in the stated form?",
+          "starting_points": [
+            "https://doi.org/10.1090/S0025-5718-1990-1023756-8",
+            "docs/template-T1.md"
+          ],
+          "methods": [
+            "Annotate each use of GRH in Bach's proof; for each, state what replaces it under H(theta) and how it changes the constants."
+          ],
+          "acceptance_gate": "An annotated outline with page and equation references, independently rechecked by a second contributor.",
+          "first_step": {
+            "command": [
+              "python3",
+              "verify/check.py",
+              "exponent",
+              "tests/fixtures/rounded-down-exponent.json"
+            ],
+            "expected": "REJECT",
+            "scope": "Negative control: the originally quoted 9.9984 is rejected as rounded down."
+          },
+          "bottleneck_link": "Confirms the exponent 2 + 1/(1-theta) before anyone invests in constants.",
+          "overlap_terms": [
+            "Bach",
+            "GRH",
+            "transfer"
+          ]
+        },
+        {
+          "id": "followup-theta-audit",
+          "question": "Which values of theta below 7/8 (Liu arXiv:2610.12234, Xu-Sang arXiv:2610.15291, later papers) rest only on OpenAI's inputs, and which add assumptions of their own?",
+          "starting_points": [
+            "https://arxiv.org/abs/2610.12234",
+            "https://arxiv.org/abs/2610.15291"
+          ],
+          "methods": [
+            "List each paper's stated dependencies and theorem; record theta as an exact rational upper bound; add a candidates/*.json mr-exponent claim for any new value."
+          ],
+          "acceptance_gate": "An mr-exponent claim that verify/check.py passes, with the source and its assumptions quoted.",
+          "first_step": {
+            "command": [
+              "python3",
+              "verify/check.py",
+              "all"
+            ],
+            "expected": "PASS   smalln",
+            "inspect": "Every line starts with PASS; the frontier file reports mr_exponent_exact: 12502266/1251133.",
+            "scope": "Positive control: the verifier and the recorded claims reproduce."
+          },
+          "bottleneck_link": "theta is the only thing that moves the exponent.",
+          "overlap_terms": [
+            "Liu",
+            "Xu-Sang",
+            "zero-free half-plane"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "verifier",
+      "weight": 15,
+      "useful_outcome": "Confidence that verify/check.py accepts only true claims: independent review and reimplementation of the explicit-bound check.",
+      "tasks": [
+        {
+          "id": "independent-recheck",
+          "question": "Is the monotonicity-plus-endpoint argument in check_explicit (verify/check.py) sound, and does an independent implementation agree on every fixture?",
+          "starting_points": [
+            "verify/check.py",
+            "docs/template-T1.md",
+            "tests/fixtures/"
+          ],
+          "methods": [
+            "Write out the argument as a short proof; reimplement it independently (another language, or interval arithmetic); add fixtures for edge cases such as D < 0, gamma = 0, and theta close to 1."
+          ],
+          "acceptance_gate": "A written proof of the check's soundness, or a counterexample claim it wrongly accepts; new tests in tests/.",
+          "first_step": {
+            "command": [
+              "python3",
+              "-m",
+              "unittest",
+              "discover",
+              "-s",
+              "tests"
+            ],
+            "expected": "OK",
+            "scope": "Positive control: the verifier's self-tests, including the required rejections, pass."
+          },
+          "bottleneck_link": "Donors and reviewers will rely on the checker; a false accept would corrupt the frontier.",
+          "overlap_terms": [
+            "verifier",
+            "check_explicit"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tighten-c",
+      "weight": 12,
+      "useful_outcome": "Smaller C (then D, n0) for a fixed theta, as measured by log10 W(2^1024).",
+      "tasks": [
+        {
+          "id": "optimize-weight",
+          "question": "Given an accepted T1 proof, how small can C be made by choosing the weight function, splitting the zero sum by height, and using a larger n0 (up to psi_13)?",
+          "starting_points": [
+            "docs/template-T1.md",
+            "Bach 1990, section on the choice of weight"
+          ],
+          "methods": [
+            "Parametrize the weight; optimize the resulting constants; re-derive T1 with the new constants."
+          ],
+          "acceptance_gate": "An explicit-witness-bound claim with a smaller log10 W(2^1024) than the frontier, and its proof.",
+          "first_step": {
+            "command": [
+              "python3",
+              "verify/check.py",
+              "explicit",
+              "tests/fixtures/synthetic-explicit-pass.json"
+            ],
+            "expected": "PASS   tests/fixtures/synthetic-explicit-pass.json",
+            "inspect": "Shows the claim format that a real T1 proof must fill in. The constants in this fixture are made up.",
+            "scope": "Positive control: the explicit-bound check runs."
+          },
+          "bottleneck_link": "C enters to the eighth power; halving it cuts the base count by about 256 times. Blocked until first-explicit-t1 lands.",
+          "overlap_terms": [
+            "weight function",
+            "constant C"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "beyond-theta",
+      "weight": 8,
+      "useful_outcome": "SPECULATIVE. Evidence on whether anything other than theta can lower the exponent below 2 + 1/(1-theta); beating AKS's 6 this way needs theta < 3/4.",
+      "tasks": [
+        {
+          "id": "base-sharing",
+          "question": "Can a deterministic set of fewer than about W(n)/log W(n) bases (for example, products of small primes) be proved to contain a witness, for every subgroup of (Z/nZ)* that excludes some prime <= W(n)?",
+          "starting_points": [
+            "docs/template-T1.md (step 2: the liar subgroup and its character)"
+          ],
+          "methods": [
+            "Small-case experiments with verify/mr.py; a counting argument over characters; a literature search for hitting sets for subgroups."
+          ],
+          "acceptance_gate": "A proof, or a counterexample family showing no such saving is possible in general; the maintainer's review.",
+          "first_step": {
+            "command": [
+              "python3",
+              "verify/check.py",
+              "all"
+            ],
+            "expected": "PASS   smalln",
+            "inspect": "Every line starts with PASS; the frontier file reports mr_exponent_exact: 12502266/1251133.",
+            "scope": "Positive control: the verifier and the recorded claims reproduce."
+          },
+          "bottleneck_link": "The per-base cost (log n)^2 is at its floor, so the base count is the only other lever. No literature supports this direction yet.",
+          "overlap_terms": [
+            "hitting set",
+            "base count",
+            "speculative"
+          ]
+        }
+      ]
+    }
+  ]
+}

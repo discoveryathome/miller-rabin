@@ -1,0 +1,8 @@
+{
+  "kind": "mr-exponent",
+  "label": "MR exponent from Liu's intermediate rational half-plane; the source of the '9.9984' in the original problem statement",
+  "theta": "34999/40000",
+  "claimed_exponent": "9.998401",
+  "source": "Baiying Liu, arXiv:2610.12234, Part II (B_r = 34999/40000)",
+  "assumptions": ["H(theta) as stated in docs/template-T1.md", "Bach-type transfer (open)"]
+}

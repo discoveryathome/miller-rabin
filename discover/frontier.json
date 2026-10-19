@@ -1,0 +1,77 @@
+{
+  "schema": "discover-frontier/v0",
+  "statement": "No explicit witness bound has been accepted yet. Reference point (recorded, not accepted): assuming H(theta) (no zeros of any Dirichlet L-function with Re s > theta), a Bach-type argument should give deterministic Miller-Rabin in (log n)^(2 + 1/(1-theta) + o(1)) bit operations. With the best published theta = 8748867/10000000 (Xu-Sang, conditional on OpenAI's inputs) the exponent is exactly 12502266/1251133 = 9.99275536...; with theta = 7/8 it is 10. That argument has not been written out with explicit constants (no explicit C exists), so this is not yet an algorithm.",
+  "status": "No accepted result yet",
+  "evidence_level": [
+    "author-checked"
+  ],
+  "metric": {
+    "name": "mr_exponent (then C, D, n0 for explicit bounds)",
+    "value": "12502266/1251133",
+    "decimal": "9.9927553665",
+    "direction": "lower-is-better"
+  },
+  "scope": "Bit complexity on a multitape Turing machine, Harvey-van der Hoeven multiplication. Conditional on H(theta). For comparison: Lenstra-Pomerance AKS is (log n)^(6+o(1)) unconditionally; under GRH (theta = 1/2) this method gives 4.",
+  "assumptions": [
+    {
+      "id": "A1",
+      "statement": "H(7/8): OpenAI, 'The Quasi-Riemann Hypothesis: A Zero-Free Half-Plane Re(s) > 7/8' (2026-09-30). Not peer reviewed; the statement (not the proof's applications) is formalized in Lean (lean/ComparatorChallenges/DirichletSevenEighths.lean).",
+      "status": "open",
+      "link": "https://github.com/openai/math"
+    },
+    {
+      "id": "A1b",
+      "statement": "theta = 8748867/10000000 (Xu-Sang, arXiv:2610.15291), assuming the analytic inputs of A1. Not peer reviewed.",
+      "status": "open",
+      "link": "https://arxiv.org/abs/2610.15291"
+    },
+    {
+      "id": "A2",
+      "statement": "The preprint's statement covers every modulus q and every Dirichlet character (including imprimitive ones, via Euler factors), uniformly, as docs/template-T1.md requires.",
+      "status": "open"
+    },
+    {
+      "id": "A3",
+      "statement": "Lemma T1 (docs/template-T1.md) holds with explicit constants: the Bach-type transfer from H(theta) to a witness bound. This is the project's core task.",
+      "status": "open"
+    },
+    {
+      "id": "A4",
+      "statement": "Every odd composite n < psi_13 = 3317044064679887385961981 has a strong witness among the first 13 primes (Sorenson-Webster, Math. Comp. 86 (2017) 985-1003). Peer reviewed; sanity-checked by verify/check.py smalln.",
+      "status": "closed",
+      "link": "https://arxiv.org/abs/1509.00864"
+    }
+  ],
+  "sources": [
+    "https://github.com/openai/math",
+    "https://arxiv.org/abs/2610.12234",
+    "https://arxiv.org/abs/2610.15291",
+    "https://doi.org/10.1090/S0025-5718-1990-1023756-8",
+    "https://arxiv.org/abs/1509.00864"
+  ],
+  "artifacts": [
+    {
+      "path": "candidates/frontier-exponent-xu-sang.json",
+      "sha256": "7e09b34ce96afa17ac2d68e65f87a4b523376e9830f82fd81727e5fa463bd0a5",
+      "role": "worked example"
+    },
+    {
+      "path": "verify/check.py",
+      "sha256": "ace2b055b5279284d04d37b6c6dde77af86088245846700c502effb3e812e709",
+      "role": "verifier"
+    },
+    {
+      "path": "verify/mr.py",
+      "sha256": "ba252ae554ac3f4ca372b692ef6ed7966772716dfa57c5b65ed22ae84fe5a1f1",
+      "role": "verifier"
+    }
+  ],
+  "reproduce": "python3 verify/check.py exponent candidates/frontier-exponent-xu-sang.json",
+  "reproduce_full": "python3 verify/check.py all && python3 -m unittest discover -s tests",
+  "reproduce_minutes": 1,
+  "prerequisites": [
+    "Python 3.9 or later (standard library only)"
+  ],
+  "review": "discover/ledger.md",
+  "updated_on": "2026-10-19"
+}

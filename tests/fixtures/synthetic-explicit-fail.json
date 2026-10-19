@@ -1,0 +1,9 @@
+{
+  "kind": "explicit-witness-bound",
+  "label": "SYNTHETIC - C too small for the template constants (C*w1 < alpha); must be rejected",
+  "theta": "7/8",
+  "C": "1",
+  "D": "0",
+  "n0": 1000000,
+  "template": {"w1": "1", "alpha": "2", "beta": "5", "gamma": "1", "delta": "3", "y_min": "2"}
+}

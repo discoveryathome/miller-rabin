@@ -1,0 +1,6 @@
+{
+  "kind": "mr-exponent",
+  "label": "The exponent as originally quoted: 9.9984 is slightly BELOW 2 + 40000/5001 and must be rejected",
+  "theta": "34999/40000",
+  "claimed_exponent": "9.9984"
+}

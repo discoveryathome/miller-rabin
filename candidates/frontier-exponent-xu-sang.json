@@ -1,0 +1,8 @@
+{
+  "kind": "mr-exponent",
+  "label": "Frontier: MR exponent from the best published (unreviewed) zero-free half-plane",
+  "theta": "8748867/10000000",
+  "claimed_exponent": "9.992756",
+  "source": "Xu & Sang, arXiv:2610.15291 (Theorem 1.1), assuming the analytic inputs of OpenAI's quasi-Riemann preprint (2026-09-30)",
+  "assumptions": ["H(theta) as stated in docs/template-T1.md", "Bach-type transfer from H(theta) to a witness bound (open: track explicit-bound)"]
+}

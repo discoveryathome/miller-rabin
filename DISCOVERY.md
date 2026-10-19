@@ -1,0 +1,123 @@
+# Explicit deterministic Miller–Rabin under the quasi-Riemann hypothesis: contributing research effort
+
+**Start here if you were told to contribute without a specific task.** Aim for one useful,
+independently reviewable result in the time available (default 60 minutes). The generic
+session procedure (refresh, orient, choose, bound, verify, hand off) comes from the
+Discovery@Home playbooks (https://github.com/discoveryathome/discover/tree/main/playbooks).
+This file holds only what is specific to this project.
+
+**Original idea: Geoffrey Irving.** Maintainer of record: Douglas R. Colkitt.
+
+## The problem
+
+**Background.** The Miller–Rabin test declares n prime when no base a in a test set is a
+witness to compositeness. Under GRH, Bach (1990) proved that testing every a ≤ 2(ln n)²
+suffices. That gives a deterministic test running in (log n)^(4+o(1)) bit operations.
+Without GRH, the best known bound on the least witness is a power of n, so a deterministic
+Miller–Rabin in P was open. The only proven deterministic polynomial-time primality test
+is AKS. Its best variant, Lenstra–Pomerance, runs in (log n)^(6+o(1)).
+
+**The new input.** On 2026-09-30, OpenAI released an AI-generated, unreviewed preprint.
+It claims that no Dirichlet L-function has a zero with Re s > 7/8. We call this
+**H(7/8)**. If it holds, Bach's argument goes through with GRH replaced by H(θ). The
+result is a witness below **W(n) = (C·ln n + D)^(1/(1−θ))** and a running time of
+(log n)^(2 + 1/(1−θ) + o(1)).
+
+| Zero-free line θ | Running-time exponent |
+|---|---|
+| 7/8 | 10 |
+| 0.8748867 (Xu–Sang, best published) | ≈ 9.9928 |
+
+**The goal of this project.** Nobody has written that argument out with explicit
+constants. Without an explicit C, the corollary is an existence statement, not an
+algorithm: the loop doesn't know where to stop. The goal is:
+
+1. Make W(n) fully explicit and rigorous under H(θ).
+2. Then make it as small as possible: smaller C first, then D and n0.
+
+The precise statements are in [docs/template-T1.md](docs/template-T1.md).
+
+## Current frontier
+
+[`discover/frontier.json`](discover/frontier.json) says **no accepted result yet**. It
+records a reference point: the exponent 12502266/1251133 ≈ 9.99276 for the best
+published θ.
+
+What is *not* established:
+- the explicit constants (Lemma T1);
+- that the preprint's statement covers every character the argument needs (assumption
+  A2);
+- the preprint itself (assumption A1), which no one has refereed.
+
+## The bottleneck
+
+The bottleneck is **writing Lemma T1 with explicit constants**. Everything else, including
+tightening C and checking the algorithm's cost, waits on it. A loose first constant is
+worth much more than a tight one later.
+
+## Tracks
+
+| Track | Share | Useful outcome |
+|---|---:|---|
+| `explicit-bound` | 40% | A written proof of Lemma T1 with explicit constants that `verify/check.py explicit` accepts |
+| `verify-premise` | 25% | Every assumption in the frontier confirmed, narrowed or refuted, with sources |
+| `verifier` | 15% | Independent review and reimplementation of the explicit-bound check |
+| `tighten-c` | 12% | A smaller C for fixed θ (waits on the first T1) |
+| `beyond-theta` | 8% | Speculative: lower the exponent without improving θ |
+
+The task cards are in [`discover/catalog.json`](discover/catalog.json).
+
+## Settled questions
+
+- **Beating AKS's 6 by tuning θ.** Settled for now: within this method it can't be done.
+  The exponent is 2 + 1/(1−θ), so getting below 6 needs θ < 3/4. Published tuning of the
+  OpenAI argument has moved θ by about 10⁻⁴, and Liu reports that his parameters are
+  optimal within that argument. *Reopen if* a zero-free half-plane with θ < 3/4 appears,
+  or someone proves a base-count saving (track `beyond-theta`).
+- **Lowering the per-base cost.** One base costs log n squarings mod n, about
+  (log n)^(2+o(1)) with Harvey–van der Hoeven multiplication. Treat this as fixed.
+  Restricting to prime bases saves only a log factor, which disappears into the o(1).
+  *Reopen if* someone finds a way to share work across bases.
+- **The exponent as originally quoted.** "(log n)^9.9984 · (log log n)^(−8.3×10⁻¹¹)":
+  - 9.9984 comes from Liu's intermediate θ = 34999/40000, and is rounded *down*. The
+    exact value is 50002/5001 ≈ 9.99840032.
+  - The log-log factor has no basis in this argument. The real factor from multiplication
+    is a positive power of log log n.
+  - Don't cite either number.
+- **Practicality.** None. Even with C = 1, (ln n)^8 bases is about 1.5×10¹³ at 64 bits,
+  more than trial division needs. At 1024 bits it is about 6×10²². The project is about
+  explicit theory, not speed.
+
+## Verification
+
+This project's evidence standard is **exact recomputation plus a written proof**.
+
+- **The checker:** `python3 verify/check.py all` and
+  `python3 -m unittest discover -s tests`. Stdlib only; under a minute. See
+  [docs/verifier.md](docs/verifier.md). It checks exponents, and checks in exact
+  arithmetic that a claimed W(n) satisfies the Lemma T1 inequality for every n ≥ n0.
+- **The proof:** Lemma T1 itself must be proved in writing, under `research/<package>/`,
+  and the maintainer reviews it.
+- **Independent rechecks count toward acceptance.** For a T1 proof, the maintainer wants
+  at least one independent check of the proof's constants before reviewing it.
+- **Before opening a PR:**
+  - Run both commands.
+  - Put new claims in `candidates/`.
+  - Never edit `discover/frontier.json`. Only the maintainer changes it.
+
+## Coordination
+
+The repository is https://github.com/discoveryathome/miller-rabin. Once Discussions are enabled there,
+post claims, findings and handoffs in its Discussions, each ending with a fenced
+`discover` block (spec §6). Until then, leave messages ready to paste in your report.
+
+## Credit
+
+- **The original idea is Geoffrey Irving's.** He is credited first in every write-up that
+  comes out of this project.
+- Every accepted contribution is listed in [CONTRIBUTORS.md](CONTRIBUTORS.md) and in
+  [`discover/ledger.md`](discover/ledger.md).
+- Contributors whose accepted work changes the frontier are offered co-authorship on any
+  resulting write-up, at the maintainer's discretion.
+- Code is Apache-2.0 ([LICENSE](LICENSE)); text and proofs are CC BY 4.0
+  ([LICENSE-CC-BY-4.0](LICENSE-CC-BY-4.0)).

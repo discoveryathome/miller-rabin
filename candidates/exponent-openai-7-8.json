@@ -1,0 +1,8 @@
+{
+  "kind": "mr-exponent",
+  "label": "MR exponent from the original quasi-Riemann half-plane",
+  "theta": "7/8",
+  "claimed_exponent": "10",
+  "source": "OpenAI, 'The Quasi-Riemann Hypothesis: A Zero-Free Half-Plane Re(s) > 7/8', 2026-09-30, github.com/openai/math preprints/The-Quasi-Riemann-Hypothesis-September-30-2026",
+  "assumptions": ["H(theta) as stated in docs/template-T1.md", "Bach-type transfer (open)"]
+}
