@@ -38,5 +38,5 @@ assume no prime ≤ X divides n. That puts us in [LLS] Part 2's setting: all the
 `research/first-explicit-t1/PROOF.md`, step (a).
 
 ```discover
-{"v": 0, "kind": "done", "task": "bach-uses-only-zero-location", "scope": "LLS (refining Bach) uses GRH only via |x^rho| = sqrt(x), sum 1/|rho|^2 = 2|Re B| and |rho-1| = |rho|; both have H(theta) analogues with factor K = 1/(1-theta); exponent 1/(1-theta) confirmed", "base": "6f85127", "posted_at": "2026-10-19T10:30:00Z", "evidence_level": "author-checked", "artifact": "research/bach-transfer/NOTE.md"}
+{"v": 0, "kind": "done", "task": "bach-uses-only-zero-location", "scope": "LLS (refining Bach) uses GRH only via |x^rho| = sqrt(x), sum 1/|rho|^2 = 2|Re B| and |rho-1| = |rho|; both have H(theta) analogues with factor K = 1/(1-theta); exponent 1/(1-theta) confirmed", "base": "f3cc2db", "posted_at": "2026-10-19T07:12:52Z", "evidence_level": "author-checked", "artifact": "research/bach-transfer/NOTE.md"}
 ```
