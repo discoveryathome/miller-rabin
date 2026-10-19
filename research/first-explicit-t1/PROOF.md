@@ -48,14 +48,23 @@ running over the non-trivial zeros. Then:
 3. Σ_ρ 1/(|ρ||ρ−1|) ≤ K·|Re B(χ)|.
 
 *Proof.*
-1. Re ρ ≤ β is H(β). Applying H(β) to χ̄ and using (F2) gives Re(1−ρ) ≤ β.
+1. Re ρ ≤ β is H(β). By (F2), 1−ρ is the conjugate of another zero of the same χ, so
+   Re(1−ρ) ≤ β too.
 2. Re(1/ρ) = Re ρ/|ρ|² ≥ (1−β)/|ρ|². Sum this and use (F1); every term is
    non-negative, so Re B(χ) ≤ 0.
 3. By AM–GM, 1/(|ρ||1−ρ|) ≤ ½(1/|ρ|² + 1/|1−ρ|²). Then use (F2) and part 2. ∎
 
 Under GRH (β = 1/2) these become the identities [LLS] uses, with K = 2 and equality in
-part 2. These are the only two places [LLS] Lemmas 2.1–2.3 use GRH or RH (see
-`research/bach-transfer/NOTE.md`). Replacing them:
+part 2. [LLS] Lemmas 2.1–2.3 use GRH or RH in exactly three places (see
+`research/bach-transfer/NOTE.md`):
+
+- |x^ρ| = √x;
+- Σ 1/|ρ|² = 2|Re B|;
+- |ρ−1| = |ρ|, in Lemma 2.3.
+
+Lemma 0 replaces all three. The contour shifts to Re s → −∞ that produce the residue
+expansions are standard and unconditional (Davenport, *Multiplicative Number Theory*,
+chs. 17 and 19). Replacing the three uses:
 
 - **(L2.1′)** For x > 1:
   Σ_{n≤x} Λ(n) log(x/n) = x − log(2π)·log x − 1 + Σ_{k≥1} (1−x^(−2k))/(4k²)
@@ -72,8 +81,19 @@ part 2. These are the only two places [LLS] Lemmas 2.1–2.3 use GRH or RH (see
   |Re B| + |Re B|/x + (that sum), since Re B(χ̄) = Re B(χ) ≤ 0.)
 
 The functions E_a and Ẽ_a (a = 0, 1) are the explicit, hypothesis-free functions in
-[LLS] Lemmas 2.2–2.3. [LLS] §3.1 records E_a(X) < −1/4 and Ẽ_a(X) ≤ −11/4 for X ≥ 64.
-We use only E_a, Ẽ_a ≤ 0 for X ≥ 64.
+[LLS] Lemmas 2.2–2.3. We use only **E_a(x), Ẽ_a(x) < 0 for x ≥ 64**. In each formula,
+every series term enters with a minus sign, so dropping the series gives an upper bound.
+Also (1 − 1/x) is increasing, and (ln x + 1)/x and (ln 2)/x are decreasing. So for
+x ≥ 64:
+
+- Ẽ₀(x) ≤ π²/24 − ½(ln 64)² < 0.42 − 8.6 < 0;
+- Ẽ₁(x) ≤ π²/8 − (ln 2 + γ/2)·ln 64 < 1.24 − 4.08 < 0;
+- E₀(x) ≤ −ln 2 − (γ/2)(63/64) + (ln 64 + 1)/64 < −0.69 − 0.28 + 0.09 < 0;
+- E₁(x) ≤ −(γ/2)(63/64) + (ln 2)/64 < −0.28 + 0.02 < 0.
+
+[LLS] states sharper versions without proof: Ẽ_a ≤ −11/4 at its line "since
+Ẽ_a(X) ≤ −11/4 for X ≥ 64", and E_a < −1/4 in §3.1. `constants.py` also samples all four
+numerically, as a sanity check only.
 
 ## Lemma T1 (constants for β = 7/8)
 
@@ -131,7 +151,8 @@ ln 200.)
   0 ≥ X − X^β·[K|B| + log(2π)·a₁ + ½L·((K + a₁)·25/24 + a₁)] − [K|B| + 1 + ½L·K·25/24].
 
 The bracketed coefficients are at most:
-- αL + β₀, since ½((8 + a₁)·25/24 + a₁) ≤ 25/6 + 10⁻¹² and 0.1848 + 1.84·10⁻¹⁴ ≤ 37/200;
+- αL + β₀, since ½((8 + a₁)·25/24 + a₁) = 25/6 + (49/48)a₁ ≤ 25/6 + 10⁻¹² and
+  0.1848 + log(2π)·a₁ < 0.1848 + 6.1·10⁻¹⁵ ≤ 37/200;
 - γL + δ, since ½·8·25/24 = 25/6 and 0.1848 + 1 ≤ 237/200.
 
 So 0 ≥ X − X^(7/8)(αL + β₀) − (γL + δ). That contradicts the hypothesis. ∎
@@ -142,7 +163,7 @@ The constant arithmetic is reproduced in `research/first-explicit-t1/constants.p
 ## What a reviewer should check
 
 1. **(L2.1′)–(L2.3′).** In [LLS] Lemmas 2.1–2.3, the hypothesis is used *only* through
-   |x^ρ| = √x and Σ 1/|ρ|² = 2|Re B|. Their explicit E_a, Ẽ_a and other terms are
+   the three uses listed in Step 0. Their explicit E_a, Ẽ_a, and the contour shifts, are
    unconditional.
 2. **Lemma 0 part 3.** The AM–GM step and the multiset identity (F2).
 3. **Step (a).** The reduction: the liar subgroup, and χ̃(m) = 1 for m ≤ X when no
@@ -150,6 +171,21 @@ The constant arithmetic is reproduced in `research/first-explicit-t1/constants.p
 4. **Signs and the bounds on E_a and Ẽ_a for X ≥ 64.**
 5. **The rational constants:** `constants.py`, and `verify/check.py` for the
    n ≥ n0 step.
+
+## Review history
+
+**2026-10-19, adversarial review by a separate AI agent (fresh context).** It is not an
+independent human check.
+- **No fatal problems.**
+- **Fixed:**
+  - the sign of E_a and Ẽ_a for all x ≥ 64 is now proved analytically, where before it
+    was only sampled;
+  - the contour-shift citation was added;
+  - "two places" corrected to "three";
+  - the log(2π)·a₁ figure corrected;
+  - Lemma 0 part 1 simplified.
+- **Suggested tightening, not applied:** use [LLS] Lemma 2.4, re-bounded under H(β), to
+  lower γ and δ.
 
 ## Where C = 4.2 comes from, and the obvious tightening
 

@@ -34,8 +34,21 @@ for k in need:
     print(f"{k:6s} needed {float(need[k]):.15g}  claimed {claimed[k]}  ok")
 
 
-# Sign facts for x >= 64 (floats; the [LLS] functions are explicit and elementary).
 EG = 0.5772156649015329
+
+# Analytic sign bounds for all x >= 64 (PROOF.md, Step 0): drop the nonpositive series,
+# use monotonicity, evaluate at x = 64. Each must be < 0.
+L64 = math.log(64)
+for name, val in (
+    ("Et0", math.pi**2 / 24 - 0.5 * L64**2),
+    ("Et1", math.pi**2 / 8 - (math.log(2) + EG / 2) * L64),
+    ("E0", -math.log(2) - EG / 2 * (63 / 64) + (L64 + 1) / 64),
+    ("E1", -EG / 2 * (63 / 64) + math.log(2) / 64),
+):
+    assert val < -0.2, name
+    print(f"{name:4s} analytic bound for x >= 64: {val:.4f} (< 0)")
+
+# Numerical sampling of the exact functions: a sanity check only.
 
 
 def E0(x):
