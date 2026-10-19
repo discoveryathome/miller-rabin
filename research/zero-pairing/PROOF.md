@@ -38,8 +38,12 @@ of Σ Re(1/ρ) = |Re B(χ)| takes the factor from K = 8 to 1, up to lower-order 
 same pairing improves the zero sum in LLS Lemma 2.3, which sets the factor 1/(1 − K/y) in
 the first T1, from K·x^(β−1) to about 1.51·x^(β−1).
 
-**Sanity check.** At β = 1/2 (GRH) both new bounds reduce exactly to the bounds LLS use:
-2√x·|Re B| and (2/√x)·|Re B|.
+**Sanity check.** Lemma 0′ below is stated for β = 7/8. The same proof, for general β ≥ ½,
+gives the following bounds:
+- (x^β + (β/(1−β))·x^(1−β))·|B|;
+- (x^(β−1) + x^(−1/2))·|B| / (2√(β(1−β))).
+
+At β = ½ (GRH) these reduce exactly to the bounds LLS use: 2√x·|Re B| and (2/√x)·|Re B|.
 
 ## Notation
 
@@ -104,7 +108,7 @@ because σ(1−σ) is decreasing on [½, β], x^(σ−1) ≤ x^(β−1), and x^(
 c₂(x^(β−1) + x^(−1/2)), because c₂ > 3/2 and x^(−1/2) ≤ x^(β−1) for x ≥ 1. ∎
 
 (`constants.py` also brute-forces both ratios over a grid in (σ, t), as a sanity check
-only. Part 1 is not sharp in its lower-order term: for large x the per-pair supremum is
+only. Part 1 is not sharp in its lower-order term: for x ≥ 256 (sampled) the per-pair supremum is
 x^β + x^(1−β), approached as t → ∞ at σ = β, so the 7 could be 1. Likewise x ≥ 7^(8/3) ≈ 179
 suffices for the comparison at σ = ½. Neither affects the constants, since 7·29⁻⁶ ≈ 10⁻⁸.)
 
@@ -194,6 +198,10 @@ hypothesis for every n ≥ ψ₁₃, where y ≥ 0.529·ln ψ₁₃ > 29.8.
 
 ## What's next
 
+- **γ.** The same pairing gives Σ 1/|ρ|² ≤ (50/7)|B|, because the per-pair supremum of
+  (A + A′)/(σA + (1−σ)A′) is max(2, 50/7). That would lower γ from 4.221 to about 3.77. The
+  effect on C is negligible.
+
 - The leading constant is now α ≈ 1/(2D_min) ≈ 0.5275, limited by y_min ≤ 0.529·ln ψ₁₃.
   As y_min → ∞ it tends to ½, so a larger pseudoprime table (n0 > ψ₁₃) is worth at most
   about 5% in C here. With the current template, C → ½ is the limit of this argument. The
@@ -217,3 +225,16 @@ independent human check.
   - the section heading's labels didn't match the formulas;
   - the "fewer bases" figure was the ratio of bounds, not of prime counts;
   - "the limit of this method" was loose wording.
+
+**2026-10-19, independent recheck by a separate AI agent** (fresh context, no access to the
+earlier review). It is not a human check.
+- **Confirmed.** Every checklist item was re-derived: the pairing involution, both parts of
+  Lemma 0′, the LLS 2.1–2.3 residue identities, and every constant in 50-digit decimals.
+- **Adversarial numerical search:** 2000 optimizer restarts plus 400k random samples per part.
+  No violation; the suprema are 1 (part 1) and 0.99991 (part 2).
+- **Taken on trust:**
+  - the contour shifts;
+  - step (a) of the first T1;
+  - `ln_bounds` and `check_explicit`.
+- **Minor, fixed:** the GRH sanity check now states the general-β forms; the 50/7 note is
+  added.
