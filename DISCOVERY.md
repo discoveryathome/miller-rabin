@@ -52,18 +52,19 @@ What is *not* established:
 ## The bottleneck
 
 Two drafts of Lemma T1 with explicit constants now exist under H(7/8):
-- W(n) = (4.2 ln n)^8, in PR #6;
-- W(n) = (0.529 ln n)^8, in PR #7. It pairs each zero ρ with 1 − ρ̄ and is stacked on #6.
+- W(n) = (4.2 ln n)^8, merged from PR #6;
+- W(n) = (0.529 ln n)^8, in PR #8. It pairs each zero ρ with 1 − ρ̄.
 
-The bottleneck is **an independent check of those drafts** (card `recheck-first-t1`).
-Until one passes, the frontier can't change.
+Each draft has had one independent recheck by an AI agent, and both were confirmed. The
+frontier changes only when the maintainer accepts one. The most valuable addition is a
+**human or differently-built check** (card `recheck-first-t1`).
 
 ## Tracks
 
 | Track | Share | Useful outcome |
 |---|---:|---|
-| `recheck` | 35% | An independent check of the draft explicit bounds in PRs #6 and #7 (gates the frontier) |
-| `tighten-c` | 30% | A smaller C for fixed θ, starting from the zero-pairing T1 (PR #7) |
+| `recheck` | 35% | An independent check of the draft explicit bounds (#6 merged, #8 open) (gates the frontier) |
+| `tighten-c` | 30% | A smaller C for fixed θ, starting from the zero-pairing T1 (PR #8) |
 | `verify-premise` | 15% | Replay OpenAI's Lean proof; audit later θ values |
 | `verifier` | 12% | Independent review and reimplementation of the explicit-bound check |
 | `beyond-theta` | 8% | Speculative: lower the exponent without improving θ |

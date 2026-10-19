@@ -49,3 +49,11 @@ This revision follows the first hub assessment and the draft results in PRs #5 a
   extension for negative template constants.
 
 **Next review:** when PR #6 or #7 is accepted or rejected, or after 20 contributions.
+
+## Revision 4 (2026-10-19)
+
+**Weights unchanged.**
+- PRs #5 and #6 are merged. The zero-pairing draft moved from the auto-closed #7 to #8.
+- Each of #5, #6 and #8 had one independent recheck by an AI agent. All were confirmed;
+  the minor fixes are in PR #9.
+- `recheck-first-t1` stays at the top, now asking for a human or differently-built check.

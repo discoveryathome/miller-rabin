@@ -1,6 +1,6 @@
 {
   "schema": "discover-catalog/v0",
-  "priority_revision": 3,
+  "priority_revision": 4,
   "assessed_on": "2026-10-19",
   "priority_log": "discover/priority-log.md",
   "status": "Research suggestions, not reservations. Check live claims and open PRs.",
@@ -12,17 +12,17 @@
       "tasks": [
         {
           "id": "recheck-first-t1",
-          "question": "Are the draft proofs of Lemma T1 in PR #6 (research/first-explicit-t1/PROOF.md, C = 4.2) and PR #7 (research/zero-pairing/PROOF.md, C = 0.529) correct: do they use Lamzouri-Li-Soundararajan Lemmas 2.1-2.3 correctly under H(7/8), and do their constants hold?",
+          "question": "Are the draft proofs of Lemma T1 in PR #6 (research/first-explicit-t1/PROOF.md, C = 4.2) and PR #8 (research/zero-pairing/PROOF.md, C = 0.529) correct: do they use Lamzouri-Li-Soundararajan Lemmas 2.1-2.3 correctly under H(7/8), and do their constants hold? Both drafts have one independent AI recheck each (confirmed); a human or differently-built check is still the most valuable addition.",
           "starting_points": [
             "https://github.com/discoveryathome/miller-rabin/pull/6",
-            "https://github.com/discoveryathome/miller-rabin/pull/7 (stacked on #6)",
+            "https://github.com/discoveryathome/miller-rabin/pull/8",
             "research/first-explicit-t1/PROOF.md (on the PR branch)",
             "Lamzouri, Li, Soundararajan, arXiv:1309.3595v3, Lemmas 2.1-2.3 and Section 3"
           ],
           "methods": [
-            "Check out PR #7 (gh pr checkout 7 -R discoveryathome/miller-rabin), which contains both packages; work through each PROOF.md's 'What a reviewer should check' list against LLS; rerun both constants.py scripts."
+            "Both packages are on main once PR #8 merges (gh pr checkout 8 -R discoveryathome/miller-rabin); work through each PROOF.md's 'What a reviewer should check' list against LLS; rerun both constants.py scripts."
           ],
-          "acceptance_gate": "A written recheck posted as a review on PR #6 or #7 (or a done message in Discussions #2) that states, per checklist item, confirmed or the exact error.",
+          "acceptance_gate": "A written recheck posted as a review on PR #8 (or a done message in Discussions #2) that states, per checklist item, confirmed or the exact error.",
           "first_step": {
             "command": [
               "python3",
@@ -38,14 +38,14 @@
             {
               "scope": "first-explicit-t1: draft proof of Lemma T1 under H(7/8) giving W(n) = (4.2 ln n)^8 for n >= psi_13; claim passes verify/check.py; adversarially reviewed by an AI agent, no fatal issues",
               "evidence": "https://github.com/discoveryathome/miller-rabin/pull/6",
-              "status": "author-checked; awaiting maintainer review and one independent recheck",
+              "status": "merged (PR #6); independent AI recheck confirmed, minor fixes in PR #9; no human recheck yet",
               "source_commit": "1536f03"
             },
             {
               "scope": "zero-pairing: Lemma T1 under H(7/8) with W(n) = (0.529 ln n)^8 for n >= psi_13, by pairing each zero rho with 1 - conj(rho); claim passes verify/check.py; adversarially reviewed by an AI agent, no fatal or fixable issues",
-              "evidence": "https://github.com/discoveryathome/miller-rabin/pull/7",
-              "status": "author-checked; awaiting maintainer review and one independent recheck",
-              "source_commit": "34b12e5"
+              "evidence": "https://github.com/discoveryathome/miller-rabin/pull/8",
+              "status": "independent AI recheck confirmed (no fatal or fixable issues); awaiting maintainer review",
+              "source_commit": "c33979e"
             }
           ],
           "overlap_terms": [
@@ -80,7 +80,7 @@
             {
               "scope": "bach-transfer: LLS (refining Bach) uses GRH only via three zero-sum bounds; each has an H(theta) analogue with K = 1/(1-theta)",
               "evidence": "https://github.com/discoveryathome/miller-rabin/pull/6",
-              "status": "author-checked; awaiting maintainer review",
+              "status": "merged (PR #6); independent AI recheck confirmed",
               "source_commit": "1536f03"
             }
           ],
@@ -130,7 +130,7 @@
             {
               "scope": "preprint-scope: OpenAI's Dirichlet 7/8 statement (paper Thm 1.1, Lean comparator statement at openai/math 1581d4c) matches H(7/8) clause by clause",
               "evidence": "https://github.com/discoveryathome/miller-rabin/pull/5",
-              "status": "author-checked; awaiting maintainer review",
+              "status": "merged (PR #5); independent AI recheck confirmed with corrections (PR #9)",
               "source_commit": "54a267d"
             }
           ],
@@ -214,9 +214,9 @@
       "tasks": [
         {
           "id": "lls-lemma-2-4",
-          "question": "Using LLS Lemma 2.4 re-bounded under H(theta), so that sum Lambda(m)/m (1 - m/X) >= log X - O(1) instead of >= 0, how much lower can log10 W(2^1024) go than the zero-pairing T1 (PR #7)? This subtracts about log X from the bound on |Re B|, giving negative template constants (and D < 0).",
+          "question": "Using LLS Lemma 2.4 re-bounded under H(theta), so that sum Lambda(m)/m (1 - m/X) >= log X - O(1) instead of >= 0, how much lower can log10 W(2^1024) go than the zero-pairing T1 (PR #8)? This subtracts about log X from the bound on |Re B|, giving negative template constants (and D < 0).",
           "starting_points": [
-            "research/zero-pairing/PROOF.md, 'What's next' (PR #7 branch)",
+            "research/zero-pairing/PROOF.md, 'What's next' (PR #8)",
             "LLS arXiv:1309.3595 Lemma 2.4 and Section 3.2",
             "verify/check.py check_explicit (currently requires alpha, beta, gamma, delta >= 0)"
           ],
