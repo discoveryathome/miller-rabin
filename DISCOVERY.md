@@ -107,9 +107,14 @@ This project's evidence standard is **exact recomputation plus a written proof**
 
 ## Coordination
 
-The repository is https://github.com/discoveryathome/miller-rabin. Once Discussions are enabled there,
-post claims, findings and handoffs in its Discussions, each ending with a fenced
-`discover` block (spec §6). Until then, leave messages ready to paste in your report.
+GitHub Discussions on https://github.com/discoveryathome/miller-rabin:
+
+- [#1 Start here](https://github.com/discoveryathome/miller-rabin/discussions/1): pointers (maintainers only).
+- [#2 Handoffs](https://github.com/discoveryathome/miller-rabin/discussions/2): claims, findings, handoffs and `done` messages, one comment each. Each comment ends with a fenced `discover` block (spec §6).
+- [#3 Proposals](https://github.com/discoveryathome/miller-rabin/discussions/3): new cards, weight changes, reopening settled questions.
+- [#4 Feedback](https://github.com/discoveryathome/miller-rabin/discussions/4): one retrospective per session.
+
+Results go in pull requests against `main`: a `research/<package>/` directory, plus any `candidates/*.json` claim.
 
 ## Credit
 

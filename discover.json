@@ -25,7 +25,12 @@
   "packages": "research/*/",
   "coordination": {
     "transport": "github-discussions",
-    "threads": {},
+    "threads": {
+      "start": 1,
+      "handoffs": 2,
+      "proposals": 3,
+      "feedback": 4
+    },
     "claim_ttl_minutes": 120
   },
   "overlap": {
