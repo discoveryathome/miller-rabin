@@ -62,26 +62,37 @@ part 2. [LLS] Lemmas 2.1–2.3 use GRH or RH in exactly three places (see
 - Σ 1/|ρ|² = 2|Re B|;
 - |ρ−1| = |ρ|, in Lemma 2.3.
 
-Lemma 0 replaces all three. The contour shifts to Re s → −∞ that produce the residue
-expansions are standard and unconditional (Davenport, *Multiplicative Number Theory*,
-chs. 17 and 19). Replacing the three uses:
+Lemma 0 replaces all three. The residue expansions come from shifting the contour to
+Re s → −∞. That shift is unconditional:
+- the kernels x^s/s² and x^(s−1)/(s(s−1)) decay like |s|^(−2);
+- the bounds on ξ′/ξ along suitable horizontal and left-hand paths (Davenport,
+  *Multiplicative Number Theory*, chs. 17 and 19) make the connecting integrals vanish.
+
+These are [LLS]'s own proofs of Lemmas 2.1–2.3. Replacing the three uses:
 
 - **(L2.1′)** For x > 1:
-  Σ_{n≤x} Λ(n) log(x/n) = x − log(2π)·log x − 1 + Σ_{k≥1} (1−x^(−2k))/(4k²)
+  Σ_{m≤x} Λ(m) log(x/m) = x − log(2π)·log x − 1 + Σ_{k≥1} (1−x^(−2k))/(4k²)
   + θ·K|B|(x^β + 1).
   (In [LLS], 2|B|(√x + 1) bounds |Σ_ρ x^ρ/ρ²| + |Σ_ρ 1/ρ²|. Lemma 0 bounds the same two
   sums by K|B|·x^β and K|B|.)
 - **(L2.2′)** For primitive χ mod q ≥ 3 and x > 1:
   Re S(x, χ) ≤ |Re B(χ)|·(K x^β + K + log x) + ½ log(q/π)·log x + Ẽ_a(x),
-  where S(x, χ) = Σ_{n≤x} Λ(n) χ(n) log(x/n).
+  where S(x, χ) = Σ_{m≤x} Λ(m) χ(m) log(x/m).
 - **(L2.3′)** For primitive χ mod q ≥ 3 and x > 1 with K x^(β−1) < 1:
-  |Re B(χ)|·(1 + 1/x − K x^(β−1)) ≤ ½(1−1/x) log(q/π) − Re Σ_{n≤x} (Λ(n)/n) χ(n)(1 − n/x) + E_a(x).
+  |Re B(χ)|·(1 + 1/x − K x^(β−1)) ≤ ½(1−1/x) log(q/π) − Re Σ_{m≤x} (Λ(m)/m) χ(m)(1 − m/x) + E_a(x).
   (In [LLS], the zero sum Σ_ρ x^(ρ−1)/(ρ(ρ−1)) is bounded by (2/√x)|Re B|. Lemma 0
   parts 1 and 3 bound it by K x^(β−1)|Re B|. Taking real parts, the left side is
   |Re B| + |Re B|/x + (that sum), since Re B(χ̄) = Re B(χ) ≤ 0.)
 
 The functions E_a and Ẽ_a (a = 0, 1) are the explicit, hypothesis-free functions in
-[LLS] Lemmas 2.2–2.3. We use only **E_a(x), Ẽ_a(x) < 0 for x ≥ 64**. In each formula,
+[LLS] Lemmas 2.2–2.3, with γ Euler's constant:
+
+- Ẽ₀(x) = π²/24 − (γ/2) log x − ½(log x)² − Σ_{k≥1} x^(−2k)/(2k)²;
+- Ẽ₁(x) = π²/8 − (log 2 + γ/2) log x − Σ_{k≥0} x^(−2k−1)/(2k+1)²;
+- E₀(x) = −log 2 − (γ/2)(1 − 1/x) + (log x + 1)/x − Σ_{k≥1} x^(−2k−1)/(2k(2k+1));
+- E₁(x) = −Σ_{k≥0} x^(−2k−2)/((2k+1)(2k+2)) − (γ/2)(1 − 1/x) + (log 2)/x.
+
+We use only **E_a(x), Ẽ_a(x) < 0 for x ≥ 64**. In each formula,
 every series term enters with a minus sign, so dropping the series gives an upper bound.
 Also (1 − 1/x) is increasing, and (ln x + 1)/x and (ln 2)/x are decreasing. So for
 x ≥ 64:
@@ -122,7 +133,7 @@ prime p ≤ X, so χ(m) = 1 for every m ≤ X (all such m are coprime to n).
 Let χ̃ mod q̃ be the primitive character inducing χ. It is non-principal, so q̃ ≥ 3, and
 q̃ | n gives log q̃ ≤ L. Every m ≤ X is coprime to n, so χ̃(m) = χ(m) = 1 for all m ≤ X.
 
-**(b) Lower bound.** S(X, χ̃) = Σ_{n≤X} Λ(n) log(X/n). Apply (L2.1′) and drop the
+**(b) Lower bound.** S(X, χ̃) = Σ_{m≤X} Λ(m) log(X/m). Apply (L2.1′) and drop the
 non-negative k-sum:
 
   S(X, χ̃) ≥ X − K|B| X^β − K|B| − log(2π) log X − 1.        (1)
@@ -186,6 +197,27 @@ independent human check.
   - Lemma 0 part 1 simplified.
 - **Suggested tightening, not applied:** use [LLS] Lemma 2.4, re-bounded under H(β), to
   lower γ and δ.
+
+**2026-10-19, independent recheck by a separate AI agent** (fresh context, no access to the
+earlier review). It is not a human check.
+- **Verdict: confirmed.** No fatal or fixable issues.
+- **Re-derived:**
+  - all four Γ-factor residues, cross-checked against direct quadrature at x = 100 (to 20
+    digits);
+  - the ζ residue at 0, cross-checked with mpmath;
+  - Lemma 0 and (F2);
+  - (L2.1′)–(L2.3′);
+  - step (a) against Conrad, including n a prime power and primes dividing n;
+  - the step (c)–(f) algebra;
+  - the soundness of `check_explicit`.
+- **Taken on trust:**
+  - convergence of the contour shifts;
+  - Re B(χ) = −Σ Re(1/ρ);
+  - minimality of ψ₁₃.
+- **Minor, fixed:**
+  - the summation variable is now m, so it no longer clashes with the composite n;
+  - E_a and Ẽ_a are written out;
+  - the contour-shift justification is stated.
 
 ## Where C = 4.2 comes from, and the obvious tightening
 
