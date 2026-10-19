@@ -1,14 +1,16 @@
 {
   "schema": "discover-frontier/v0",
-  "statement": "No explicit witness bound has been accepted yet. Reference point (recorded, not accepted): assuming H(theta) (no zeros of any Dirichlet L-function with Re s > theta), a Bach-type argument should give deterministic Miller-Rabin in (log n)^(2 + 1/(1-theta) + o(1)) bit operations. With the best published theta = 8748867/10000000 (Xu-Sang, conditional on OpenAI's inputs) the exponent is exactly 12502266/1251133 = 9.99275536...; with theta = 7/8 it is 10. That argument has not been written out with explicit constants (no explicit C exists), so this is not yet an algorithm.",
-  "status": "No accepted result yet",
+  "statement": "Assuming H(7/8) (no zero of any Dirichlet L-function with Re s > 7/8): every odd composite n >= psi_13 = 3317044064679887385961981 has a prime Miller-Rabin witness p <= (0.529 ln n)^8, and every odd composite n < psi_13 has one among the primes <= 41. Hence testing every prime base p <= max(41, (0.529 ln n)^8) is a deterministic primality test in (log n)^(10+o(1)) bit operations. log10 W(2^1024) = 20.597. Reference point (recorded, not an explicit bound): with the best published theta = 8748867/10000000 (Xu-Sang) the exponent would be 12502266/1251133 = 9.99275536..., but no explicit C has been written out for that theta.",
+  "status": "First explicit witness bound accepted (PR #8, zero pairing; builds on PR #6)",
   "evidence_level": [
-    "author-checked"
+    "author-checked",
+    "independently-checked",
+    "maintainer-reviewed"
   ],
   "metric": {
-    "name": "mr_exponent (then C, D, n0 for explicit bounds)",
-    "value": "12502266/1251133",
-    "decimal": "9.9927553665",
+    "name": "C in W(n) = (C ln n + D)^(1/(1-theta)) at theta = 7/8, D = 0, n0 = psi_13 (priority: exponent, then C, D, n0; checker also reports log10 W(2^1024))",
+    "value": "529/1000",
+    "decimal": "0.529",
     "direction": "lower-is-better"
   },
   "scope": "Bit complexity on a multitape Turing machine, Harvey-van der Hoeven multiplication. Conditional on H(theta). For comparison: Lenstra-Pomerance AKS is (log n)^(6+o(1)) unconditionally; under GRH (theta = 1/2) this method gives 4.",
@@ -27,13 +29,15 @@
     },
     {
       "id": "A2",
-      "statement": "The preprint's statement covers every modulus q and every Dirichlet character (including imprimitive ones, via Euler factors), uniformly, as docs/template-T1.md requires.",
-      "status": "open"
+      "statement": "The preprint's statement covers every modulus q and every Dirichlet character (including imprimitive ones, via Euler factors), uniformly, as docs/template-T1.md requires. Confirmed clause by clause against paper Thm 1.1, the Quadratic transfer proposition and the Lean statement (PR #5; recheck corrections in PR #9).",
+      "status": "closed",
+      "link": "research/preprint-scope/NOTE.md"
     },
     {
       "id": "A3",
-      "statement": "Lemma T1 (docs/template-T1.md) holds with explicit constants: the Bach-type transfer from H(theta) to a witness bound. This is the project's core task.",
-      "status": "open"
+      "statement": "Lemma T1 (docs/template-T1.md) holds under H(7/8) with the constants in candidates/explicit-t1-zero-pairing-7-8.json (w1 1, alpha 0.5276, beta 0.0232, gamma 4.221, delta 0, y_min 29). Proof: research/zero-pairing/PROOF.md, building on research/first-explicit-t1/PROOF.md; independently rechecked; accepted by the maintainer with PR #8.",
+      "status": "closed",
+      "link": "research/zero-pairing/PROOF.md"
     },
     {
       "id": "A4",
@@ -43,6 +47,10 @@
     }
   ],
   "sources": [
+    "https://github.com/discoveryathome/miller-rabin/pull/8",
+    "https://github.com/discoveryathome/miller-rabin/pull/6",
+    "https://github.com/discoveryathome/miller-rabin/pull/5",
+    "https://arxiv.org/abs/1309.3595",
     "https://github.com/openai/math",
     "https://arxiv.org/abs/2610.12234",
     "https://arxiv.org/abs/2610.15291",
@@ -51,9 +59,24 @@
   ],
   "artifacts": [
     {
-      "path": "candidates/frontier-exponent-xu-sang.json",
-      "sha256": "7e09b34ce96afa17ac2d68e65f87a4b523376e9830f82fd81727e5fa463bd0a5",
-      "role": "worked example"
+      "path": "candidates/explicit-t1-zero-pairing-7-8.json",
+      "sha256": "93b97139d3474a28f77781bb230d56fbccd0203c45a3f6b8505fa3c915834e56",
+      "role": "claim"
+    },
+    {
+      "path": "research/zero-pairing/PROOF.md",
+      "sha256": "824af09db62887a04107e72f9aafb56345aef45c1ea3ccf6499956d6896e914c",
+      "role": "proof"
+    },
+    {
+      "path": "research/zero-pairing/constants.py",
+      "sha256": "b71772dee37a2b068677c2800c2dce6d0737a94d03380f47b2f9d87ec6e610a7",
+      "role": "constant recomputation"
+    },
+    {
+      "path": "research/first-explicit-t1/PROOF.md",
+      "sha256": "9503a7bdda0c5c5cc0596e31780271ee4d03516c1ffce0789d80da36cdb33f6e",
+      "role": "proof (base steps)"
     },
     {
       "path": "verify/check.py",
@@ -66,12 +89,13 @@
       "role": "verifier"
     }
   ],
-  "reproduce": "python3 verify/check.py exponent candidates/frontier-exponent-xu-sang.json",
+  "reproduce": "python3 verify/check.py explicit candidates/explicit-t1-zero-pairing-7-8.json && python3 research/zero-pairing/constants.py",
   "reproduce_full": "python3 verify/check.py all && python3 -m unittest discover -s tests",
   "reproduce_minutes": 1,
   "prerequisites": [
     "Python 3.9 or later (standard library only)"
   ],
   "review": "discover/ledger.md",
-  "updated_on": "2026-10-19"
+  "updated_on": "2026-10-19",
+  "previous_record": "6f85127:discover/frontier.json"
 }

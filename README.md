@@ -23,7 +23,10 @@ This project makes C explicit and rigorous, then makes it as small as possible.
 
 ## What's known
 
-- **Accepted results:** none yet. See [`discover/frontier.json`](discover/frontier.json).
+- **Accepted result:** assuming H(7/8), every odd composite n has a prime Miller–Rabin
+  witness p ≤ max(41, (0.529·ln n)^8). The proof is
+  [research/zero-pairing/PROOF.md](research/zero-pairing/PROOF.md), and the claim is
+  [`discover/frontier.json`](discover/frontier.json).
 - **The exponent depends only on θ.** Getting below the 6 of Lenstra–Pomerance AKS would
   need θ < 3/4, which would be new mathematics, not tuning. Under GRH (θ = 1/2), Bach's
   bound 2(ln n)² gives an exponent of 4.
