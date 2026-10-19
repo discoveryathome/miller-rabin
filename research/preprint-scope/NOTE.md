@@ -59,7 +59,7 @@ continuation elsewhere.
    - Replaying it was **not done**. It needs Lean `v4.34.1` (from `lean/lean-toolchain`)
      and a Mathlib build, which is several GB and a long build. Ask the maintainer before
      attempting it.
-   - Suggested new card: `replay-comparator` in the `verify-premise` track.
+   - Follow-up: the existing card `replay-lean-proof` covers replaying it.
 2. **The paper never mentions Miller–Rabin.** Its only algorithmic corollary
    (Corollary 1.2, lines 325–338) is least nonresidues and square roots mod p, deduced
    from Bhargava–Ivanyos–Mittal–Saxena's weak-GRH theorem with ε = 7/16. The
@@ -75,5 +75,5 @@ continuation elsewhere.
   replayed by this project".
 
 ```discover
-{"v": 0, "kind": "done", "task": "preprint-scope", "scope": "A2: OpenAI's Dirichlet 7/8 statement (paper Thm 1.1 + Lean comparator statement) matches H(7/8) clause by clause; Lean proof module exists but was not replayed", "base": "6f85127", "posted_at": "2026-10-19T09:40:00Z", "evidence_level": "author-checked", "artifact": "research/preprint-scope/NOTE.md"}
+{"v": 0, "kind": "done", "task": "preprint-scope", "scope": "A2: OpenAI's Dirichlet 7/8 statement (paper Thm 1.1 + Lean comparator statement) matches H(7/8) clause by clause; Lean proof module exists but was not replayed", "base": "f3cc2db", "posted_at": "2026-10-19T07:12:51Z", "evidence_level": "author-checked", "artifact": "research/preprint-scope/NOTE.md"}
 ```
