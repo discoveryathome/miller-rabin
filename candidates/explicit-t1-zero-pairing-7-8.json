@@ -1,0 +1,23 @@
+{
+  "kind": "explicit-witness-bound",
+  "theta": "7/8",
+  "C": "529/1000",
+  "D": "0",
+  "n0": 3317044064679887385961981,
+  "template": {
+    "w1": "1",
+    "alpha": "5276/10000",
+    "beta": "232/10000",
+    "gamma": "4221/1000",
+    "delta": "0",
+    "y_min": "29"
+  },
+  "proof": "research/zero-pairing/PROOF.md",
+  "source": "Draft (AI-written, unreviewed): research/zero-pairing/PROOF.md, tightening research/first-explicit-t1 by pairing each zero rho with 1 - conj(rho).",
+  "assumptions": [
+    "A1: H(7/8) (OpenAI preprint, unrefereed)",
+    "A2: the preprint's statement covers every Dirichlet character needed",
+    "A3: Lemma T1 with these constants, as proved in research/zero-pairing/PROOF.md (awaiting review)",
+    "A4: Sorenson-Webster psi_13"
+  ]
+}
