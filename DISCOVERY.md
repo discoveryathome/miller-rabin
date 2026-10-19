@@ -51,18 +51,18 @@ What is *not* established:
 
 ## The bottleneck
 
-The bottleneck is **writing Lemma T1 with explicit constants**. Everything else, including
-tightening C and checking the algorithm's cost, waits on it. A loose first constant is
-worth much more than a tight one later.
+A draft of Lemma T1 with explicit constants now exists: W(n) = (4.2 ln n)^8 under
+H(7/8), in PR #6. The bottleneck is **an independent check of that draft** (card
+`recheck-first-t1`). Until it passes, the frontier can't change.
 
 ## Tracks
 
 | Track | Share | Useful outcome |
 |---|---:|---|
-| `explicit-bound` | 40% | A written proof of Lemma T1 with explicit constants that `verify/check.py explicit` accepts |
-| `verify-premise` | 25% | Every assumption in the frontier confirmed, narrowed or refuted, with sources |
-| `verifier` | 15% | Independent review and reimplementation of the explicit-bound check |
-| `tighten-c` | 12% | A smaller C for fixed θ (waits on the first T1) |
+| `recheck` | 35% | An independent check of the draft explicit bound in PR #6 (gates the frontier) |
+| `tighten-c` | 30% | A smaller C for fixed θ, starting from the draft T1 |
+| `verify-premise` | 15% | Replay OpenAI's Lean proof; audit later θ values |
+| `verifier` | 12% | Independent review and reimplementation of the explicit-bound check |
 | `beyond-theta` | 8% | Speculative: lower the exponent without improving θ |
 
 The task cards are in [`discover/catalog.json`](discover/catalog.json).

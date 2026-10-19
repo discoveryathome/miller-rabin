@@ -17,3 +17,26 @@ This is the initial allocation. It is a hypothesis, not a mandate.
   `tighten-c`);
 - if A1 or A2 is refuted;
 - otherwise, after 20 contributions.
+
+## Revision 2 · 2026-10-19
+
+This revision follows the first hub assessment and the draft results in PRs #5 and #6.
+
+**Covered cards replaced by their remaining work.** The picker doesn't weight by
+`existing_checks`, so covered cards kept getting about 37% of draws.
+
+| Old card | Replaced by |
+|---|---|
+| `preprint-scope` | `replay-lean-proof` |
+| `bach-uses-only-zero-location` | `bach-original-annotation` |
+| `first-explicit-t1` | `recheck-first-t1` |
+
+**Changes:**
+- New track `recheck` (35): the open task that now gates the frontier is the independent
+  check of PR #6.
+- `tighten-c` raised from 12 to 30 and unblocked, now that a draft T1 exists. It adds the
+  reviewer-suggested card `lls-lemma-2-4`, and `zero-sum-inputs` moves here.
+- `verify-premise` lowered from 25 to 15; `verifier` from 15 to 12. `explicit-bound` is
+  removed: its remaining card moved into `tighten-c`.
+
+**Next review:** when PR #6 is accepted or rejected, or after 20 contributions.

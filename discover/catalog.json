@@ -1,142 +1,136 @@
 {
   "schema": "discover-catalog/v0",
-  "priority_revision": 1,
+  "priority_revision": 2,
   "assessed_on": "2026-10-19",
   "priority_log": "discover/priority-log.md",
   "status": "Research suggestions, not reservations. Check live claims and open PRs.",
   "tracks": [
     {
-      "id": "explicit-bound",
-      "weight": 40,
-      "useful_outcome": "A written, checkable proof of Lemma T1 under H(theta) with explicit constants, plus a claim file that verify/check.py explicit accepts. That turns 'deterministic Miller-Rabin is in P' into an actual algorithm.",
+      "id": "recheck",
+      "weight": 35,
+      "useful_outcome": "An independent check of the draft explicit bound in PR #6, so it can enter the frontier.",
       "tasks": [
         {
-          "id": "first-explicit-t1",
-          "question": "Under H(7/8), what explicit constants (w1, alpha, beta, gamma, delta, y_min) make Lemma T1 provable, and what C, D, n0 follow?",
+          "id": "recheck-first-t1",
+          "question": "Is the draft proof of Lemma T1 in PR #6 (research/first-explicit-t1/PROOF.md) correct: does it use Lamzouri-Li-Soundararajan Lemmas 2.1-2.3 correctly under H(7/8), and do its constants hold?",
           "starting_points": [
-            "docs/template-T1.md",
-            "Bach, Explicit bounds for primality testing and related problems, Math. Comp. 55 (1990) 355-380, https://doi.org/10.1090/S0025-5718-1990-1023756-8",
-            "tests/fixtures/synthetic-explicit-pass.json"
+            "https://github.com/discoveryathome/miller-rabin/pull/6",
+            "research/first-explicit-t1/PROOF.md (on the PR branch)",
+            "Lamzouri, Li, Soundararajan, arXiv:1309.3595v3, Lemmas 2.1-2.3 and Section 3"
           ],
           "methods": [
-            "Follow Bach's GRH proof step by step, replacing each use of Re rho = 1/2 by Re rho <= theta; keep every constant explicit; loose constants are fine for a first result."
+            "Check out the PR (gh pr checkout 6 -R discoveryathome/miller-rabin, or git fetch origin research/first-explicit-t1), then work through the 'What a reviewer should check' list in PROOF.md line by line against LLS; rerun research/first-explicit-t1/constants.py."
           ],
-          "acceptance_gate": "A proof (Markdown or LaTeX under research/<package>/) of Lemma T1 with exactly the constants in a candidates/*.json claim that verify/check.py explicit passes; the maintainer's review of the proof.",
+          "acceptance_gate": "A written recheck posted as a review on PR #6 (or a done message in Discussions #2) that states, per checklist item, confirmed or the exact error.",
           "first_step": {
             "command": [
               "python3",
               "verify/check.py",
-              "explicit",
-              "tests/fixtures/synthetic-explicit-pass.json"
+              "all"
             ],
-            "expected": "PASS   tests/fixtures/synthetic-explicit-pass.json",
-            "inspect": "Shows the claim format that a real T1 proof must fill in. The constants in this fixture are made up.",
-            "scope": "Positive control: the explicit-bound check runs."
+            "expected": "PASS   smalln",
+            "inspect": "Every line starts with PASS.",
+            "scope": "Positive control on main: the verifier and recorded claims reproduce."
           },
-          "bottleneck_link": "No explicit C exists anywhere; until one does, the corollary is an existence statement, not an algorithm.",
-          "scope_change_triggers": [
-            "A step in Bach's proof uses GRH beyond the location of zeros (e.g. a density or pair-correlation input): report it, since the template may need to change."
+          "bottleneck_link": "The first explicit C cannot enter the frontier until an independent check confirms the proof; this is the binding constraint now.",
+          "existing_checks": [
+            {
+              "scope": "first-explicit-t1: draft proof of Lemma T1 under H(7/8) giving W(n) = (4.2 ln n)^8 for n >= psi_13; claim passes verify/check.py; adversarially reviewed by an AI agent, no fatal issues",
+              "evidence": "https://github.com/discoveryathome/miller-rabin/pull/6",
+              "status": "author-checked; awaiting maintainer review and one independent recheck",
+              "source_commit": "1536f03"
+            }
           ],
           "overlap_terms": [
+            "PR #6",
             "Lemma T1",
-            "Bach",
-            "explicit formula",
-            "witness bound"
+            "recheck"
           ]
         },
         {
-          "id": "zero-sum-inputs",
-          "question": "What are the best explicit bounds, valid for every conductor q <= n, on sum over nontrivial zeros rho of L(s, chi) of |w-hat(rho)| for a fixed smooth weight w, in the form a ln q + b?",
+          "id": "bach-original-annotation",
+          "question": "Does Bach's original argument (Math. Comp. 55 (1990) 355-380) confirm the LLS-based transfer, and does it give different or better constants under H(theta)?",
           "starting_points": [
-            "Trudgian, An improved upper bound for the error in the zero-counting formulae for Dirichlet L-functions and Dedekind zeta-functions, Math. Comp. 84 (2015)",
-            "Bennett, Martin, O'Bryant, Rechnitzer, Explicit bounds for primes in arithmetic progressions, Illinois J. Math. 62 (2018)",
-            "McCurley, Explicit estimates for the error term in the prime number theorem for arithmetic progressions, Math. Comp. 42 (1984)"
+            "https://doi.org/10.1090/S0025-5718-1990-1023756-8",
+            "research/bach-transfer/NOTE.md (PR #6 branch)"
           ],
           "methods": [
-            "Literature extraction: state each explicit zero-counting theorem exactly, with hypotheses and constants, and derive the a ln q + b bound by partial summation for one or two standard weights."
+            "Obtain Bach 1990 (library access; ams.org returned 403 to scripts); annotate each use of GRH; compare with research/bach-transfer/NOTE.md."
           ],
-          "acceptance_gate": "A note under research/<package>/ quoting each theorem exactly with its source, and the derived (a, b) with the derivation; one independent recheck.",
+          "acceptance_gate": "An annotated outline with page and equation references, posted as a done message.",
           "first_step": {
             "command": [
               "python3",
-              "-m",
-              "unittest",
-              "discover",
-              "-s",
-              "tests"
+              "verify/check.py",
+              "all"
             ],
-            "expected": "OK",
-            "scope": "Positive control: the verifier's self-tests, including the required rejections, pass."
+            "expected": "PASS   smalln",
+            "inspect": "Every line starts with PASS.",
+            "scope": "Positive control on main: the verifier and recorded claims reproduce."
           },
-          "bottleneck_link": "These constants feed alpha and beta in T1, which dominate C.",
+          "bottleneck_link": "An independent route to the same transfer strengthens the case for the first explicit C.",
+          "existing_checks": [
+            {
+              "scope": "bach-transfer: LLS (refining Bach) uses GRH only via three zero-sum bounds; each has an H(theta) analogue with K = 1/(1-theta)",
+              "evidence": "https://github.com/discoveryathome/miller-rabin/pull/6",
+              "status": "author-checked; awaiting maintainer review",
+              "source_commit": "1536f03"
+            }
+          ],
           "overlap_terms": [
-            "zero counting",
-            "N(T, chi)",
-            "Trudgian"
+            "Bach 1990",
+            "GRH",
+            "transfer"
           ]
         }
       ]
     },
     {
       "id": "verify-premise",
-      "weight": 25,
-      "useful_outcome": "Each assumption in discover/frontier.json is confirmed, narrowed or refuted with a source, so nothing downstream rests on an unchecked claim.",
+      "weight": 15,
+      "useful_outcome": "Each assumption in discover/frontier.json is confirmed, narrowed or refuted with a source.",
       "tasks": [
         {
-          "id": "preprint-scope",
-          "question": "Does OpenAI's quasi-Riemann statement (paper and Lean file) cover every modulus and every Dirichlet character, uniformly, as H(theta) in docs/template-T1.md requires? (Assumption A2.)",
+          "id": "replay-lean-proof",
+          "question": "Does OpenAI's Lean proof of the Dirichlet 7/8 half-plane (solution module OAI.NumberTheory.DirichletL.Nonvanishing, openai/math 1581d4c) build and pass its comparator check with only the standard axioms?",
           "starting_points": [
-            "https://github.com/openai/math (preprints/The-Quasi-Riemann-Hypothesis-September-30-2026/paper.pdf; lean/ComparatorChallenges/DirichletSevenEighths.lean; lean/docs/003.md)",
-            "docs/template-T1.md"
+            "https://github.com/openai/math (lean/ComparatorChallenges/README.md, DirichletSevenEighths.json)",
+            "research/preprint-scope/NOTE.md (PR #5 branch)"
           ],
           "methods": [
-            "Read the main theorem and the Lean statement; quote both exactly; compare them with H(theta) clause by clause (moduli, primitive vs imprimitive, the pole at s = 1)."
+            "On Linux (comparator needs landrun): follow lean/ComparatorChallenges/README.md, then run lake env comparator ComparatorChallenges/DirichletSevenEighths.json. The lakefile clones about 40 dependencies and runs code at configure time, so do it in a disposable VM or container."
           ],
-          "acceptance_gate": "A note quoting the statements exactly, with file paths and commit, and a clause-by-clause verdict.",
+          "acceptance_gate": "A replay report: environment, exact commands, comparator output, and the printed axioms.",
           "first_step": {
             "command": [
               "python3",
               "verify/check.py",
-              "exponent",
-              "candidates/exponent-openai-7-8.json"
+              "all"
             ],
-            "expected": "mr_exponent_exact: 10",
-            "scope": "Positive control: exponent recomputation for theta = 7/8."
+            "expected": "PASS   smalln",
+            "inspect": "Every line starts with PASS.",
+            "scope": "Positive control on main: the verifier and recorded claims reproduce."
           },
-          "bottleneck_link": "If the statement is narrower than H(theta), the whole project needs an extra lemma first.",
+          "requires": {
+            "os": [
+              "linux"
+            ],
+            "disk_gb": 30,
+            "note": "Large: about 40 Lean dependencies plus Mathlib; run in a disposable VM. The size is a guess."
+          },
+          "bottleneck_link": "If it replays, assumption A1 becomes kernel-checked instead of resting on an unrefereed paper.",
+          "existing_checks": [
+            {
+              "scope": "preprint-scope: OpenAI's Dirichlet 7/8 statement (paper Thm 1.1, Lean comparator statement at openai/math 1581d4c) matches H(7/8) clause by clause",
+              "evidence": "https://github.com/discoveryathome/miller-rabin/pull/5",
+              "status": "author-checked; awaiting maintainer review",
+              "source_commit": "54a267d"
+            }
+          ],
           "overlap_terms": [
-            "OpenAI",
-            "quasi-Riemann",
             "Lean",
-            "A2"
-          ]
-        },
-        {
-          "id": "bach-uses-only-zero-location",
-          "question": "Does Bach's 1990 GRH argument for the 2 (ln n)^2 bound use GRH only through Re rho = 1/2, so that replacing it by Re rho <= theta gives Lemma T1 in the stated form?",
-          "starting_points": [
-            "https://doi.org/10.1090/S0025-5718-1990-1023756-8",
-            "docs/template-T1.md"
-          ],
-          "methods": [
-            "Annotate each use of GRH in Bach's proof; for each, state what replaces it under H(theta) and how it changes the constants."
-          ],
-          "acceptance_gate": "An annotated outline with page and equation references, independently rechecked by a second contributor.",
-          "first_step": {
-            "command": [
-              "python3",
-              "verify/check.py",
-              "exponent",
-              "tests/fixtures/rounded-down-exponent.json"
-            ],
-            "expected": "REJECT",
-            "scope": "Negative control: the originally quoted 9.9984 is rejected as rounded down."
-          },
-          "bottleneck_link": "Confirms the exponent 2 + 1/(1-theta) before anyone invests in constants.",
-          "overlap_terms": [
-            "Bach",
-            "GRH",
-            "transfer"
+            "comparator",
+            "A1"
           ]
         },
         {
@@ -171,8 +165,8 @@
     },
     {
       "id": "verifier",
-      "weight": 15,
-      "useful_outcome": "Confidence that verify/check.py accepts only true claims: independent review and reimplementation of the explicit-bound check.",
+      "weight": 12,
+      "useful_outcome": "Confidence that verify/check.py accepts only true claims.",
       "tasks": [
         {
           "id": "independent-recheck",
@@ -208,9 +202,36 @@
     },
     {
       "id": "tighten-c",
-      "weight": 12,
+      "weight": 30,
       "useful_outcome": "Smaller C (then D, n0) for a fixed theta, as measured by log10 W(2^1024).",
       "tasks": [
+        {
+          "id": "lls-lemma-2-4",
+          "question": "Using LLS Lemma 2.4 re-bounded under H(theta), so that sum Lambda(m)/m (1 - m/X) >= log X - O(1) instead of >= 0, how much do gamma, delta and C come down in the first T1?",
+          "starting_points": [
+            "research/first-explicit-t1/PROOF.md step (c) (PR #6 branch)",
+            "LLS arXiv:1309.3595 Lemma 2.4 and Section 3.2"
+          ],
+          "methods": [
+            "Re-bound Lemma 2.4's zeta zero sum by K|B| x^(beta-1); redo steps (c)-(f); recheck with verify/check.py explicit."
+          ],
+          "acceptance_gate": "An explicit-witness-bound claim with smaller log10 W(2^1024) than the first T1, and its proof.",
+          "first_step": {
+            "command": [
+              "python3",
+              "verify/check.py",
+              "all"
+            ],
+            "expected": "PASS   smalln",
+            "inspect": "Every line starts with PASS.",
+            "scope": "Positive control on main: the verifier and recorded claims reproduce."
+          },
+          "bottleneck_link": "Suggested by the adversarial review of the first T1; the cheapest known tightening.",
+          "overlap_terms": [
+            "Lemma 2.4",
+            "tightening"
+          ]
+        },
         {
           "id": "optimize-weight",
           "question": "Given an accepted T1 proof, how small can C be made by choosing the weight function, splitting the zero sum by height, and using a larger n0 (up to psi_13)?",
@@ -233,10 +254,41 @@
             "inspect": "Shows the claim format that a real T1 proof must fill in. The constants in this fixture are made up.",
             "scope": "Positive control: the explicit-bound check runs."
           },
-          "bottleneck_link": "C enters to the eighth power; halving it cuts the base count by about 256 times. Blocked until first-explicit-t1 lands.",
+          "bottleneck_link": "C enters to the eighth power; halving it cuts the base count by about 256 times. A draft T1 now exists (PR #6) to start from.",
           "overlap_terms": [
             "weight function",
             "constant C"
+          ]
+        },
+        {
+          "id": "zero-sum-inputs",
+          "question": "What are the best explicit bounds, valid for every conductor q <= n, on sum over nontrivial zeros rho of L(s, chi) of |w-hat(rho)| for a fixed smooth weight w, in the form a ln q + b?",
+          "starting_points": [
+            "Trudgian, An improved upper bound for the error in the zero-counting formulae for Dirichlet L-functions and Dedekind zeta-functions, Math. Comp. 84 (2015)",
+            "Bennett, Martin, O'Bryant, Rechnitzer, Explicit bounds for primes in arithmetic progressions, Illinois J. Math. 62 (2018)",
+            "McCurley, Explicit estimates for the error term in the prime number theorem for arithmetic progressions, Math. Comp. 42 (1984)"
+          ],
+          "methods": [
+            "Literature extraction: state each explicit zero-counting theorem exactly, with hypotheses and constants, and derive the a ln q + b bound by partial summation for one or two standard weights."
+          ],
+          "acceptance_gate": "A note under research/<package>/ quoting each theorem exactly with its source, and the derived (a, b) with the derivation; one independent recheck.",
+          "first_step": {
+            "command": [
+              "python3",
+              "-m",
+              "unittest",
+              "discover",
+              "-s",
+              "tests"
+            ],
+            "expected": "OK",
+            "scope": "Positive control: the verifier's self-tests, including the required rejections, pass."
+          },
+          "bottleneck_link": "These constants feed alpha and beta in T1, which dominate C.",
+          "overlap_terms": [
+            "zero counting",
+            "N(T, chi)",
+            "Trudgian"
           ]
         }
       ]
