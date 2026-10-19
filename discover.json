@@ -65,5 +65,15 @@
       "acknowledgement",
       "contributors-file"
     ]
-  }
+  },
+  "review": {
+    "per_week": 1000,
+    "note": "First responses by the maintainer of record, Douglas R. Colkitt. An independent recheck of a T1 proof's constants is wanted before maintainer review."
+  },
+  "hubs": [
+    {
+      "hub": "*",
+      "list": true
+    }
+  ]
 }
