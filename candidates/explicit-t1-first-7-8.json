@@ -1,0 +1,18 @@
+{
+  "kind": "explicit-witness-bound",
+  "label": "First explicit witness bound under H(7/8): W(n) = (4.2 ln n)^8 for n >= psi_13",
+  "theta": "7/8",
+  "C": "21/5",
+  "D": "0",
+  "n0": 3317044064679887385961981,
+  "template": {
+    "w1": "1",
+    "alpha": "12500000000003/3000000000000",
+    "beta": "37/200",
+    "gamma": "25/6",
+    "delta": "237/200",
+    "y_min": "200"
+  },
+  "proof": "research/first-explicit-t1/PROOF.md",
+  "assumptions": ["H(7/8) (frontier A1)", "Lemma T1 as proved in research/first-explicit-t1/PROOF.md (awaiting review)", "Sorenson-Webster psi_13 (frontier A4)"]
+}
