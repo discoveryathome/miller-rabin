@@ -40,3 +40,12 @@ This revision follows the first hub assessment and the draft results in PRs #5 a
   removed: its remaining card moved into `tighten-c`.
 
 **Next review:** when PR #6 is accepted or rejected, or after 20 contributions.
+
+## Revision 3 (2026-10-19)
+
+**Weights unchanged.** A second draft T1 (PR #7, zero pairing, C = 0.529) now exists.
+- `recheck-first-t1` now covers both PR #6 and PR #7.
+- `lls-lemma-2-4` is re-aimed at the PR #7 proof. It notes that it needs a verifier
+  extension for negative template constants.
+
+**Next review:** when PR #6 or #7 is accepted or rejected, or after 20 contributions.

@@ -51,16 +51,19 @@ What is *not* established:
 
 ## The bottleneck
 
-A draft of Lemma T1 with explicit constants now exists: W(n) = (4.2 ln n)^8 under
-H(7/8), in PR #6. The bottleneck is **an independent check of that draft** (card
-`recheck-first-t1`). Until it passes, the frontier can't change.
+Two drafts of Lemma T1 with explicit constants now exist under H(7/8):
+- W(n) = (4.2 ln n)^8, in PR #6;
+- W(n) = (0.529 ln n)^8, in PR #7. It pairs each zero ρ with 1 − ρ̄ and is stacked on #6.
+
+The bottleneck is **an independent check of those drafts** (card `recheck-first-t1`).
+Until one passes, the frontier can't change.
 
 ## Tracks
 
 | Track | Share | Useful outcome |
 |---|---:|---|
-| `recheck` | 35% | An independent check of the draft explicit bound in PR #6 (gates the frontier) |
-| `tighten-c` | 30% | A smaller C for fixed θ, starting from the draft T1 |
+| `recheck` | 35% | An independent check of the draft explicit bounds in PRs #6 and #7 (gates the frontier) |
+| `tighten-c` | 30% | A smaller C for fixed θ, starting from the zero-pairing T1 (PR #7) |
 | `verify-premise` | 15% | Replay OpenAI's Lean proof; audit later θ values |
 | `verifier` | 12% | Independent review and reimplementation of the explicit-bound check |
 | `beyond-theta` | 8% | Speculative: lower the exponent without improving θ |
