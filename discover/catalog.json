@@ -116,7 +116,7 @@
               "linux"
             ],
             "disk_gb": 30,
-            "note": "Large: about 40 Lean dependencies plus Mathlib; run in a disposable VM. The size is a guess."
+            "note": "Large. The solution module's import closure is 2924 OAI modules (about 24 MB of Lean source, traced at openai/math 1581d4c) plus Mathlib, PrimeNumberTheoremAnd and RellichKondrachov; lake also clones about 40 dependencies at configure time. Expect hours of build; run in a disposable Linux VM."
           },
           "bottleneck_link": "If it replays, assumption A1 becomes kernel-checked instead of resting on an unrefereed paper.",
           "existing_checks": [
