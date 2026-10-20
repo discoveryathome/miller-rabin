@@ -49,3 +49,21 @@ This revision follows the first hub assessment and the draft results in PRs #5 a
   extension for negative template constants.
 
 **Next review:** when PR #6 or #7 is accepted or rejected, or after 20 contributions.
+
+## Revision 4 (2026-10-19)
+
+- PRs #5 and #6 are merged. The zero-pairing draft moved from the auto-closed #7 to #8.
+- Each of #5, #6 and #8 was independently rechecked, and all three were confirmed. The
+  maintainer counts same-model, fresh-context rechecks as independent. The minor fixes are
+  in this PR (#9).
+- The maintainer directed that #8 moves the frontier on merge.
+
+**Weights:**
+- `recheck` lowered from 35 to 15: its gate is cleared, and `recheck-first-t1` is retired.
+- `tighten-c` raised from 30 to 40.
+- `verify-premise` raised from 15 to 20: A1 (the unrefereed preprint) is now the main open
+  assumption.
+- `verifier` raised from 12 to 17: new card `negative-template-constants`, which unblocks
+  `lls-lemma-2-4`.
+
+**Next review:** when #8 merges, or after 20 contributions.

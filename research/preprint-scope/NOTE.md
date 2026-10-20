@@ -16,10 +16,22 @@
 > $\Re s>7/8$. The same holds for every Dirichlet $L$-function, including $\zeta(s)$.
 > A pole at $s=1$ for a principal character is allowed.
 
-**Paper, on imprimitive characters** (line 176):
+**Paper, on imprimitive characters.** The paper's Quadratic transfer proposition
+(`paper.tex` lines 6706–6714) concludes that "every Dirichlet $L$-function is zero-free on
+that same strict half-plane". Its proof (lines 6719–6721) reads:
 
-> Imprimitive characters have the same possible zeros in $\Re s>0$, because the finitely
-> omitted Euler factors are nonzero there.
+> The same observation for factors $1-\chi(p)p^{-s}$ reduces the Dirichlet assertion to a
+> primitive Dirichlet character $\chi$ of conductor $q$.
+
+(An earlier version of this note cited lines 176–177 instead. That remark concerns Hecke
+characters over $F$, not Dirichlet characters.)
+
+**Lean scope note** (`lean/docs/003.md`, lines 10 and 12):
+
+> The formalization gives $\theta=7/8$ for the Riemann zeta function and every Dirichlet
+> $L$-function, uniformly over all positive moduli and all characters.
+
+> The principal-character poles at $s=1$ are excluded in the Dirichlet and Hecke statements.
 
 **Lean comparator statement** (`DirichletSevenEighths.lean`):
 
@@ -38,16 +50,24 @@ theorem LFunction_ne_zero_of_seven_eighths_lt_re
 
 | H(7/8) requires | Paper | Lean statement | Verdict |
 |---|---|---|---|
-| every modulus q ≥ 1 | "every Dirichlet L-function" | `{q : ℕ} [NeZero q]` | ✓ |
-| every character, imprimitive included | line 176 remark | every `DirichletCharacter ℂ q` | ✓ |
+| every modulus q ≥ 1 | "every Dirichlet L-function" | `{q : ℕ} [NeZero q]`, which is exactly q ≥ 1 | ✓ |
+| q = 1, i.e. ζ | "including $\zeta(s)$" | q = 1; Mathlib's `LFunction_modOne_eq` gives `LFunction χ = riemannZeta` | ✓ |
+| every character, imprimitive included | Quadratic transfer, lines 6706–6721 | every `DirichletCharacter ℂ q` | ✓ |
+| every s | — | χ is explicit and s implicit; both are universally quantified | ✓ |
 | principal characters mod q > 1 | covered | `χ = 1` is the principal character mod q; only s = 1 is excluded | ✓ |
 | no zero with Re s > 7/8, strict | "no zero in Re s > 7/8" | `7/8 < s.re` | ✓ |
 | pole at s = 1 is not a zero | "pole … allowed" | `hpole` excludes (χ = 1, s = 1) only | ✓ |
 
-**Verdict.** As a statement, assumption A2 holds. The Lean statement is exactly H(7/8),
-provided Mathlib's `DirichletCharacter.LFunction` agrees with the Dirichlet series for
-Re s > 1 (Mathlib proves this as `LFunction_eq_LSeries`) and is its analytic
-continuation elsewhere.
+**Verdict.** As a statement, assumption A2 holds, and the Lean statement is exactly H(7/8).
+Mathlib's `DirichletCharacter.LFunction` is the analytic continuation of the Dirichlet
+series:
+- `LFunction_eq_LSeries` gives agreement for Re s > 1;
+- `differentiableAt_LFunction` (hypothesis `s ≠ 1 ∨ χ ≠ 1`) makes it holomorphic on ℂ∖{1};
+- ℂ∖{1} is connected, so the identity theorem applies.
+
+At (χ = 1, s = 1) Mathlib's value is a junk value, and that is exactly the point `hpole`
+excludes. (This was read in a current Mathlib. The revision pinned by openai/math was not
+rechecked.)
 
 ## Findings beyond the card
 
@@ -65,8 +85,26 @@ continuation elsewhere.
    from Bhargava–Ivanyos–Mittal–Saxena's weak-GRH theorem with ε = 7/16. The
    Miller–Rabin corollary is this project's to write.
 3. **The functional equation gives zeros in 1/8 ≤ Re s ≤ 7/8** (proof of
-   Corollary 1.2). This symmetric strip, not just the half-plane, is what an explicit
-   formula sees. Lemma T1 needs only the right half.
+   Corollary 1.2; the paper states it for primitive χ). This symmetric strip, not just the
+   half-plane, is what an explicit formula sees. Lemma T1 uses both halves: Lemma 0 part 1
+   of the first T1 uses Re ρ ≥ 1/8. The left half follows from H(7/8) and the
+   unconditional functional equation, so nothing beyond H(7/8) is assumed.
+
+## Review history
+
+**2026-10-19, independent recheck by a separate AI agent** (fresh context). It is not a human
+check.
+- **Verdict: confirmed with corrections.**
+  - Every quotation matches the source at 1581d4c.
+  - Theorem 1.1 together with the Lean statement covers exactly H(7/8).
+  - The downstream proofs need nothing more.
+- **Fixed:**
+  - the imprimitive-character citation was a remark about Hecke characters; it is replaced
+    by the Quadratic transfer proposition;
+  - "Lemma T1 needs only the right half" was wrong;
+  - the Mathlib proviso is now closed by an argument;
+  - rows for q = 1 and for the quantifiers are added;
+  - `lean/docs/003.md` is quoted.
 
 ## Suggested frontier update (maintainer only)
 
