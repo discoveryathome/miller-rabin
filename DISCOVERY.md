@@ -39,15 +39,15 @@ The precise statements are in [docs/template-T1.md](docs/template-T1.md).
 
 ## Current frontier
 
-[`discover/frontier.json`](discover/frontier.json) says **no accepted result yet**. It
-records a reference point: the exponent 12502266/1251133 ≈ 9.99276 for the best
-published θ.
+[`discover/frontier.json`](discover/frontier.json) records the accepted result. Assuming
+H(7/8), every odd composite n has a prime witness p ≤ max(41, (0.529·ln n)^8), with
+log₁₀ W(2^1024) = 20.597. Proof: [research/zero-pairing/PROOF.md](research/zero-pairing/PROOF.md).
 
 What is *not* established:
-- the explicit constants (Lemma T1);
-- that the preprint's statement covers every character the argument needs (assumption
-  A2);
-- the preprint itself (assumption A1), which no one has refereed.
+- the preprint itself (assumption A1), which no one has refereed and whose Lean proof
+  this project hasn't replayed;
+- an explicit C for any θ < 7/8, such as Xu–Sang's;
+- anything below C = ½, the limit of the current template.
 
 ## The bottleneck
 
