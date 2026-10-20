@@ -34,6 +34,8 @@ algorithm: the loop doesn't know where to stop. The goal is:
 
 1. Make W(n) fully explicit and rigorous under H(θ).
 2. Then make it as small as possible: smaller C first, then D and n0.
+3. Transfer the same machinery to the sibling problems: the least non-residue, the least
+   prime in a progression, and L(1, χ).
 
 The precise statements are in [docs/template-T1.md](docs/template-T1.md).
 
@@ -49,27 +51,49 @@ What is *not* established:
 - an explicit C for any θ < 7/8, such as Xu–Sang's;
 - anything below C = ½, the limit of the current template.
 
-## The bottleneck
+## Where effort is most useful now
 
-Two drafts of Lemma T1 with explicit constants now exist under H(7/8):
-- W(n) = (4.2 ln n)^8, merged from PR #6;
-- W(n) = (0.529 ln n)^8, in PR #8. It pairs each zero ρ with 1 − ρ̄.
+The first explicit bound is accepted, so there is easy, visible work right next to it.
 
-Each draft has had one independent recheck, and both were confirmed. The maintainer counts
-same-model rechecks run in a fresh context as independent. PR #8 moves the frontier when it
-merges. The next bottleneck is **tightening C below the zero-pairing bound**:
-- LLS Lemma 2.4 (card `lls-lemma-2-4`);
-- the verifier extension it needs (card `negative-template-constants`).
+- **Quick wins** (track `quick-wins`):
+  - the same bound at Xu–Sang's θ, which would be the first explicit test with running-time
+    exponent below 10;
+  - a runnable implementation of the accepted test.
+- **Sibling theorems** (track `corollaries`): Lamzouri–Li–Soundararajan proved several
+  other explicit results under GRH. They carry over to H(7/8) with the same pairing
+  lemma:
+  - the least quadratic non-residue, which is nearly the accepted proof already;
+  - the least prime in an arithmetic progression;
+  - bounds on L(1, χ).
+- **Tightening C** (track `tighten-c`): LLS Lemma 2.4, after the verifier extension it needs
+  (card `negative-template-constants`).
+
+## Ceilings (so a slowdown isn't mistaken for a stall)
+
+- **C cannot go much lower.** The current argument can't push C below ½, and the accepted
+  bound has C = 0.529. Further gains on the main metric come in percents, mostly from D < 0
+  via Lemma 2.4, roughly 0.4 in log₁₀ W(2^1024).
+- **The exponent moves only with θ.** Each new zero-free half-plane gives a new explicit
+  exponent through `explicit-lower-theta`. Beating AKS's 6 needs θ < 3/4, which is new
+  mathematics, not tuning.
+- **The main open assumption is A1**, the unrefereed preprint. A Lean replay
+  (`replay-lean-proof`) would turn it into a kernel-checked fact, but it needs a Linux
+  machine and hours of build.
 
 ## Tracks
 
 | Track | Share | Useful outcome |
 |---|---:|---|
-| `tighten-c` | 40% | A smaller C for fixed θ, starting from the zero-pairing T1 (PR #8) |
-| `verify-premise` | 20% | Replay OpenAI's Lean proof; audit later θ values |
-| `verifier` | 17% | Soundness of the explicit-bound check; the negative-constants extension |
-| `recheck` | 15% | Independent checks of new claims and classical inputs |
-| `beyond-theta` | 8% | Speculative: lower the exponent without improving θ |
+| `quick-wins` | 35% | Explicit bound at a smaller θ (exponent below 10); a runnable implementation |
+| `corollaries` | 20% | Explicit H(7/8) versions of LLS's other theorems: least non-residue, least prime in a progression, L(1, χ) |
+| `tighten-c` | 20% | A smaller C, D or n0 than the zero-pairing T1 |
+| `verifier` | 10% | Soundness of the explicit-bound check; the negative-constants extension |
+| `verify-premise` | 8% | Replay OpenAI's Lean proof; audit later θ values |
+| `recheck` | 4% | Independent checks of new claims and classical inputs |
+| `beyond-theta` | 3% | Speculative: lower the exponent without improving θ |
+
+Every new result also needs one independent recheck before the maintainer reviews it. A
+separate agent with a fresh context counts.
 
 The task cards are in [`discover/catalog.json`](discover/catalog.json).
 

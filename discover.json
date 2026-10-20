@@ -1,7 +1,7 @@
 {
   "schema": "discover/v0",
   "title": "Explicit deterministic Miller-Rabin under the quasi-Riemann hypothesis",
-  "summary": "Make the witness bound W(n)=(C ln n + D)^(1/(1-theta)) for deterministic Miller-Rabin fully explicit, assuming a zero-free half-plane Re s > theta for Dirichlet L-functions, and minimize C.",
+  "summary": "Make the witness bound W(n)=(C ln n + D)^(1/(1-theta)) for deterministic Miller-Rabin fully explicit, assuming a zero-free half-plane Re s > theta for Dirichlet L-functions, and minimize C; then transfer the method to sibling problems (least non-residue, least prime in a progression, L(1, chi)). Accepted: (0.529 ln n)^8 under H(7/8).",
   "domains": [
     "mathematics",
     "number-theory",

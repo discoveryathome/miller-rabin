@@ -67,3 +67,22 @@ This revision follows the first hub assessment and the draft results in PRs #5 a
   `lls-lemma-2-4`.
 
 **Next review:** when #8 merges, or after 20 contributions.
+
+## Revision 5 (2026-10-20)
+
+**Pre-launch, by the maintainer's decision.** First contributors should land on reachable,
+visible results.
+- **New track `quick-wins` (35):**
+  - `explicit-lower-theta`: the zero-pairing proof at Xu–Sang's θ, giving an exponent
+    below 10. A float probe suggests C ≈ 0.528.
+  - `reference-implementation`.
+- **New track `corollaries` (20):** the maintainer widened the scope to LLS's sibling
+  theorems under H(7/8). Cards `least-nonresidue`, `least-prime-in-progression` and
+  `l-one-bounds`.
+- **Weights:** `tighten-c` 40 → 20, `verifier` 17 → 10, `verify-premise` 20 → 8,
+  `recheck` 15 → 4, `beyond-theta` 8 → 3.
+- **DISCOVERY.md** now states the ceilings: C ≥ ½ in this argument, the exponent is tied
+  to θ, and A1 is the main open assumption.
+
+**Next review:** after the first 10 contributions, or when `quick-wins` empties.
+

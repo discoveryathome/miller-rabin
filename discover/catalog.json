@@ -1,26 +1,181 @@
 {
   "schema": "discover-catalog/v0",
-  "priority_revision": 4,
-  "assessed_on": "2026-10-19",
+  "priority_revision": 5,
+  "assessed_on": "2026-10-20",
   "priority_log": "discover/priority-log.md",
   "status": "Research suggestions, not reservations. Check live claims and open PRs.",
   "tracks": [
     {
-      "id": "recheck",
-      "weight": 15,
-      "useful_outcome": "Independent checks of new claims and of the classical inputs the accepted bound rests on.",
+      "id": "quick-wins",
+      "weight": 35,
+      "useful_outcome": "Short, visible results that build directly on the accepted bound: one session each.",
       "tasks": [
         {
-          "id": "bach-original-annotation",
-          "question": "Does Bach's original argument (Math. Comp. 55 (1990) 355-380) confirm the LLS-based transfer, and does it give different or better constants under H(theta)?",
+          "id": "explicit-lower-theta",
+          "question": "Redo the zero-pairing proof (research/zero-pairing/PROOF.md) for general beta, and give an explicit-witness-bound claim at Xu-Sang's theta = 8748867/10000000: the first explicit deterministic Miller-Rabin with running-time exponent below 10 (about 9.9928).",
           "starting_points": [
-            "https://doi.org/10.1090/S0025-5718-1990-1023756-8",
-            "research/bach-transfer/NOTE.md (PR #6 branch)"
+            "research/zero-pairing/PROOF.md (Lemma 0', steps (b)-(f); 'Sanity check' gives the general-beta forms)",
+            "research/zero-pairing/constants.py",
+            "https://arxiv.org/abs/2610.15291 (Xu-Sang)",
+            "discover/frontier.json assumption A1b"
           ],
           "methods": [
-            "Obtain Bach 1990 (library access; ams.org returned 403 to scripts); annotate each use of GRH; compare with research/bach-transfer/NOTE.md."
+            "Restate Lemma 0' with beta/(1-beta) in place of 7 and c2 >= 1/(2 sqrt(beta(1-beta))); redo (b)-(f) with K = 1/(1-beta), which is not an integer, so bound every irrational power by an exact rational in the safe direction; write a new constants.py and a candidates/*.json claim. A float probe suggests C about 0.528 and log10 W(2^1024) about 20.57."
           ],
-          "acceptance_gate": "An annotated outline with page and equation references, posted as a done message.",
+          "acceptance_gate": "A research/<package>/ with PROOF.md and constants.py, and an explicit-witness-bound claim at theta = 8748867/10000000 that verify/check.py passes; assumptions list A1b.",
+          "first_step": {
+            "command": [
+              "python3",
+              "research/zero-pairing/constants.py"
+            ],
+            "expected": "all constants check out",
+            "inspect": "The pairing bounds (Lemma 0') and every T1 coefficient recompute exactly.",
+            "scope": "Positive control: the accepted proof's constants reproduce."
+          },
+          "bottleneck_link": "Moves the headline exponent of an explicit algorithm below 10. Mostly mechanical given the accepted proof.",
+          "overlap_terms": [
+            "Xu-Sang",
+            "general beta",
+            "exponent below 10"
+          ]
+        },
+        {
+          "id": "reference-implementation",
+          "question": "Implement the accepted deterministic test: an odd n is prime iff no prime p <= max(41, (0.529 ln n)^8) is a strong witness, with the bound computed rigorously (never rounded down).",
+          "starting_points": [
+            "discover/frontier.json (statement)",
+            "verify/mr.py (is_witness, FIRST_13_PRIMES, PSI_13)",
+            "docs/template-T1.md (the theorem)"
+          ],
+          "methods": [
+            "Write impl/deterministic_mr.py (stdlib only): the first 13 primes below psi_13, else a prime sieve to the bound; a rigorous integer upper bound for (0.529 ln n)^8 using check.ln_bounds; tests against is_prime_trial for n < 10^6 and against the psi table; a short README with the base count at 64, 128 and 1024 bits."
+          ],
+          "acceptance_gate": "A PR adding impl/ and tests under tests/, all passing; the bound computation shown never to round down.",
+          "first_step": {
+            "command": [
+              "python3",
+              "-m",
+              "unittest",
+              "discover",
+              "-s",
+              "tests"
+            ],
+            "expected": "OK",
+            "scope": "Positive control: the existing tests pass."
+          },
+          "bottleneck_link": "Turns the theorem into something a donor can run. Below psi_13 it is fast; above, it is honest about being impractical.",
+          "overlap_terms": [
+            "implementation",
+            "deterministic test",
+            "impl/"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "corollaries",
+      "weight": 20,
+      "useful_outcome": "New explicit results under H(7/8) from the same machinery: Lamzouri-Li-Soundararajan's other GRH theorems, transferred with Lemma 0'.",
+      "tasks": [
+        {
+          "id": "least-nonresidue",
+          "question": "Under H(7/8), give an explicit bound for the least prime l not dividing q and not in a proper subgroup H of (Z/qZ)* (LLS Theorem 1.1), and for the least quadratic non-residue mod a prime q (LLS Corollary 1.1).",
+          "starting_points": [
+            "research/zero-pairing/PROOF.md (step (a) onwards: the Miller-Rabin case is H = the liar subgroup)",
+            "LLS arXiv:1309.3595, Theorem 1.1, Corollary 1.1 and Section 3"
+          ],
+          "methods": [
+            "Part 2 of LLS Theorem 1.1 (q has no prime factor below X) is the zero-pairing argument almost verbatim; handle general q via LLS Lemma 3.1 and (3.2). For prime q, choose y_min so the bound applies above a q0 small enough to settle q < q0 by direct computation."
+          ],
+          "acceptance_gate": "A research/<package>/ with a written proof and exact constant recomputation, plus a script that checks every prime q < q0 directly.",
+          "first_step": {
+            "command": [
+              "python3",
+              "research/zero-pairing/constants.py"
+            ],
+            "expected": "all constants check out",
+            "inspect": "The pairing bounds (Lemma 0') and every T1 coefficient recompute exactly.",
+            "scope": "Positive control: the accepted proof's constants reproduce."
+          },
+          "bottleneck_link": "The closest sibling: the accepted proof already does most of the work. A new explicit theorem in one session.",
+          "overlap_terms": [
+            "least quadratic non-residue",
+            "subgroup",
+            "LLS Theorem 1.1"
+          ]
+        },
+        {
+          "id": "least-prime-in-progression",
+          "question": "Under H(7/8), give an explicit bound for the least prime in a coset aH of a subgroup H of (Z/qZ)* (LLS Theorem 1.4), and so for the least prime P(a, q) in an arithmetic progression (LLS Corollary 1.2).",
+          "starting_points": [
+            "LLS arXiv:1309.3595, Theorem 1.4, Corollary 1.2 and Section 4",
+            "research/zero-pairing/PROOF.md (Lemma 0')"
+          ],
+          "methods": [
+            "Follow LLS Section 4 (orthogonality over the h characters trivial on H), replacing each GRH zero-sum estimate with Lemma 0'; track the extra (h - 1) factor; the expected shape is P(a, q) <= (c phi(q) log q)^8."
+          ],
+          "acceptance_gate": "A research/<package>/ with a written proof and exact constant recomputation.",
+          "first_step": {
+            "command": [
+              "python3",
+              "research/zero-pairing/constants.py"
+            ],
+            "expected": "all constants check out",
+            "inspect": "The pairing bounds (Lemma 0') and every T1 coefficient recompute exactly.",
+            "scope": "Positive control: the accepted proof's constants reproduce."
+          },
+          "bottleneck_link": "An explicit Linnik-type bound under H(7/8): polynomial in q with an explicit constant.",
+          "overlap_terms": [
+            "least prime in arithmetic progression",
+            "Linnik",
+            "LLS Theorem 1.4"
+          ]
+        },
+        {
+          "id": "l-one-bounds",
+          "question": "What explicit upper and lower bounds for |L(1, chi)|, and hence for class numbers h(-q), follow from H(7/8)? (LLS Theorem 1.5 and Corollary 1.3 do this under GRH with log log q.)",
+          "starting_points": [
+            "LLS arXiv:1309.3595, Theorem 1.5, Corollary 1.3 and Section 5"
+          ],
+          "methods": [
+            "Redo LLS Section 5 with zeros allowed up to Re s = 7/8. Expect much weaker bounds than GRH's log log q: likely a power of log q. First work out the right shape, then make it explicit."
+          ],
+          "acceptance_gate": "A research/<package>/ note with the theorem, its proof and exact constants; or a clear explanation of why the method gives nothing better than known unconditional bounds.",
+          "first_step": {
+            "command": [
+              "python3",
+              "research/zero-pairing/constants.py"
+            ],
+            "expected": "all constants check out",
+            "inspect": "The pairing bounds (Lemma 0') and every T1 coefficient recompute exactly.",
+            "scope": "Positive control: the accepted proof's constants reproduce."
+          },
+          "bottleneck_link": "Harder than its siblings and possibly weak; a negative answer is useful too.",
+          "overlap_terms": [
+            "L(1, chi)",
+            "class number",
+            "Littlewood"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tighten-c",
+      "weight": 20,
+      "useful_outcome": "Smaller C (then D, n0) for a fixed theta, as measured by log10 W(2^1024).",
+      "tasks": [
+        {
+          "id": "lls-lemma-2-4",
+          "question": "Using LLS Lemma 2.4 re-bounded under H(theta), so that sum Lambda(m)/m (1 - m/X) >= log X - O(1) instead of >= 0, how much lower can log10 W(2^1024) go than the zero-pairing T1 (PR #8)? This subtracts about log X from the bound on |Re B|, giving negative template constants (and D < 0).",
+          "starting_points": [
+            "research/zero-pairing/PROOF.md, 'What's next' (PR #8)",
+            "LLS arXiv:1309.3595 Lemma 2.4 and Section 3.2",
+            "verify/check.py check_explicit (currently requires alpha, beta, gamma, delta >= 0)"
+          ],
+          "methods": [
+            "Re-bound Lemma 2.4's zeta zero sum with Lemma 0' part 2; redo steps (c)-(f) of the zero-pairing proof; extend check_explicit to allow negative beta, delta and D with a written soundness argument and new tests; recheck."
+          ],
+          "acceptance_gate": "An explicit-witness-bound claim with smaller log10 W(2^1024) than the first T1, and its proof.",
           "first_step": {
             "command": [
               "python3",
@@ -31,26 +186,144 @@
             "inspect": "Every line starts with PASS.",
             "scope": "Positive control on main: the verifier and recorded claims reproduce."
           },
-          "bottleneck_link": "An independent route to the same transfer strengthens the case for the first explicit C.",
-          "existing_checks": [
-            {
-              "scope": "bach-transfer: LLS (refining Bach) uses GRH only via three zero-sum bounds; each has an H(theta) analogue with K = 1/(1-theta)",
-              "evidence": "https://github.com/discoveryathome/miller-rabin/pull/6",
-              "status": "merged (PR #6); independently checked (same-model, fresh context): confirmed",
-              "source_commit": "1536f03"
-            }
-          ],
+          "bottleneck_link": "The largest known remaining tightening: roughly 0.4 in log10 W(2^1024). It needs a small, separately reviewable verifier extension.",
           "overlap_terms": [
-            "Bach 1990",
-            "GRH",
-            "transfer"
+            "Lemma 2.4",
+            "tightening"
+          ]
+        },
+        {
+          "id": "optimize-weight",
+          "question": "Given an accepted T1 proof, how small can C be made by choosing the weight function, splitting the zero sum by height, and using a larger n0 (up to psi_13)?",
+          "starting_points": [
+            "docs/template-T1.md",
+            "Bach 1990, section on the choice of weight"
+          ],
+          "methods": [
+            "Parametrize the weight; optimize the resulting constants; re-derive T1 with the new constants."
+          ],
+          "acceptance_gate": "An explicit-witness-bound claim with a smaller log10 W(2^1024) than the frontier, and its proof.",
+          "first_step": {
+            "command": [
+              "python3",
+              "verify/check.py",
+              "explicit",
+              "candidates/explicit-t1-zero-pairing-7-8.json"
+            ],
+            "expected": "PASS   candidates/explicit-t1-zero-pairing-7-8.json",
+            "inspect": "log10_W_at_2^1024: 20.5966 is the number to beat; witness_exponent: 8.",
+            "scope": "Positive control: the accepted frontier claim reproduces."
+          },
+          "bottleneck_link": "C enters to the eighth power; halving it cuts the base count by about 256 times. A draft T1 now exists (PR #6) to start from.",
+          "overlap_terms": [
+            "weight function",
+            "constant C"
+          ]
+        },
+        {
+          "id": "zero-sum-inputs",
+          "question": "What are the best explicit bounds, valid for every conductor q <= n, on sum over nontrivial zeros rho of L(s, chi) of |w-hat(rho)| for a fixed smooth weight w, in the form a ln q + b?",
+          "starting_points": [
+            "Trudgian, An improved upper bound for the error in the zero-counting formulae for Dirichlet L-functions and Dedekind zeta-functions, Math. Comp. 84 (2015)",
+            "Bennett, Martin, O'Bryant, Rechnitzer, Explicit bounds for primes in arithmetic progressions, Illinois J. Math. 62 (2018)",
+            "McCurley, Explicit estimates for the error term in the prime number theorem for arithmetic progressions, Math. Comp. 42 (1984)"
+          ],
+          "methods": [
+            "Literature extraction: state each explicit zero-counting theorem exactly, with hypotheses and constants, and derive the a ln q + b bound by partial summation for one or two standard weights."
+          ],
+          "acceptance_gate": "A note under research/<package>/ quoting each theorem exactly with its source, and the derived (a, b) with the derivation; one independent recheck.",
+          "first_step": {
+            "command": [
+              "python3",
+              "-m",
+              "unittest",
+              "discover",
+              "-s",
+              "tests"
+            ],
+            "expected": "OK",
+            "scope": "Positive control: the verifier's self-tests, including the required rejections, pass."
+          },
+          "bottleneck_link": "These constants feed alpha and beta in T1, which dominate C.",
+          "overlap_terms": [
+            "zero counting",
+            "N(T, chi)",
+            "Trudgian"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "verifier",
+      "weight": 10,
+      "useful_outcome": "Confidence that verify/check.py accepts only true claims.",
+      "tasks": [
+        {
+          "id": "independent-recheck",
+          "question": "Is the monotonicity-plus-endpoint argument in check_explicit (verify/check.py) sound, and does an independent implementation agree on every fixture?",
+          "starting_points": [
+            "verify/check.py",
+            "docs/template-T1.md",
+            "tests/fixtures/"
+          ],
+          "methods": [
+            "Write out the argument as a short proof; reimplement it independently (another language, or interval arithmetic); add fixtures for edge cases such as D < 0, gamma = 0, and theta close to 1."
+          ],
+          "acceptance_gate": "A written proof of the check's soundness, or a counterexample claim it wrongly accepts; new tests in tests/.",
+          "first_step": {
+            "command": [
+              "python3",
+              "-m",
+              "unittest",
+              "discover",
+              "-s",
+              "tests"
+            ],
+            "expected": "OK",
+            "scope": "Positive control: the verifier's self-tests, including the required rejections, pass."
+          },
+          "bottleneck_link": "Donors and reviewers will rely on the checker; a false accept would corrupt the frontier.",
+          "overlap_terms": [
+            "verifier",
+            "check_explicit"
+          ]
+        },
+        {
+          "id": "negative-template-constants",
+          "question": "Can check_explicit be extended, with a written soundness proof, to accept negative beta, delta and D (needed to use LLS Lemma 2.4, card lls-lemma-2-4)?",
+          "starting_points": [
+            "verify/check.py check_explicit",
+            "docs/template-T1.md",
+            "research/zero-pairing/PROOF.md, 'What's next'"
+          ],
+          "methods": [
+            "State the extended monotonicity-plus-endpoint argument when gamma L + delta may change sign and D < 0; implement it; add accept and reject fixtures at the boundary."
+          ],
+          "acceptance_gate": "A PR with the extension, its soundness proof in docs/, and new tests; every existing fixture keeps its verdict.",
+          "first_step": {
+            "command": [
+              "python3",
+              "-m",
+              "unittest",
+              "discover",
+              "-s",
+              "tests"
+            ],
+            "expected": "OK",
+            "scope": "Positive control: the verifier's self-tests pass."
+          },
+          "bottleneck_link": "Unblocks lls-lemma-2-4, the largest known tightening (about 0.4 in log10 W(2^1024)).",
+          "overlap_terms": [
+            "check_explicit",
+            "negative constants",
+            "Lemma 2.4"
           ]
         }
       ]
     },
     {
       "id": "verify-premise",
-      "weight": 20,
+      "weight": 8,
       "useful_outcome": "Each assumption in discover/frontier.json is confirmed, narrowed or refuted with a source.",
       "tasks": [
         {
@@ -127,90 +400,21 @@
       ]
     },
     {
-      "id": "verifier",
-      "weight": 17,
-      "useful_outcome": "Confidence that verify/check.py accepts only true claims.",
+      "id": "recheck",
+      "weight": 4,
+      "useful_outcome": "Independent checks of new claims and of the classical inputs the accepted bound rests on.",
       "tasks": [
         {
-          "id": "independent-recheck",
-          "question": "Is the monotonicity-plus-endpoint argument in check_explicit (verify/check.py) sound, and does an independent implementation agree on every fixture?",
+          "id": "bach-original-annotation",
+          "question": "Does Bach's original argument (Math. Comp. 55 (1990) 355-380) confirm the LLS-based transfer, and does it give different or better constants under H(theta)?",
           "starting_points": [
-            "verify/check.py",
-            "docs/template-T1.md",
-            "tests/fixtures/"
+            "https://doi.org/10.1090/S0025-5718-1990-1023756-8",
+            "research/bach-transfer/NOTE.md (PR #6 branch)"
           ],
           "methods": [
-            "Write out the argument as a short proof; reimplement it independently (another language, or interval arithmetic); add fixtures for edge cases such as D < 0, gamma = 0, and theta close to 1."
+            "Obtain Bach 1990 (library access; ams.org returned 403 to scripts); annotate each use of GRH; compare with research/bach-transfer/NOTE.md."
           ],
-          "acceptance_gate": "A written proof of the check's soundness, or a counterexample claim it wrongly accepts; new tests in tests/.",
-          "first_step": {
-            "command": [
-              "python3",
-              "-m",
-              "unittest",
-              "discover",
-              "-s",
-              "tests"
-            ],
-            "expected": "OK",
-            "scope": "Positive control: the verifier's self-tests, including the required rejections, pass."
-          },
-          "bottleneck_link": "Donors and reviewers will rely on the checker; a false accept would corrupt the frontier.",
-          "overlap_terms": [
-            "verifier",
-            "check_explicit"
-          ]
-        },
-        {
-          "id": "negative-template-constants",
-          "question": "Can check_explicit be extended, with a written soundness proof, to accept negative beta, delta and D (needed to use LLS Lemma 2.4, card lls-lemma-2-4)?",
-          "starting_points": [
-            "verify/check.py check_explicit",
-            "docs/template-T1.md",
-            "research/zero-pairing/PROOF.md, 'What's next'"
-          ],
-          "methods": [
-            "State the extended monotonicity-plus-endpoint argument when gamma L + delta may change sign and D < 0; implement it; add accept and reject fixtures at the boundary."
-          ],
-          "acceptance_gate": "A PR with the extension, its soundness proof in docs/, and new tests; every existing fixture keeps its verdict.",
-          "first_step": {
-            "command": [
-              "python3",
-              "-m",
-              "unittest",
-              "discover",
-              "-s",
-              "tests"
-            ],
-            "expected": "OK",
-            "scope": "Positive control: the verifier's self-tests pass."
-          },
-          "bottleneck_link": "Unblocks lls-lemma-2-4, the largest known tightening (about 0.4 in log10 W(2^1024)).",
-          "overlap_terms": [
-            "check_explicit",
-            "negative constants",
-            "Lemma 2.4"
-          ]
-        }
-      ]
-    },
-    {
-      "id": "tighten-c",
-      "weight": 40,
-      "useful_outcome": "Smaller C (then D, n0) for a fixed theta, as measured by log10 W(2^1024).",
-      "tasks": [
-        {
-          "id": "lls-lemma-2-4",
-          "question": "Using LLS Lemma 2.4 re-bounded under H(theta), so that sum Lambda(m)/m (1 - m/X) >= log X - O(1) instead of >= 0, how much lower can log10 W(2^1024) go than the zero-pairing T1 (PR #8)? This subtracts about log X from the bound on |Re B|, giving negative template constants (and D < 0).",
-          "starting_points": [
-            "research/zero-pairing/PROOF.md, 'What's next' (PR #8)",
-            "LLS arXiv:1309.3595 Lemma 2.4 and Section 3.2",
-            "verify/check.py check_explicit (currently requires alpha, beta, gamma, delta >= 0)"
-          ],
-          "methods": [
-            "Re-bound Lemma 2.4's zeta zero sum with Lemma 0' part 2; redo steps (c)-(f) of the zero-pairing proof; extend check_explicit to allow negative beta, delta and D with a written soundness argument and new tests; recheck."
-          ],
-          "acceptance_gate": "An explicit-witness-bound claim with smaller log10 W(2^1024) than the first T1, and its proof.",
+          "acceptance_gate": "An annotated outline with page and equation references, posted as a done message.",
           "first_step": {
             "command": [
               "python3",
@@ -221,76 +425,26 @@
             "inspect": "Every line starts with PASS.",
             "scope": "Positive control on main: the verifier and recorded claims reproduce."
           },
-          "bottleneck_link": "The largest known remaining tightening: roughly 0.4 in log10 W(2^1024). It needs a small, separately reviewable verifier extension.",
+          "bottleneck_link": "An independent route to the same transfer strengthens the case for the first explicit C.",
+          "existing_checks": [
+            {
+              "scope": "bach-transfer: LLS (refining Bach) uses GRH only via three zero-sum bounds; each has an H(theta) analogue with K = 1/(1-theta)",
+              "evidence": "https://github.com/discoveryathome/miller-rabin/pull/6",
+              "status": "merged (PR #6); independently checked (same-model, fresh context): confirmed",
+              "source_commit": "1536f03"
+            }
+          ],
           "overlap_terms": [
-            "Lemma 2.4",
-            "tightening"
-          ]
-        },
-        {
-          "id": "optimize-weight",
-          "question": "Given an accepted T1 proof, how small can C be made by choosing the weight function, splitting the zero sum by height, and using a larger n0 (up to psi_13)?",
-          "starting_points": [
-            "docs/template-T1.md",
-            "Bach 1990, section on the choice of weight"
-          ],
-          "methods": [
-            "Parametrize the weight; optimize the resulting constants; re-derive T1 with the new constants."
-          ],
-          "acceptance_gate": "An explicit-witness-bound claim with a smaller log10 W(2^1024) than the frontier, and its proof.",
-          "first_step": {
-            "command": [
-              "python3",
-              "verify/check.py",
-              "explicit",
-              "tests/fixtures/synthetic-explicit-pass.json"
-            ],
-            "expected": "PASS   tests/fixtures/synthetic-explicit-pass.json",
-            "inspect": "Shows the claim format that a real T1 proof must fill in. The constants in this fixture are made up.",
-            "scope": "Positive control: the explicit-bound check runs."
-          },
-          "bottleneck_link": "C enters to the eighth power; halving it cuts the base count by about 256 times. A draft T1 now exists (PR #6) to start from.",
-          "overlap_terms": [
-            "weight function",
-            "constant C"
-          ]
-        },
-        {
-          "id": "zero-sum-inputs",
-          "question": "What are the best explicit bounds, valid for every conductor q <= n, on sum over nontrivial zeros rho of L(s, chi) of |w-hat(rho)| for a fixed smooth weight w, in the form a ln q + b?",
-          "starting_points": [
-            "Trudgian, An improved upper bound for the error in the zero-counting formulae for Dirichlet L-functions and Dedekind zeta-functions, Math. Comp. 84 (2015)",
-            "Bennett, Martin, O'Bryant, Rechnitzer, Explicit bounds for primes in arithmetic progressions, Illinois J. Math. 62 (2018)",
-            "McCurley, Explicit estimates for the error term in the prime number theorem for arithmetic progressions, Math. Comp. 42 (1984)"
-          ],
-          "methods": [
-            "Literature extraction: state each explicit zero-counting theorem exactly, with hypotheses and constants, and derive the a ln q + b bound by partial summation for one or two standard weights."
-          ],
-          "acceptance_gate": "A note under research/<package>/ quoting each theorem exactly with its source, and the derived (a, b) with the derivation; one independent recheck.",
-          "first_step": {
-            "command": [
-              "python3",
-              "-m",
-              "unittest",
-              "discover",
-              "-s",
-              "tests"
-            ],
-            "expected": "OK",
-            "scope": "Positive control: the verifier's self-tests, including the required rejections, pass."
-          },
-          "bottleneck_link": "These constants feed alpha and beta in T1, which dominate C.",
-          "overlap_terms": [
-            "zero counting",
-            "N(T, chi)",
-            "Trudgian"
+            "Bach 1990",
+            "GRH",
+            "transfer"
           ]
         }
       ]
     },
     {
       "id": "beyond-theta",
-      "weight": 8,
+      "weight": 3,
       "useful_outcome": "SPECULATIVE. Evidence on whether anything other than theta can lower the exponent below 2 + 1/(1-theta); beating AKS's 6 this way needs theta < 3/4.",
       "tasks": [
         {
