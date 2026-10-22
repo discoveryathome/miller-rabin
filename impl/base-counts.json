@@ -1,0 +1,32 @@
+{
+  "source": "https://doi.org/10.1215/ijm/1255631807",
+  "source_location": "p. 69, Corollary 1, equations (3.5)-(3.6)",
+  "meaning": "Full prime-base budget at the largest integer of each bit size, before any early witness",
+  "large_counts": "rigorous bounds, not exact enumeration",
+  "rows": [
+    {
+      "bits": 64,
+      "input": "2^bits - 1",
+      "prime_base_limit": 41,
+      "base_count_lower": 13,
+      "base_count_upper": 13,
+      "exact_count": true
+    },
+    {
+      "bits": 128,
+      "input": "2^bits - 1",
+      "prime_base_limit": 23546633375396,
+      "base_count_lower": 764749280272,
+      "base_count_upper": 959806231697,
+      "exact_count": false
+    },
+    {
+      "bits": 1024,
+      "input": "2^bits - 1",
+      "prime_base_limit": 395046954211813343884,
+      "base_count_lower": 8329836307735353089,
+      "base_count_upper": 10454444356386332247,
+      "exact_count": false
+    }
+  ]
+}
