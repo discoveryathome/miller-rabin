@@ -350,7 +350,7 @@ an L-value or zero are used for these estimates.
 
 Replay: `python3 research/least-prime-progression/constants.py` from the repository
 root. It checks the rational envelopes, elementary constants, and precisely the
-finite fallback; its five failure controls must print `REJECT control`.
+finite fallback; its six failure controls must print `REJECT control`.
 The existing `verify/check.py` verifies its recorded Miller--Rabin claims, not
 this coset theorem. This proof has no new T1 claim or accepted-frontier change.
 

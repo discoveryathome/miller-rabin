@@ -16,7 +16,7 @@ conditional on H(7/8), which this package does not prove or replay in Lean.
 
 - [PROOF.md](PROOF.md): theorem, complete transfer, constants, and limitations.
 - [constants.py](constants.py): exact rational recomputation and exhaustive
-  fallback, with five deliberate rejection controls. Python standard library only.
+  fallback, with six deliberate rejection controls. Python standard library only.
 - [SOURCE-AUDIT.md](SOURCE-AUDIT.md): primary-source audit preceding the proof;
   this is not the fresh-context recheck of the finished theorem.
 - [RECHECK.md](RECHECK.md): separate fresh-context same-model AI recheck of the
@@ -37,7 +37,7 @@ python3 -m unittest discover -s tests
 Expected new-check result: `all constants and finite checks pass`, including
 1274560 reduced classes modulo 3 through 2047. The original coset error bound
 is `5385194673/5600000000 < 1`; the refined progression error bound is
-`114068220107243/115735200000000 < 1`. All five rejection controls must reject.
+`114068220107243/115735200000000 < 1`. All six rejection controls must reject.
 The shared verifier continues to check only its existing Miller--Rabin claims.
 The exact counterexample P(1,3)=7 rules out coefficient 0.58 in the same all-q
 form, so this refinement is close to a genuine small-modulus obstruction.

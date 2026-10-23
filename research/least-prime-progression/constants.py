@@ -68,7 +68,7 @@ def elementary_constants():
 
 def analytic_certificate(y_min=80, c2=F(189, 125)):
     """Certify the stated uniform envelope, rather than sample real inputs."""
-    require(7 * c2 ** 2 >= 16, "c2 must dominate 4/sqrt(7)")
+    require(c2 > 0 and 7 * c2 ** 2 >= 16, "c2 must dominate 4/sqrt(7)")
     b_zeta = elementary_constants()
     u = 2 ** 16
     complex_denominator = 1 - F(1, u) - c2 * (F(1, 4) + F(1, 256))
@@ -182,6 +182,7 @@ def failure_controls():
     require(largest_least_prime(3, trial_primes, 2) == (7, 1), "q=3 positive control")
     for label, check in [
         ("insufficient pairing constant", lambda: analytic_certificate(c2=F(3, 2))),
+        ("negative pairing constant", lambda: analytic_certificate(c2=-F(189, 125))),
         ("too small analytic cutoff", lambda: analytic_certificate(y_min=64)),
         ("missing reduced class", lambda: largest_least_prime(3, [2, 3, 5], 2)),
         ("false progression coefficient", lambda: finite_certificate(trial_primes, [3], F(1, 2))),
