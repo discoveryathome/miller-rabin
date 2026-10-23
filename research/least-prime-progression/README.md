@@ -25,8 +25,8 @@ bound with coefficient .58. For b=8748867/10000000, this gives exponent
 10000000/1251133, and the conservative decimal .581 still works.
 This extension passed its own fresh-context recheck in RECHECK-SHARP.md.
 
-Section 9 adds an author-checked improvement P(aH,q)<max(64,h logq)^r,
-throughout the same parameter interval, awaiting its own fresh-context review.
+Section 9 adds the separately AI-rechecked improvement
+P(aH,q)<max(64,h logq)^r throughout the same parameter interval.
 It keeps the negative constant in the principal T sum, the h-1 saving and
 a sharper proper-power bound. The q<=20 step uses the sharp progression
 theorem in this package; the q>=21 estimate is uniform and analytic.
@@ -44,6 +44,9 @@ theorem in this package; the q>=21 estimate is uniform and analytic.
 - [RECHECK-SHARP.md](RECHECK-SHARP.md): separate fresh-context same-model AI
   recheck of the full parameter interval, exact sharp coefficient and all
   1274558 new fallback classes, using a distinct progression search.
+- [RECHECK-CUTOFF.md](RECHECK-CUTOFF.md): separate fresh-context same-model AI
+  review of cutoff 64, the new zeta saving, aggregate and proper-power bounds,
+  and an independent 126-class check for q=3..20.
 
 From the repository root:
 
@@ -92,10 +95,15 @@ edits record review status and links only. The parameter and sharp-coefficient
 extension is a new result, checked in its own RECHECK-SHARP.md report rather
 than inferred from those historical reviews. All reports pin their snapshots;
 subsequent edits record review status and links only.
+The cutoff review's three exact inputs are preserved in commit
+`0dabf63ca292550e4705e8cc3f847b3a28bd6a7a`. Its optional snapshot/head
+comparisons describe the prepublication workspace; its independent arithmetic
+and helper replays apply to the unchanged certificate code. Later changes
+record status, links and the next question.
 
 ## Open next questions
 
-- Improve the coset cutoff 80 using PROOF.md (13), preserving the full domain.
+- Improve the coset cutoff 64 using PROOF.md Section 9, preserving the full domain.
 - Replace the elementary proper-prime-power envelope by a sharper proved one
   under H(7/8); keep the separate principal and complex-character errors.
 - Maintainer review of the conditional theorem and the evidence in RECHECK.md.

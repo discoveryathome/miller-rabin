@@ -10,8 +10,10 @@ AI recheck; see [RECHECK-REFINEMENT.md](RECHECK-REFINEMENT.md). Both reports pin
 their reviewed snapshots. The parameter transfer and sharp coefficient in
 Section 8 passed their own fresh-context same-model AI recheck; see
 [RECHECK-SHARP.md](RECHECK-SHARP.md).
-The cutoff-64 improvement in Section 9 is new author-checked work awaiting
-its own fresh-context recheck.
+The cutoff-64 improvement in Section 9 passed its own fresh-context same-model
+AI recheck; see [RECHECK-CUTOFF.md](RECHECK-CUTOFF.md). Its exact reviewed
+inputs are preserved in commit 0dabf63ca292550e4705e8cc3f847b3a28bd6a7a;
+subsequent edits record status, links and the updated next question only.
 Maintainer review is pending.
 
 This builds on Bach's conditional least-prime method, Lamzouri--Li--Soundararajan
@@ -375,7 +377,7 @@ any finite search over all large q or all subgroups. An independent source
 audit preceded this proof; the separate completed theorem recheck is recorded in
 [RECHECK.md](RECHECK.md), with its exact scope and classical-input limitations.
 
-Open next question: improve the coset cutoff 80 without weakening its all-q
+Open next question: improve the coset cutoff 64 without weakening its all-q
 domain. Keep (13), the full complex-character estimate, and proper-prime-power
 subtraction; positivity of the smoothed coset count alone is insufficient.
 Section 8 resolves the sharp-coefficient question while retaining a non-strict
@@ -596,6 +598,7 @@ strictly below its cutoff. This completes the exact all-q statement.
 The three additional controls reject cutoff63 with these fixed envelopes,
 removal of the zeta constant saving, and an unjustified saving2 in (24).
 They test this certificate and do not prove cutoff63 impossible. All ten
-controls and old positive certificates are retained. This improvement is
-author-checked and awaiting a fresh-context independent recheck; earlier
+controls and old positive certificates are retained. This improvement passed
+its own fresh-context independent AI recheck in RECHECK-CUTOFF.md; earlier
 reviews do not certify its changed aggregate and prime-power bounds.
+Maintainer acceptance remains separate.
