@@ -15,12 +15,12 @@ For a negative fundamental discriminant -q in the same range,
 
     pi sqrt(q)/(6 M(q)) <= h(-q) <= M(q) sqrt(q)/pi.
 
-Section 11 gives a new author-checked parameter theorem: for any real
+Section 11 gives an independently AI-rechecked parameter theorem: for any real
 13/15<=beta<=7/8, assume H(beta), including zeta, and let r=1/(1-beta).
 For primitive conductor logq>=20, the same two-sided bounds hold with
 M_beta(q)=exp(gamma)(r loglogq+2). The class-number and explicitly factored
 imprimitive statements have that same primitive-conductor threshold.
-This extension is awaiting its own fresh-context recheck. The earlier
+This extension passed its own fresh-context recheck. The earlier
 H(7/8) threshold 15 result remains available.
 
 The threshold is on the **primitive conductor**, not an arbitrary large
@@ -35,6 +35,9 @@ optimal constants and the truth of H(7/8) are outside the theorem.
   confirming the log q>=32 certificate with independently derived arithmetic.
 - [RECHECK-REFINEMENT.md](RECHECK-REFINEMENT.md): separate fresh-context
   same-model AI review confirming the extension to log q>=15.
+- [RECHECK-PARAMETER.md](RECHECK-PARAMETER.md): separate fresh-context
+  same-model AI review of the leading-r theorem over the entire real parameter
+  interval and logq>=20, with independent arithmetic and all nine controls.
 
 From the repository root (Python standard library only):
 
@@ -67,7 +70,9 @@ the log q>=15 extension passed separate independent AI rechecks. Maintainer
 review is pending. The first recheck independently
 reconstructed the integrated kernels, zeta pole limit, Euler minimum and
 uniform simple budget.
-The parameter theorem is new work, not covered by those earlier reviews.
+The parameter theorem has its own review, rather than relying on those
+earlier reports. Its three exact reviewed inputs are preserved in commit
+`72bf45bb542071bf0d2561535fb4a4f153718aea`; later edits record status and links.
 The second recheck reconstructs the sharper zeta estimate, scaled truncation,
 uniform error budget and endpoint exponential bridge. Source research is not
 counted as independent theorem verification. Each report pins its reviewed

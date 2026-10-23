@@ -8,8 +8,10 @@ and packaged its exact arithmetic. A separate fresh-context same-model AI
 recheck confirmed the log q>=32 certificate; see [RECHECK.md](RECHECK.md).
 The extension to log q>=15 in Section 10 passed its own fresh-context
 same-model AI recheck; see [RECHECK-REFINEMENT.md](RECHECK-REFINEMENT.md).
-The leading-r parameter theorem in Section 11 is new author-checked work
-awaiting its own fresh-context recheck.
+The leading-r parameter theorem in Section 11 passed its own fresh-context
+same-model AI recheck; see [RECHECK-PARAMETER.md](RECHECK-PARAMETER.md).
+Its exact reviewed inputs are preserved in commit
+72bf45bb542071bf0d2561535fb4a4f153718aea; later edits record status and links.
 Source research, author checks and that independent recheck are separate
 evidence items. This is not an accepted result or a proof of H(7/8).
 Maintainer review remains pending. Text: CC BY 4.0; code: Apache-2.0.
@@ -773,6 +775,7 @@ The checker retains the threshold 32 and threshold 15 certificates and their
 six controls. Three additional controls reject beta=9/10, the fixed
 endpoint enclosure at threshold 19, and additive 1 with this budget. These
 are failures of the stated certificate, not impossibility theorems for
-different truncations. The parameter theorem is author-checked and awaits
-its own fresh-context recheck. No earlier report certifies this new leading
-factor, range or uniform parameter transfer.
+different truncations. The parameter theorem passed its own fresh-context
+recheck in RECHECK-PARAMETER.md. No earlier report certifies this new leading
+factor, range or uniform parameter transfer. Maintainer acceptance remains
+separate.
