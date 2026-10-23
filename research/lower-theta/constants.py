@@ -125,6 +125,53 @@ def coefficient_certificate(beta=THETA, c2=F(189, 125), half_power=3,
     return need
 
 
+def refined_certificate(beta=THETA, alpha=F(13169, 25000), power_factor=28):
+    """Sharper endpoint envelopes for the two claimed half-planes."""
+    beta, alpha, power_factor = F(beta), F(alpha), F(power_factor)
+    require(THETA <= beta <= F(7, 8), "refined half-plane interval")
+    k, y, c2 = 1/(1-beta), F(14883, 500), F(189, 125)
+    require(k/2-3 > F(99, 100) and k-7 > F(99, 100) and k <= 8,
+            "refined directed exponent range")
+    require(power_factor > 0 and y**99 > power_factor**100,
+            "refined integer power factor")
+    require(log_bounds(y)[1] < F(17, 5) and 6*log_bounds(y)[0] > 1,
+            "refined uniform logarithm cap")
+    require(c2 > 0 and 7*c2*c2 >= 16 and y**7 > 256,
+            "refined pairing range")
+    d_min = 1-c2*(1/y+1/(power_factor*y**3))
+    require(d_min > 0, "refined positive denominator")
+    b1 = 1/(2*d_min)
+    s, a = 1/(power_factor*y**5), 8*F(17, 5)/(power_factor*y**6)
+    need = {
+        "alpha": b1*(1+7*s+a)+a/2,
+        "beta": F(231, 10000)*(1+7*s)+F(18379, 10000)*a,
+        "gamma": 8*b1,
+    }
+    require(alpha >= need["alpha"], "refined insufficient alpha")
+    require(F(29, 1250) >= need["beta"] and F(843, 200) >= need["gamma"],
+            "refined beta and gamma coefficients")
+    if power_factor == 28:
+        require(d_min == F(115895402389, 122097755681), "refined Dmin arithmetic")
+        require(need["alpha"] == F(238168329447264162697001708275930457,
+                                  452139580341872249446204481994840666),
+                "refined alpha arithmetic")
+        require(need["beta"] == F(17573285443376355449035050473,
+                                 760748194917465671495023830000),
+                "refined beta arithmetic")
+        require(need["gamma"] == F(488391022724, 115895402389),
+                "refined gamma arithmetic")
+    return need
+
+
+def baseline_claim(beta):
+    return {
+        "kind": "explicit-witness-bound", "theta": str(beta),
+        "C": "66/125", "D": "0", "n0": check.mr.PSI_13,
+        "template": {"w1": "1", "alpha": "10551/20000", "beta": "29/1250",
+                     "gamma": "4221/1000", "delta": "0", "y_min": "29"},
+    }
+
+
 def reject(label, callback, reason):
     try:
         callback()
@@ -138,22 +185,24 @@ def reject(label, callback, reason):
 def main():
     elementary_certificate()
     for name, beta in CLAIMS:
-        need = coefficient_certificate(beta)
+        coefficient_certificate(beta)
+        check.check_explicit(baseline_claim(beta))
+        need = refined_certificate(beta)
         claim = json.loads((ROOT / "candidates" / name).read_text())
-        require(F(claim["theta"]) == beta and F(claim["C"]) == F(66, 125)
+        require(F(claim["theta"]) == beta and F(claim["C"]) == F(659, 1250)
                 and F(claim["D"]) == 0 and claim["n0"] == check.mr.PSI_13,
                 "claim domain and substitution")
         template = claim["template"]
         require(F(template["w1"]) == 1 and F(template["delta"]) == 0 and
-                F(template["y_min"]) == 29, "claim template range")
+                F(template["y_min"]) == F(14883, 500), "claim template range")
         for key, value in need.items():
             require(F(template[key]) >= value, f"claim {key} coefficient")
         result = check.check_explicit(claim)
         l0 = log_bounds(check.mr.PSI_13)[0]
-        y0 = F(66, 125)*l0
-        g0 = F(9, 20000)*l0-F(29, 1250)-F(4221, 1000)*l0/y0**6
-        require(y0 > F(29811, 1000) > 29 and g0 > F(2207, 10**6),
-                "uniform endpoint lower bounds")
+        y0 = F(659, 1250)*l0
+        g0 = F(11, 25000)*l0-F(29, 1250)-F(843, 200)*l0/y0**6
+        require(y0 > F(14883, 500) and g0 > F(41, 25000),
+                "refined uniform endpoint lower bounds")
         print(f"PASS {name}: theta={beta}, witness exponent={1/(1-beta)}")
         print("  shared-verifier display:", result["g_at_n0_lower_bound"])
     print("needed coefficients:", {key: str(value) for key, value in need.items()})
@@ -163,7 +212,8 @@ def main():
     check.check_exponent({"theta": str(THETA), "claimed_exponent": str(exponent)})
     print("exact bit exponent:", exponent, "; gap below10:", 10-exponent)
 
-    source = json.loads((ROOT / "candidates" / CLAIMS[0][0]).read_text())
+    # Historical controls target the retained C=.528 certificate specifically.
+    source = baseline_claim(THETA)
     bad = copy.deepcopy(source)
     bad["C"] = "5279/10000"
     reject("C=.5279 endpoint", lambda: check.check_explicit(bad), "inequality not established")
@@ -191,7 +241,15 @@ def main():
     require(k*(1+(8-k)*log_bounds(29)[0]) > 8,
             "old logarithmic cap must underestimate the true value")
     print("old logarithmic cap disproved by a rational exponential lower bound")
-    print("all constants, both claims and ten rejection controls pass")
+    bad = json.loads((ROOT / "candidates" / CLAIMS[0][0]).read_text())
+    bad["C"] = "5271/10000"
+    reject("refined C=.5271 cutoff", lambda: check.check_explicit(bad), "below y_min")
+    reject("refined alpha=.52675", lambda: refined_certificate(alpha=F(2107, 4000)),
+           "refined insufficient alpha")
+    reject("refined power factor29", lambda: refined_certificate(power_factor=29),
+           "refined integer power factor")
+    print("C=.528 baseline retained at both half-planes")
+    print("all constants, both claims and thirteen rejection controls pass")
 
 
 if __name__ == "__main__":

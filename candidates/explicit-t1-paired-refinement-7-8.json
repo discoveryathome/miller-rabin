@@ -1,19 +1,19 @@
 {
   "kind": "explicit-witness-bound",
   "theta": "7/8",
-  "C": "66/125",
+  "C": "659/1250",
   "D": "0",
   "n0": 3317044064679887385961981,
   "template": {
     "w1": "1",
-    "alpha": "10551/20000",
+    "alpha": "13169/25000",
     "beta": "29/1250",
-    "gamma": "4221/1000",
+    "gamma": "843/200",
     "delta": "0",
-    "y_min": "29"
+    "y_min": "14883/500"
   },
   "proof": "research/lower-theta/PROOF.md",
-  "source": "Conditional AI draft: same directed coefficient certificate at H(7/8), with C=0.528, confirmed by a separate fresh-context same-model AI review; maintainer review pending.",
+  "source": "Conditional AI draft: sharper rational endpoint certificate at H(7/8), C=0.5272; fresh-context refinement review pending. The earlier C=0.528 certificate was separately AI-rechecked.",
   "assumptions": [
     "A1: H(7/8), assumed directly",
     "A2: H(7/8) covers all Dirichlet characters needed, including zeta",

@@ -1,11 +1,12 @@
 Original idea: **Geoffrey Irving**.
 
-# Explicit witnesses at the smaller theta, with C=0.528
+# Explicit witnesses at the smaller theta, with C=0.5272
 
 **Status: author-checked and independently AI-rechecked conditional draft,
 2026-10-23.** See [RECHECK.md](RECHECK.md) for the fresh-context same-model
-review, exact snapshot hashes and limits. Later edits record status and links
-only. An AI source-research context proposed the transfer; the parent
+review of the C=.528 certificate, exact snapshot hashes and limits.
+Section 6's C=.5272 refinement is author-checked and awaiting its own
+fresh-context recheck. An AI source-research context proposed the transfer; the parent
 checked and packaged the derivation and exact arithmetic. Source research is
 not independent theorem verification. This is not an accepted result or a
 verification of either half-plane hypothesis. Text: CC BY 4.0; code: Apache-2.0.
@@ -29,13 +30,13 @@ Poles are not zeros. Put
     PSI_13=3317044064679887385961981.
 
 > Assuming H(theta), every odd composite n>=PSI_13 has a prime Miller--Rabin
-> witness p <= ((66/125) log n)^K.
+> witness p <= ((659/1250) log n)^K.
 
 The same proof also gives the backportable statement under H(7/8), with
-exponent 8 and the **same coefficient 66/125=0.528**. These are separate
+exponent 8 and the **same coefficient 659/1250=0.5272**. These are separate
 conditional assertions. For either hypothesis, every smaller odd composite
 has a witness among primes <=41 by the Sorenson--Webster theorem. Thus a bound
-for every odd composite is max(41,((66/125)log n)^K), taking the relevant K.
+for every odd composite is max(41,((659/1250)log n)^K), taking the relevant K.
 All logarithms here are natural.
 
 In the repository's declared per-base bit-cost model, the smaller-theta test
@@ -239,8 +240,9 @@ w1=1, delta=0, y_min=29. It retains the exact K in the final witness exponent.
 
 ## 5. Substitution for all n>=PSI_13
 
-The two new candidate JSON files give C=66/125,D=0 and the coefficients in
-(T1). The unchanged verifier reduces the inequality to
+The baseline certificate takes C=66/125,D=0 and the coefficients in (T1).
+It is retained in the checker as an in-memory positive control for both
+half-planes. The unchanged verifier reduces its inequality to
 
     g(L)=(9/20000)L-29/1250-(4221/1000)L/(C L)^(K-1)>0.
 
@@ -268,14 +270,18 @@ python3 verify/check.py all
 python3 -m unittest discover -s tests
 ```
 
-The new checker certifies (3)--(6), both claim files and the exact bit
-exponent. Its rejection controls exercise the endpoint C=.5279, the negative
+The new checker certifies (3)--(6), Section 6's refinement, both current claim
+files and the exact bit exponent. Its ten historical rejection controls
+target the retained baseline: the endpoint C=.5279, the negative
 slope C=.5275, y_min=30, a rounded-down bit exponent, insufficient alpha,
 insufficient or negative pairing coefficients, and the unsafe copied integer
 powers 4,6,7 in (5). For theta<7/8 these old powers underestimate the actual
 terms. The old logarithmic cap is also disproved by
 K[1+(8-K)log29_lo]>8 and exp(u)>=1+u. These are algebraic controls, not
-counterexamples involving actual L-function zeros. Display-only floating
+counterexamples involving actual L-function zeros. In particular, rejecting
+a coefficient with the old template does not refute the refined template.
+Three additional controls exercise the new cutoff, alpha and integer-power
+factor described in Section 6. Display-only floating
 metrics from the shared verifier never decide a certificate comparison.
 
 Task: `explicit-lower-theta`, catalog revision 5, original seed
@@ -292,3 +298,63 @@ zero calculations, the exhaustive pseudoprime search, optimal constants, or
 the repository's bit-cost model from first principles. Maintainer acceptance
 remains pending. The exact arithmetic is evidence for the written derivation,
 not a replacement for its analytic assumptions or independent review.
+
+## 6. A sharper rational endpoint certificate
+
+For either b=theta or b=7/8, write r=1/(1-b) and put
+
+    Y=14883/500=29.766,   Q=28.
+
+The stronger hypothesis range used here has
+r/2-3>99/100 and r-7>99/100. The exact integer comparison
+Y^99>28^100 proves Y^(99/100)>28. Consequently, for every y>=Y,
+
+    X^(-1/2)=y^(-r/2) <=1/(28y^3),
+    X^(1-2b)=y^(2-r) <=1/(28y^5),
+    log X/X^b=r log y/y^(r-1) <=8 log y/(28y^6).                  (7)
+
+The factor 28 is uniform for all larger y; it is not a numerical fractional
+power evaluated only at the endpoint. A rational logarithm enclosure gives
+log Y<17/5, and log y/y^6 decreases throughout this range. Thus the Section 4
+derivation applies with
+
+    Dmin=1-(189/125)[1/Y+1/(28Y^3)]
+        =115895402389/122097755681>0,
+    b1=1/(2Dmin),   s=1/(28Y^5),   a=8(17/5)/(28Y^6)=34/(35Y^6).
+
+The exact required coefficients now are
+
+    alpha_need=238168329447264162697001708275930457
+                /452139580341872249446204481994840666 <13169/25000,
+    beta_need=17573285443376355449035050473
+                /760748194917465671495023830000 <29/1250,
+    gamma_need=488391022724/115895402389 <843/200.
+
+All gamma signs and the nonpositive static delta charge in Section 3 remain
+in range. In particular, no new analytic residue identity is assumed.
+The resulting refined T1 is
+
+    X-X^b[(13169/25000)log n+29/1250]-(843/200)log n>0,            (T1r)
+
+for y=X^(1-b)>=Y, implying a prime Miller--Rabin witness <=X.
+The two current candidate JSON files record precisely this template and
+C=659/1250,D=0. The older T1 remains a separately checked positive control.
+
+At the lower logarithm enclosure l0 for PSI_13, exact rational arithmetic
+gives y0=(659/1250)l0>Y and
+
+    (11/25000)l0-29/1250-[(843/200)l0]/y0^6 >41/25000>0.          (8)
+
+Since r-1>=6 and y0>1, the integer power6 enlarges the true subtracted tail.
+The positive slope is 11/25000; the tail is proportional to L^(2-r) and
+decreases for L>0. Thus (8) proves the entire n>=PSI_13 domain at both
+half-planes, and the unchanged small-n fallback completes the theorem.
+The exact witness and bit exponents are unchanged.
+
+The three new rejection controls have specific meanings: C=.5271 falls
+below the fixed cutoff Y at PSI_13; alpha=.52675 is below its required
+coefficient; and the proposed power factor29 fails Y^99>29^100. These
+reject this certificate, not every possible proof with altered constants.
+Together with the ten retained baseline controls, all thirteen must reject.
+This refinement is author-checked; its separate fresh-context recheck is
+pending. The earlier report does not certify the changed coefficients.
