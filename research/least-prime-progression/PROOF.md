@@ -1,13 +1,16 @@
 **Original idea: Geoffrey Irving.**
 
-# Least primes in cosets and progressions under H(7/8)
+# Least primes in cosets and progressions under half-plane hypotheses
 
 AI-authored conditional research draft (Codex), 2026-10-23. Text: CC BY 4.0;
 code: Apache-2.0. The coset theorem and original coefficient-1 corollary passed
 a separate fresh-context same-model AI recheck; see [RECHECK.md](RECHECK.md).
 The coefficient-0.581 refinement also passed a separate fresh-context same-model
 AI recheck; see [RECHECK-REFINEMENT.md](RECHECK-REFINEMENT.md). Both reports pin
-their reviewed snapshots. Maintainer review is pending.
+their reviewed snapshots. The parameter transfer and sharp coefficient in
+Section 8 passed their own fresh-context same-model AI recheck; see
+[RECHECK-SHARP.md](RECHECK-SHARP.md).
+Maintainer review is pending.
 
 This builds on Bach's conditional least-prime method, Lamzouri--Li--Soundararajan
 (LLS), and the accepted AI-authored first-T1 and zero-pairing packages by Claude
@@ -31,10 +34,17 @@ For any a in G, let P(aH,q) be the least prime whose residue lies in aH.
 >
 > P(a,q) < (0.581 phi(q) log q)^8.
 
+Section 8 strengthens this to the **sharp all-q coefficient**
+`c_b=7^(1-b)/(2 log3)` for every b in [13/15,7/8], under H(b), with exponent
+`r=1/(1-b)` and a non-strict inequality. Equality occurs exactly for
+q=3,a=1. It also preserves the coset cutoff 80 with exponent r. In particular,
+the two original strict inequalities remain true with exponent
+10000000/1251133 under the separate assumption H(8748867/10000000).
+
 There is no small-modulus computation in the coset theorem. The progression
 corollary uses an exact finite check for 3 <= q < 2048, described below.
 The assertion excludes q = 2. No assertion about the truth of H(7/8), an
-unconditional Linnik constant, optimal constants, or a Miller--Rabin improvement
+unconditional Linnik constant, optimal coset cutoff, or a Miller--Rabin improvement
 is made.
 
 ## Pinned inputs
@@ -350,18 +360,147 @@ an L-value or zero are used for these estimates.
 
 Replay: `python3 research/least-prime-progression/constants.py` from the repository
 root. It checks the rational envelopes, elementary constants, and precisely the
-finite fallback; its six failure controls must print `REJECT control`.
+finite fallback; its seven failure controls must print `REJECT control`.
 The existing `verify/check.py` verifies its recorded Miller--Rabin claims, not
 this coset theorem. This proof has no new T1 claim or accepted-frontier change.
 
 Not checked here: H(7/8) or its Lean proof; the classical contour shifts beyond
-the cited LLS residue identities; minimality or optimality of the constants;
+the cited LLS residue identities; optimality of the coset cutoff;
 any finite search over all large q or all subgroups. An independent source
 audit preceded this proof; the separate completed theorem recheck is recorded in
 [RECHECK.md](RECHECK.md), with its exact scope and classical-input limitations.
 
-Open next questions: narrow the gap between the impossible coefficient 0.58
-and sufficient coefficient 0.581, or improve the coset cutoff 80 without
-weakening its all-q domain. Keep (13), the full complex-character estimate,
-and proper-prime-power subtraction; positivity of the smoothed coset count
-alone is insufficient.
+Open next question: improve the coset cutoff 80 without weakening its all-q
+domain. Keep (13), the full complex-character estimate, and proper-prime-power
+subtraction; positivity of the smoothed coset count alone is insufficient.
+Section 8 resolves the sharp-coefficient question while retaining a non-strict
+inequality at its necessary equality case.
+
+## 8. Parameter transfer and the sharp progression coefficient
+
+Assume H(b) for 13/15<=b<=7/8, including zeta, and set
+
+    r=1/(1-b),    c_b=7^(1-b)/(2 log3).
+
+Then the following complete statements hold, with the same definitions and
+q>=3 as above:
+
+    P(aH,q) < max(80,h log q)^r,
+    P(a,q) <= [c_b phi(q) log q]^r.                                 (16)
+
+The second coefficient is sharp: equality holds exactly at q=3,a=1,
+where P(1,3)=7. Every q>=4 satisfies the strictly stronger subdomain bound
+
+    P(a,q) < [.58 phi(q) log q]^r.                                  (17)
+
+This is a conditional parameter theorem, not a certification of H(b).
+For b=8748867/10000000 it uses the half-plane from the frontier's A1b
+reference, [Xu--Sang, arXiv:2610.15291v2](https://arxiv.org/html/2610.15291v2),
+Theorem 1.1. That version covers all Dirichlet L-functions, including zeta,
+but is itself conditional on its stated analytic inputs and H(7/8).
+Its proof, imported analytic inputs and any Lean replay are not verified here.
+The theorem assumes H(b) directly, and uses no unmerged sibling theorem.
+
+First extend the accepted pairing argument, retaining its range condition.
+The functional-equation involution within one character is still
+rho ->1-conjugate(rho), and 1-b<=Re rho<=b. For an off-line pair with
+sigma>=1/2, put v=1/|rho|^2,w=1/|1-conjugate(rho)|^2. The main-sum ratio
+to its A weight is fractional-linear in w/v, whose endpoints give
+
+    X^sigma+X^(1-sigma),
+    ((1-sigma)/sigma)X^sigma+(sigma/(1-sigma))X^(1-sigma).
+
+Since sigma/(1-sigma)<=7, both are bounded by
+g(sigma)=X^sigma+7X^(1-sigma). Convexity reduces to sigma=1/2 or b.
+For z=X^(b-1/2), [g(b)-g(1/2)]/sqrt(X)=(z-1)(z-7)/z>=0 whenever
+z>=7. This holds for X>=256, because b-1/2>=11/30 and 256^11>7^30.
+Line zeros have ratio 2 sqrt(X), also covered. For the second kernel,
+AM--GM gives the paired ratio at most
+
+    [X^(sigma-1)+X^(-sigma)]/[2sqrt(sigma(1-sigma))]
+       <=(189/125)[X^(b-1)+X^(-1/2)],
+
+because b(1-b)>=7/64 and 7*189^2>16*125^2. The constant zero sum is
+bounded by rA<=8A. All terms and weights are nonnegative and convergent,
+so the same-character regrouping applies equally to complex chi and zeta.
+Thus Sections 1--5 and criterion (13) hold with
+
+    F_b(X)=X^b+7X^(1-b)+8,
+    c(X;b)=(189/125)[X^(b-1)+X^(-1/2)],
+    d(X;b)=1+1/X-c(X;b).                                           (18)
+
+The correction c(X;b) is distinct from the sharp coefficient c_b. The
+full-complex B estimate (5) remains valid: at the fixed u=2^16,
+b<=7/8 makes c(u;b) no larger than the old c(u), so its absorption
+denominator is still >3/5. The h-1 aggregation, all Euler corrections and
+the prime-power subtraction are unchanged. The gamma bounds are independent
+of b. No real-part estimate has replaced the full complex constant.
+
+Put y=X^(1-b), so X=y^r, with 7<r<=8. For y>=80,
+
+    F_b(X)/X <=1/y+7/y^6+8/y^7 <1001/(1000y),
+    d(X;b)>=1-(189/125)(1/y+1/y^3),
+    X>=y^7,   log X<=8 log y,
+    sqrt(X)>=y^(7/2)>8y^3.                                        (19)
+
+These bounds use weaker integer powers in the safe direction. In particular,
+copying the old y^-4 bound for X^-1/2 would be invalid when b<7/8.
+For y=max(80,hL), the denominator in (19) is >49/50. The residual R/X
+is at most the Section 6 numerator divided by y^7 instead of y^8, and is
+<1/10^6 at y=80,t<176/5. Its summands have the form (log y)^j/y^k,
+k>=5,j<=2, so they decrease throughout the range. Proper prime powers
+now cost at most 4(log y)^2/y^2. The four errors in (13) are bounded by
+
+    (231/10000)(1001/1000)/80
+      +(1001/1000)(47/50)/(49/50)+1/10^6+4(22/5)^2/80^2
+      =5446184217/5600000000 <1,                                 (20)
+
+with margin 153815783/5600000000. This proves the first part of (16).
+As before, a prime at X has zero logarithmic weight, so the criterion
+actually gives a prime strictly below X.
+
+For q>=2048 take C0=29/50=.58 and y=C0 phi(q)L. The cubic totient bound
+(14) still gives y>400. We have d(X;b)>249/250 and
+sqrt(X)>=y^(7/2)>=20y^3. The Section 7 residual numerator divided by
+y^7 is <1/10^9; all its summands again decrease for y>=400. Therefore
+the four errors in (13) have total at most
+
+    (231/10000)(1001/1000)/400
+      +(1001/1000)(1/(2C0)+3/25)/(249/250)
+      +1/10^9+8*6^2/(5C0*400^2)
+      =5705615549587/5776800000000 <1,                            (21)
+
+with margin 71184450413/5776800000000. This proves (17) for large q.
+For 4<=q<2048 the same exhaustive marking of least primes now checks
+
+    largest_a P(a,q) <[.58 phi(q) ln_bounds(q)[0]]^7.
+
+All 1274558 reduced classes pass, and every base exceeds 1. Since r>7,
+this implies (17) on the complete finite remainder. The largest least prime
+is still 169937 at q=1945,a=722. The old coefficient-.581 fallback is
+retained as a positive control, rather than counted as evidence for this
+new exponent check.
+
+Finally the existing exact upper-log comparison
+(.58*2log3)^8<7, together with .58*2log3>1 and r<=8, proves c_b>.58.
+Thus (17) is strictly smaller than the second bound in (16) for every q>=4.
+At q=3, the least primes in the two reduced classes are 2 and 7; the right
+side of (16) is exactly 7. This proves (16), its only equality case, and
+sharpness: any smaller coefficient fails at that same class.
+
+For b=theta or 7/8, the old decimal coefficient .581 exceeds c_b. To certify
+this without fractional powers, use r>=10000000/1251133>799/100 and a
+downward eight-decimal rational enclosure l3 for log3. The checker proves
+
+    (.581*2*l3)^799>7^100,   .581*2*l3>1.
+
+Consequently the original strict coefficient-.581 corollary is also true
+at the smaller-theta exponent. The exact expression c_b in (16), rather
+than a rounded decimal, is the sharp coefficient.
+
+The new checker runs seven rejection controls and exact endpoint budgets.
+This extension and its complete finite domain are author-checked and passed
+their own separate fresh-context AI review in RECHECK-SHARP.md. Neither the
+original two reviews nor the source audit is counted as verification of this
+new theorem. The report pins its snapshot; later edits record status and
+links only. Maintainer review remains pending.

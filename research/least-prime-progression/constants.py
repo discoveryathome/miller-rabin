@@ -15,6 +15,7 @@ from check import ln_bounds  # noqa: E402
 
 PROGRESSION_C = F(581, 1000)
 SMALL_Q_CUTOFF = 2048
+SMALLER_THETA = F(8748867, 10000000)
 
 
 def require(condition, message):
@@ -125,6 +126,59 @@ def progression_certificate(scale=PROGRESSION_C):
     return total
 
 
+def theta_certificate(beta=SMALLER_THETA, scale=F(29, 50)):
+    """Uniform cosets and q>=2048 progressions for 13/15<=beta<=7/8."""
+    beta, scale = F(beta), F(scale)
+    require(F(13, 15) <= beta <= F(7, 8), "unsupported pairing strip")
+    r, c2 = 1 / (1 - beta), F(189, 125)
+    require(7 < r <= 8 and beta / (1-beta) <= 7, "paired and static zero sums")
+    require(c2 > 0 and 7*c2*c2 >= 16 and beta-F(1, 2) >= F(11, 30)
+            and 256**11 > 7**30, "parameter pairing certificate")
+    # At the fixed u, beta<=7/8 makes c_beta(u) no larger than before.
+    u = 2**16
+    require(1-F(1, u)-c2*(F(1, 4)+F(1, 256)) > F(3, 5),
+            "uniform complex-B absorption")
+    bz, factor = elementary_constants(), F(1001, 1000)
+    y, log_hi = F(80), F(22, 5)
+    require(ln_bounds(80)[1] < log_hi and y > 8**2, "coset endpoint range")
+    require(1-c2*(1/y+1/y**3) > F(49, 50), "parameter coset denominator")
+    require(1+7/y**5+8/y**6 < factor, "parameter coset F envelope")
+    t = 8*log_hi
+    residual = (2*t+1+y*y*t*t/2+y*((3*y/4+26)*t+t*t/2+3))/y**7
+    require(residual < F(1, 10**6), "parameter coset residual")
+    coset = (bz*factor/y + factor*(F(1, 2)+t/y)/F(49, 50)
+             + 4*log_hi**2/y**2 + F(1, 10**6))
+    require(coset == F(5446184217, 5600000000) < 1,
+            "parameter coset total")
+
+    # The strict progression estimate needs only scale=.58 for q>=4.
+    require(F(29, 50) <= scale <= 1, "subdomain progression scale")
+    y, log_hi, t = F(400), F(6), F(48)
+    require(ln_bounds(400)[1] < log_hi and y >= 20**2,
+            "parameter progression endpoint range")
+    require(9*96**3 < 2*SMALL_Q_CUTOFF**2 and
+            11*ln_bounds(2)[0] > F(22, 3) and scale*96*F(22, 3) > y,
+            "parameter progression cutoff")
+    require(1-c2*(1/y+1/y**3) > F(249, 250),
+            "parameter progression denominator")
+    require(1+7/y**5+8/y**6 < factor, "parameter progression F envelope")
+    residual = (2*t+1+y*y*t*t/(2*scale**2)
+                +(y/scale)*((3*y/(4*scale)+26)*t+t*t/2+3))/y**7
+    require(residual < F(1, 10**9), "parameter progression residual")
+    progression = (bz*factor/y
+                   + factor*(1/(2*scale)+t/y)/F(249, 250)
+                   + F(8, 5)*log_hi**2/(scale*y*y) + F(1, 10**9))
+    require(progression < 1, "parameter progression total")
+    if scale == F(29, 50):
+        require(progression == F(5705615549587, 5776800000000),
+                "sharp progression subdomain arithmetic")
+    # This also proves c_sharp(beta)>.58: the base is >1 and r<=8.
+    require(F(29, 50)*2*ln_bounds(3)[0] > 1 and
+            (F(29, 50)*2*ln_bounds(3)[1])**8 < 7,
+            "sharp constant lower comparison")
+    return coset, progression
+
+
 def primes_up_to(limit):
     sieve = bytearray(b"\x01") * (limit + 1)
     sieve[:2] = b"\x00\x00"
@@ -158,14 +212,16 @@ def largest_least_prime(q, primes, phi):
     raise ValueError(f"prime list does not cover every reduced class modulo {q}")
 
 
-def finite_certificate(primes, moduli=range(3, SMALL_Q_CUTOFF), scale=PROGRESSION_C):
+def finite_certificate(primes, moduli=range(3, SMALL_Q_CUTOFF), scale=PROGRESSION_C,
+                       power=8):
+    require(power in (7, 8), "supported finite-certificate power")
     phis = totients_below(max(moduli) + 1)
     classes = 0
     largest = (0, 0, 0)
     for q in moduli:
         phi = phis[q]
         p, a = largest_least_prime(q, primes, phi)
-        bound_lo = (scale * phi * ln_bounds(q)[0]) ** 8
+        bound_lo = (scale * phi * ln_bounds(q)[0]) ** power
         require(p < bound_lo, f"progression bound fails at q={q}, a={a}, p={p}")
         largest = max(largest, (p, q, a))
         classes += phi
@@ -187,6 +243,7 @@ def failure_controls():
         ("missing reduced class", lambda: largest_least_prime(3, [2, 3, 5], 2)),
         ("false progression coefficient", lambda: finite_certificate(trial_primes, [3], F(1, 2))),
         ("coefficient 0.58 obstruction", lambda: finite_certificate(trial_primes, [3], F(29, 50))),
+        ("unsupported weaker zero-free line", lambda: theta_certificate(beta=F(9, 10))),
     ]:
         try:
             check()
@@ -199,7 +256,22 @@ def failure_controls():
 def main():
     denominator, total = analytic_certificate()
     refined = progression_certificate()
-    classes, (p, q, a) = finite_certificate(primes_up_to(2 ** 20))
+    primes = primes_up_to(2 ** 20)
+    classes, (p, q, a) = finite_certificate(primes)
+    theta_coset, sharp_subdomain = theta_certificate()
+    require(theta_certificate(beta=F(7, 8)) == (theta_coset, sharp_subdomain),
+            "H(7/8) endpoint uses the same directed envelopes")
+    sharp_classes, sharp_largest = finite_certificate(
+        primes, range(4, SMALL_Q_CUTOFF), F(29, 50), power=7)
+    require(sharp_classes == classes-2 and sharp_largest == (p, q, a),
+            "sharp finite-domain coverage")
+    log3_lo = ln_bounds(3)[0]
+    scaled = log3_lo*10**8
+    short_lo = F(scaled.numerator//scaled.denominator, 10**8)
+    require(1/(1-SMALLER_THETA) > F(799, 100) and
+            PROGRESSION_C*2*short_lo > 1 and
+            (PROGRESSION_C*2*short_lo)**799 > 7**100,
+            "coefficient .581 above both sharp constants")
     failure_controls()
     print(f"complex B denominator: {denominator} > 3/5")
     print(f"normalized total error bound: {total} < 1")
@@ -209,6 +281,11 @@ def main():
     print(f"refined positive margin: {1 - refined}")
     print(f"finite fallback: q=3..{SMALL_Q_CUTOFF-1}, {classes} reduced classes checked exactly")
     print(f"largest least prime in fallback: p={p}, q={q}, a={a}")
+    print(f"parameter coset normalized error: {theta_coset}; margin: {1-theta_coset}")
+    print(f"sharp subdomain normalized error: {sharp_subdomain}; margin: {1-sharp_subdomain}")
+    print(f"sharp fallback: q=4..{SMALL_Q_CUTOFF-1}, {sharp_classes} classes, power7")
+    print("sharp coefficient: 7^(1-beta)/(2 log3), equality only at q=3,a=1")
+    print("smaller theta:", SMALLER_THETA, "; exponent:", 1/(1-SMALLER_THETA))
     print("all constants and finite checks pass")
 
 
