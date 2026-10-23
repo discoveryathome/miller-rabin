@@ -94,14 +94,49 @@ def budget_certificate(l_min=32, c2=F(189, 125), additive=F(2)):
     return total, F(8, 3) - total
 
 
+def refined_certificate(l_min=15, additive=F(2)):
+    """Certify the new pinned truncation x=((31/50)*log q)^8."""
+    l, a, c2, bz = F(l_min), F(31, 50), F(189, 125), F(231, 10000)
+    require(l > 0, "positive refined conductor threshold")
+    y = a * l
+    require(y > 2 and y ** 8 > 256, "refined kernel range")
+    t_lo, t_hi = F(446, 25), F(17841, 1000)
+    y_lo = ln_bounds(y.numerator)[0] - ln_bounds(y.denominator)[1]
+    y_hi = ln_bounds(y.numerator)[1] - ln_bounds(y.denominator)[0]
+    require(8 * y_lo > t_lo and 8 * y_hi < t_hi, "refined t endpoint enclosure")
+    require(t_lo > F(19, 2), "refined b/L monotonicity")
+    harmonic100 = sum((F(1, k) for k in range(1, 101)), F(0))
+    require(harmonic100 - ln_bounds(101)[1] > F(57, 100), "gamma>0.57")
+    require(F(3, 256) + c2 * (F(1, 2) + F(1, 16)) * bz < F(7, 100),
+            "T_z(x)<log x-3/2 for x>=256")
+    c = c2 * (1 / y + 1 / y ** 4)
+    d, x = 1 - c, y ** 8
+    require(d > 0, "refined positive denominator")
+    b_over_l = (F(1, 2) + (t_hi - F(3, 2)) / l) / d
+    k_bound = (b_over_l * l * c + 8 * b_over_l / (a * t_lo)
+               + bz * c + 8 * bz / (y * t_lo)
+               + (b_over_l * l + l / 2 + t_hi + 5) / x
+               + 2 / (x * t_lo) + 1 / (3 * x ** 3 * t_lo)
+               + 2 * t_hi / y ** 4)
+    require(k_bound < F(603, 100), "refined K<603/100")
+    k = F(503, 100)
+    require(k / t_lo < 3, "exponential series tail range")
+    bridge = k + k ** 2 / (2 * t_lo * (1 - k / (3 * t_lo)))
+    require(bridge == F(5637121, 969800) < F(728, 125), "refined exponential bridge")
+    log_inv_a_lo = ln_bounds(50)[0] - ln_bounds(31)[1]
+    require(log_inv_a_lo > F(239, 500), "log(50/31)>239/500")
+    require(bridge < additive + 8 * log_inv_a_lo, "refined additive envelope")
+    return k_bound, F(603, 100) - k_bound, bridge
+
+
 def failure_controls():
     for label, check in [
         ("insufficient pairing constant", lambda: budget_certificate(c2=F(3, 2))),
         ("negative pairing constant", lambda: budget_certificate(c2=-F(189, 125))),
-        ("too small conductor threshold", lambda: budget_certificate(l_min=16)),
+        ("too small refined conductor threshold", lambda: refined_certificate(l_min=14)),
         ("retained GRH denominator constant", lambda: shifted_denominator_certificate(F(2))),
         ("uncharged p=2 envelope", lambda: euler_certificate(F(1, 500))),
-        ("overstated additive constant", lambda: budget_certificate(additive=F(1))),
+        ("overstated additive constant", lambda: refined_certificate(additive=F(1))),
     ]:
         try:
             check()
@@ -113,14 +148,16 @@ def failure_controls():
 
 def main():
     total, margin = budget_certificate()
+    refined, refined_margin, bridge = refined_certificate()
     gap = euler_certificate()
     shifted_denominator_certificate()
     failure_controls()
     print(f"p=2 polynomial margin: {gap}")
-    print(f"common error budget upper bound: {total} < 8/3")
-    print(f"margin to 8/3: {margin}")
-    print("exponential bridge: 135/76 < 2")
-    print("range: primitive conductor q with log(q)>=32; x=(log q)^8")
+    print(f"original log(q)>=32 budget: {total} < 8/3; margin {margin}")
+    print(f"refined K upper bound: {refined} < 603/100")
+    print(f"refined K margin: {refined_margin}")
+    print(f"refined exponential bridge: {bridge} < 728/125")
+    print("range: primitive conductor q with log(q)>=15; x=((31/50)*log q)^8")
     print("all constants and algebraic controls pass")
 
 

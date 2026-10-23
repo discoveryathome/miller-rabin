@@ -5,7 +5,9 @@ Original idea: Geoffrey Irving.
 **Status: author-checked conditional draft, 2026-10-23.** A separate Codex
 source-research context derived this argument; the parent checked the derivation
 and packaged its exact arithmetic. A separate fresh-context same-model AI
-recheck confirmed the complete conditional theorem; see [RECHECK.md](RECHECK.md).
+recheck confirmed the log q>=32 certificate; see [RECHECK.md](RECHECK.md).
+The extension to log q>=15 in Section 10 passed its own fresh-context
+same-model AI recheck; see [RECHECK-REFINEMENT.md](RECHECK-REFINEMENT.md).
 Source research, author checks and that independent recheck are separate
 evidence items. This is not an accepted result or a proof of H(7/8).
 Maintainer review remains pending. Text: CC BY 4.0; code: Apache-2.0.
@@ -28,7 +30,7 @@ The complete error budget for the following conservative result is given below.
 All logarithms are natural.
 
 > **Theorem.** Assume H(7/8), including its application to zeta. Let
-> chi be a primitive Dirichlet character of conductor q, with log q >= 32. Then
+> chi be a primitive Dirichlet character of conductor q, with log q >= 15. Then
 >
 >     pi^2 / [6 exp(gamma) (8 log log q + 2)]
 >       <= |L(1,chi)| <= exp(gamma) (8 log log q + 2).                 (T)
@@ -36,12 +38,14 @@ All logarithms are natural.
 > Equivalently, the reciprocal is at most
 > `(6 exp(gamma)/pi^2) (8 log log q + 2)`.
 
-The exact conductor threshold is q >= exp(32), about 7.90 times 10^13. There is
-no assertion here for the smaller conductors. The proof chooses
+The exact conductor threshold is q >= exp(15). There is no assertion here for
+smaller primitive conductors. Section 5 supplies a simple certificate for
+log q>=32 using
 
     L = log q,  x = L^8,  t = log x = 8 log L,  y = x^(1/8) = L.
 
-In particular x >= 32^8 = 2^40. The leading constants in (T) are 8 exp(gamma)
+Section 10 covers the full stated range using x=((31/50)log q)^8. Both
+certificates retain the same leading constants in (T): 8 exp(gamma)
 for |L(1,chi)| and 48 exp(gamma)/pi^2 for its reciprocal. These replace LLS's
 GRH leading constants 2 exp(gamma) and 12 exp(gamma)/pi^2.
 
@@ -445,7 +449,7 @@ an additive constant in the final Euler envelope. In particular the integrated
 zero term contributes 8b/(y t) to that bounded numerator rather than a power
 of log q to |L(1,chi)|. This explains the log-log shape directly.
 
-Open next questions are reducing the threshold log q>=32 or additive constant
+Open next questions are reducing the threshold log q>=15 or additive constant
 2, using a different truncation x=(c_0 log q)^8 and fully recomputing its range.
 No optimized-c_0 theorem, smaller-conductor extension or optimal leading
 constant is claimed here.
@@ -485,7 +489,7 @@ then the exact identity is
     L(1,chi)=L(1,chi*) product_{p|Q_0, p not dividing f}
                                       (1-chi*(p)/p).             (8.1)
 
-Consequently, if log f>=32, (T) transfers only with the explicit additional
+Consequently, if log f>=15, (T) transfers only with the explicit additional
 factors
 
     [zeta(2)/(exp(gamma)(8 log log f+2))]
@@ -517,11 +521,12 @@ The recommended first control has two parts.
    passes; simply retaining the GRH constant fails. Also check signs in
    (2.10) directly against the pre-estimation identities (2.2), (2.6).
 
-The exact checker recomputes (4.6)--(4.8) by polynomial coefficients, the
-entire rational budget (5.1)--(5.6), the elementary logarithm enclosures and
-the formal-pair positive/negative controls. Its charged K upper bound is
-286849/108000, with margin 1151/108000 to 8/3; the exponential bridge is
-135/76<2. All coefficient decisions use exact Fractions.
+The exact checker recomputes (4.6)--(4.8) by polynomial coefficients, both
+the simple budget (5.1)--(5.6) and the refined Section 10 budget, elementary
+logarithm enclosures and the formal-pair controls. The retained simple
+certificate gives K<286849/108000<8/3 and bridge135/76<2; the current full
+range uses K<603/100 and the shifted bridge in Section 10. All certificate
+decisions use exact Fractions.
 
 Six deliberate rejection controls exercise a too-small or negative pairing
 constant, too-small conductor threshold, the invalid retained-GRH denominator
@@ -539,15 +544,97 @@ python3 -m unittest discover -s tests
 ```
 
 Expected new-check result: `all constants and algebraic controls pass`, six
-`REJECT control` lines, p=2 margin17/7200 and K margin1151/108000.
+`REJECT control` lines, p=2 margin17/7200, the retained simple margin1151/108000,
+and the refined K<603/100 and bridge5637121/969800<728/125.
 The shared verifier checks its existing Miller--Rabin claims; it does not
 verify the new L-value theorem. Source research and author checks do not
 substitute for a separate fresh-context theorem recheck.
 
 Not checked: H(7/8) or its Lean proof, a new proof of classical analytic
-continuation/functional equations/contour convergence, smaller conductors,
+continuation/functional equations/contour convergence, conductors below the stated range,
 optimized truncations, optimal constants or a product-free imprimitive
 statement. The proof checks the algebraic consequences of those published
 analytic inputs and supplies uniform error envelopes, not a finite numerical
 search over conductors or L-values. The separate AI recheck and its reviewed
 snapshot are recorded in [RECHECK.md](RECHECK.md); maintainer review remains pending.
+
+## 10. Refined truncation: the entire range log q>=15
+
+Put a=31/50, L=log q, x=(aL)^8, y=aL and t=8 log y. This changes the
+truncation, while retaining M(q)=exp(gamma)(8 log L+2) in the conclusion.
+Let L0=15, y0=93/10, x0=y0^8. Exact rational logarithm bounds give
+
+    t_- := 446/25 < 8 log y0 < 17841/1000 =: t_+,
+    log(50/31) > 239/500.                                       (10.1)
+
+In particular x>=x0>256>100, so all prior kernel and Euler-envelope ranges
+hold throughout the new conductor range.
+
+First sharpen the zeta upper estimate in (4.1). The accepted first-T1
+input gives b_z<231/10000. Also the elementary harmonic lower bound
+gamma>H_100-log101>57/100 is certified exactly. By (3.1), the decreasing
+c(x), and log(2pi)<3, for every x>=256,
+
+    T_z(x) <= t-1-gamma+3/x+c(x)b_z < t-3/2,
+
+because
+
+    3/256+(189/125)(1/2+1/16)(231/10000) < 7/100.                (10.2)
+
+The negative trivial-zero series was dropped in this upper bound. Reusing
+(2.2), E_a<=0 and Q<=L now gives
+
+    b <= [L/2+t-3/2]/d(x).
+
+Let c0=c2(1/y0+1/y0^4) and D0=1-c0. For L>=L0, c(x)<=c0 and d(x)>=D0>0.
+The ratio (t-3/2)/L decreases because its derivative has the sign of
+19/2-t, which is negative since t>t_->19/2. Consequently
+
+    b/L <= B0 := [1/2+(t_+-3/2)/15]/D0,
+    D0 = 57989077/69264075,
+    B0 = 22017664161/11597815400.                                (10.3)
+
+The product c(x)L=c2(1/a+1/(a^4 L^3)) decreases, as do c(x), 1/(yt),
+t/L, t/L^4 and every reciprocal-power residual used below. These facts
+follow by differentiating, using t>t_->17 and t'=8/L.
+
+Return to J_chi and J_z before rounding b_z to 1/2 in (5.2). Their exact
+upper envelopes and the lower Euler tail give
+
+    K <= (b+b_z)[c(x)+8/(yt)]
+         +[b+L/2+t+5]/x+2/(xt)+1/(3x^3t)+2t/y^4.                (10.4)
+
+The constant5 charges the gamma correction2 and log(2pi)<3. Uniformly for
+L>=15, the right side is at most the following rational number, where
+z=231/10000 and c0, D0, B0 are defined above:
+
+    K0 = B0*15*c0 + 8B0/(a*t_-)+z*c0+8z/(y0*t_-)
+         +(15B0+15/2+t_++5)/x0
+         +2/(x0*t_-)+1/(3x0^3*t_-)+2t_+/y0^4
+       < 603/100.                                               (10.5)
+
+The exact checker recomputes every term; K0 is about6.0182 for display
+only. Each substitution above increases a nonnegative error. In particular
+the uniform b/L and c(x)L estimates charge their product separately,
+and the two integrated zero errors retain their factors1/t.
+
+As in (5.5), both desired logarithmic bounds now have error at most
+k/t with k=503/100. For t>0 set g(t)=t(exp(k/t)-1). Its derivative is
+exp(k/t)(1-k/t)-1<=0, so g decreases. For 0<=s<3 the positive exponential
+series and its geometric tail give
+
+    exp(s) <= 1+s+s^2/[2(1-s/3)].
+
+Using s=k/t_- yields the exact bound
+
+    g(t) <= k+k^2/[2t_-(1-k/(3t_-))]
+          = 5637121/969800 < 728/125.                             (10.6)
+
+By (10.1), 728/125 < 2+8log(50/31). Since t=8log L-8log(50/31),
+
+    t exp(k/t) < t+2+8log(50/31)=8log L+2.
+
+Exponentiating the two logarithmic bounds therefore proves (T) over the
+entire range L>=15. The same class-number normalization gives (CN), and
+the imprimitive extension (8.2) now requires log f>=15. No smaller-conductor
+enumeration, omitted Euler factor or GRH-only estimate is used.

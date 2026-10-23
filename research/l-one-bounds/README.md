@@ -2,7 +2,7 @@
 
 # Explicit L(1,chi) and class-number bounds under H(7/8)
 
-For a primitive Dirichlet character of conductor q with log q >= 32, put
+For a primitive Dirichlet character of conductor q with log q >= 15, put
 M(q) = exp(gamma)(8 log log q + 2). This package proves, conditionally on
 H(7/8) including zeta,
 
@@ -24,7 +24,9 @@ optimal constants and the truth of H(7/8) are outside the theorem.
 - [constants.py](constants.py): exact rational budget, polynomial identities
   for the complex-phase Euler minimum at p=2, and six rejection controls.
 - [RECHECK.md](RECHECK.md): independent fresh-context same-model AI review,
-  confirming the complete conditional proof with independently derived arithmetic.
+  confirming the log q>=32 certificate with independently derived arithmetic.
+- [RECHECK-REFINEMENT.md](RECHECK-REFINEMENT.md): separate fresh-context
+  same-model AI review confirming the extension to log q>=15.
 
 From the repository root (Python standard library only):
 
@@ -35,8 +37,10 @@ python3 verify/check.py all
 python3 -m unittest discover -s tests
 ```
 
-The new checker reports K <= 286849/108000 < 8/3, with margin1151/108000,
-p=2 polynomial margin17/7200, and exponential bridge135/76<2. The formal
+The checker retains the simpler log q>=32 budget286849/108000<8/3 as a
+positive control. The current refined truncation x=((31/50)log q)^8 gives
+K<603/100 and shifted exponential bridge5637121/969800<728/125, preserving
+the same final envelope. The p=2 polynomial margin remains17/7200. The formal
 pair {1/8,7/8} rejects a naive retained-GRH reciprocal-square constant2;
 it is a strip-bound control, not an assertion about actual L-function zeros.
 The full proof supplies all-height and all-conductor bounds in its stated
@@ -50,11 +54,15 @@ Card: `corollaries` / `l-one-bounds`, catalog revision5, original seed
 package against main; no unmerged theorem or accepted-record change is needed.
 An AI source-research context derived the argument, then the parent checked
 the source identities and packaged the exact arithmetic. Status:
-author-checked and independently AI-rechecked conditional draft, pending
-maintainer review. The recheck independently reconstructed the integrated
-kernels, zeta pole limit, Euler minimum and complete uniform budget.
-Source research is not counted as independent theorem verification. The report
-pins its reviewed snapshot; later edits record review status and links only.
+author-checked conditional draft; both the simpler log q>=32 certificate and
+the log q>=15 extension passed separate independent AI rechecks. Maintainer
+review is pending. The first recheck independently
+reconstructed the integrated kernels, zeta pole limit, Euler minimum and
+uniform simple budget.
+The second recheck reconstructs the sharper zeta estimate, scaled truncation,
+uniform error budget and endpoint exponential bridge. Source research is not
+counted as independent theorem verification. Each report pins its reviewed
+snapshot; later edits record review status and links only.
 
 Predecessor credit: Geoffrey Irving; Bach; Lamzouri--Li--Soundararajan,
 [arXiv:1309.3595v3](https://arxiv.org/abs/1309.3595v3), Lemmas2.3--2.6 and
@@ -63,7 +71,7 @@ Codex authored this package. Text/proofs: CC BY4.0; code: Apache-2.0.
 
 ## Open next questions
 
-- Lower log q>=32 or additive constant2 using a fully charged new truncation
+- Lower log q>=15 or additive constant2 using a fully charged new truncation
   and uniform range proof.
 - Extend the useful range to smaller primitive conductors with a new exact
   truncation and fully charged uniform errors.
