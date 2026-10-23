@@ -13,13 +13,22 @@ If q != 6, coefficient 0.678 suffices. At q = 6 the outside prime is exactly
 nonresidue is a prime below (0.678 log q)^8. The cases q = 3 and 4 have exact
 outside primes 2 and 3. All logarithms are natural.
 
+Section 6 gives independently AI-rechecked sharp coefficients for H(b) throughout
+13/15<=b<=7/8, with r=1/(1-b): C5=2^(1-b)/log5 for q>=5,q!=6 and the
+prime quadratic theorem, and C6=5^(1-b)/log6 for all q>=5. Use <= in
+these sharp bounds, with equality exactly at q=5 or q=6 respectively.
+Every q>=7 satisfies the stronger strict coefficient .677. This extension
+passed its own fresh-context recheck in RECHECK-SHARP.md.
+
 - [PROOF.md](PROOF.md): the complete conditional argument, all ranges and errors.
 - [constants.py](constants.py): exact new-constant recomputation, small-range
-  endpoints, 6540 direct prime-modulus checks and seven rejection controls.
+  endpoints, 6540 direct prime-modulus checks and eight rejection controls.
 - [RECHECK.md](RECHECK.md): independent fresh-context same-model AI recheck of
   the complete conditional theorem and a separate direct computational route.
 - [GUARD-RECHECK.md](GUARD-RECHECK.md): targeted follow-up confirming the positive
   coefficient guard, negative regression control and unchanged default results.
+- [RECHECK-SHARP.md](RECHECK-SHARP.md): independent parameter, exact sharpness,
+  equality-case and stronger finite-data checks using different algorithms.
 
 From the repository root (Python standard library only):
 
@@ -37,8 +46,9 @@ subgroups using the elementary p < q observation and two exact endpoints,
 so these direct quadratic checks are supplementary evidence.
 
 The constants face real small-modulus obstructions: 0.682 fails the general
-theorem at q = 6, and 0.677 fails the quadratic theorem at q = 5. No claim
-of optimality is made. H(7/8), its Lean proof and new contour-convergence
+theorem at q = 6, and 0.677 fails the quadratic theorem at q = 5. The rounded
+coefficients are not claimed optimal; Section 6 identifies the exact sharp
+ones. H(7/8), its Lean proof and new contour-convergence
 arguments are outside the checker's scope.
 
 Section 5 also gives an author-checked and independently AI-rechecked extension
@@ -64,7 +74,8 @@ Credit: Geoffrey Irving; Bach; Lamzouri--Li--Soundararajan,
 2.1--2.3; Claude's accepted first-T1 and zero-pairing packages (PRs #6 and #8).
 Codex drafted this contribution and ran its author checks. Separate fresh-context
 same-model AI reviews confirmed the original mathematical claims, the small
-input-guard fix, and the smaller-theta extension. The independent finite route
+input-guard fix, the smaller-theta extension and the sharp coefficients.
+The independent finite route
 used a prime sieve and quadratic reciprocity,
 rather than the author's trial primality and modular exponentiation. This is
 AI review, not human review; maintainer review remains pending. Each report pins
@@ -73,7 +84,7 @@ Text/proofs: CC BY 4.0; code: Apache-2.0.
 
 ## Open next questions
 
-- Narrow the gaps between the sufficient coefficients and their explicit
-  small-modulus obstructions, while preserving the exact domains.
+- Improve the subdomain coefficient for q>=7 while preserving every subgroup
+  and the complete modulus range.
 - Optimize the parameter-dependent constants while retaining exact directed
   bounds for noninteger powers and an explicitly checked complete domain.

@@ -10,6 +10,8 @@ Text: CC BY 4.0; code: Apache-2.0. Reports pin their reviewed snapshots;
 subsequent edits record review status and links only. The smaller-theta
 extension in Section 5 passed its own fresh-context same-model AI recheck;
 see [RECHECK-THETA.md](RECHECK-THETA.md).
+The sharp coefficients in Section 6 passed their own fresh-context same-model
+AI recheck; see [RECHECK-SHARP.md](RECHECK-SHARP.md).
 
 ## Results
 
@@ -31,10 +33,17 @@ not dividing q whose residue is outside H.
 >
 > ell < (0.678 log q)^8.
 
+Section 6 identifies the sharp coefficients, with a non-strict inequality
+at the forced small cases. For H(b), 13/15<=b<=7/8, and r=1/(1-b), these
+are C5=2^(1-b)/log5 for q>=5,q!=6 (and the quadratic theorem), and
+C6=5^(1-b)/log6 for every q>=5. Equality occurs exactly at q=5 or q=6,
+respectively. The earlier decimal bounds remain useful separate corollaries.
+
 These coefficients are close to forced small-modulus constraints:
 0.682 fails the uniform general-modulus statement at q = 6, and 0.677
-fails the prime quadratic statement at q = 5. Neither optimality nor an
-unconditional large-modulus theorem is asserted.
+fails the prime quadratic statement at q = 5. The preceding rounded
+coefficients are not claimed optimal; Section 6 proves the exact sharp
+coefficients. No unconditional large-modulus theorem is asserted.
 
 ## Inputs and predecessor credit
 
@@ -215,7 +224,7 @@ For the negative controls, use the **upper** logarithm bounds:
     (0.682 log 6)^8 < 5 = ell(6,{1}).
 
 They prove that those proposed coefficients, and any smaller ones in the
-same domains, fail. The seven rejection controls also test positivity of the pairing
+same domains, fail. The eight rejection controls also test positivity of the pairing
 constant, analytic cutoff, positive small-modulus endpoints and the invalid
 use of Euler's criterion with a composite modulus.
 
@@ -230,19 +239,20 @@ python3 verify/check.py all
 python3 -m unittest discover -s tests
 ```
 
-Expected new-check result: `all constants and direct checks pass`, seven
+Expected new-check result: `all constants and direct checks pass`, eight
 `REJECT control` lines, and 6540 directly checked prime moduli. The shared
 verifier checks its recorded Miller--Rabin claims; the new theorem is
 supported by this written proof and its separate exact checker.
 
-Not checked here: H(7/8) or its Lean proof, new contour-convergence arguments,
-optimal coefficients, or all large-modulus character values by enumeration.
+Not checked here: H(b) or a Lean replay, new contour-convergence arguments,
+or all large-modulus character values by enumeration. Section 6 proves
+optimality only for its stated all-q coefficient shapes and domains.
 The accepted zero-pairing and gamma estimates are declared inputs. The new
 proof and the guard fix have separate AI rechecks with their precise scopes
 recorded above; maintainer acceptance remains separate.
 
-Open next questions: sharpen the gaps between the impossible and sufficient
-constants, or obtain a coefficient nearer 1/2 above a new explicit cutoff
+Section 6 resolves the all-q coefficient gaps. Open next question: obtain
+a coefficient nearer 1/2 above a new explicit cutoff
 while keeping a complete piecewise bound for the smaller moduli.
 
 ## 5. The exact smaller-theta exponent
@@ -322,4 +332,91 @@ respective domains. The seventh rejection control prevents applying these
 fixed envelopes to an unsupported weaker zero-free line.
 
 This extension is author-checked and separately independently AI-rechecked.
-It does not verify H(theta), Xu--Sang's proof, a Lean replay or optimality.
+It does not verify H(theta), Xu--Sang's proof or a Lean replay. The rounded
+coefficients in this section are not claimed optimal; Section 6 identifies
+the exact sharp coefficients.
+
+## 6. Sharp coefficients for the complete domains
+
+Assume H(b), including zeta, for 13/15<=b<=7/8. Put
+
+    r=1/(1-b),  C5=2^(1-b)/log5,  C6=5^(1-b)/log6.
+
+Then, for every proper subgroup H of (Z/qZ)*,
+
+    ell(q,H) <= (C6 log q)^r                    for every q>=5,
+    ell(q,H) <= (C5 log q)^r                    for q>=5,q!=6.     (10)
+
+Equality in the first statement occurs exactly at q=6, and in the second
+exactly at q=5. The prime quadratic theorem has sharp coefficient C5 and
+equality exactly at q=5. These are the best possible coefficients in these
+same non-strict statements; any smaller one fails at the indicated modulus.
+The exact q=3,4 exceptions remain 2,3 and are outside the domains in (10).
+
+It suffices to prove the stronger strict subdomain bound
+
+    ell(q,H) < (.677 log q)^r                   for every q>=7.   (11)
+
+The Section 5 pairing proof works throughout this parameter interval:
+b/(1-b)<=7, b-1/2>=11/30, b(1-b)>=7/64, and 15/2<=r<=8. Hence the
+same R=7, positive c2=189/125 and X>=256 certify the two paired sums;
+the static sum costs rA<=8A. Reflection, nonnegative regrouping and the
+line-zero bounds are identical. Criterion (6) therefore still applies,
+including the two S corrections, the T correction, conductor saving and
+gamma signs. This argument uses accepted lemmas and the written transfer,
+not a theorem from an unmerged sibling.
+
+Use C0=677/1000 and y=X^(1-b)=C0 log q. For q>=65536 we have y>7.
+The integer envelopes in (8) still hold: they require only r>7 and r<=8.
+Thus d>77/100, F/X<(1001/1000)/y, X>=y^7 and log X<=8log y.
+With the same monotone residual bounds as Section 5, the total error is
+at most
+
+    (1001/1000)[(231/10000)/7+1/(2C0*(77/100))]
+      +[(7/(2C0*(77/100))+7/(2C0)+2)*16+1+(14/C0)*16^2]/7^7
+      =8499538701758399/8761321030000000 <1,                     (12)
+
+with margin 261782328241601/8761321030000000. This proves (11) there.
+
+For 7<=q<=65536, the function (.677 log q)^r/q again has a single
+interior maximum, so its minimum is at an endpoint. The upper endpoint
+follows from .677 log65536>7 and 7^7>65536. At q=7 the exact rational
+lower logarithm bound gives
+
+    (.677 ln_bounds(7)[0])^15 > 7^2,
+    .677 ln_bounds(7)[0] >1.
+
+Since r>=15/2, this proves (.677 log7)^r>7, including at b=13/15.
+The unconditional prime p<q outside every proper subgroup then proves
+(11) on the entire interval. The supplementary direct prime computation
+also checks the stronger coefficient .677 with integer exponent 7 for
+each of the 6539 primes q>=7 below 65536. These finite prime checks support,
+and do not replace, the all-subgroup interval argument.
+
+To compare the exact coefficients, the old obstruction gives
+(.677 log5)^8<2 with base>1. Since r<=8, it follows that C5>.677.
+Also the exact logarithm comparison
+
+    (ln_bounds(6)[1]/ln_bounds(5)[0])^8 <5/2
+
+proves log6/log5<(5/2)^(1/8)<=(5/2)^(1-b). Rearranging gives C6>C5.
+Consequently every q>=7 has a strict inequality in both parts of (10).
+At q=5, 2 generates the full unit group, so every proper subgroup excludes
+it and ell(5,H)=2=(C5 log5)^r. At q=6 the only proper subgroup is {1},
+and ell(6,H)=5=(C6 log6)^r. Since C6>C5, the first bound is strict at
+q=5. This proves both complete domains and their equality cases.
+
+For a prime q, apply the second statement to the subgroup of nonzero
+squares. As before the least positive nonresidue is prime. The equality
+at q=5 proves sharpness also in the prime quadratic domain. No numerical
+evaluation of C5 or C6 is needed in the proof or certificate.
+
+The old H(7/8) and exact smaller-theta decimal results remain separately
+certified positive controls. For other b in this interval, (10) is the
+parameter theorem; the old decimal constants are not asserted uniformly
+in b. H(b) is assumed directly. The source and analytic-foundation limits
+above remain; no proof of Xu--Sang or either half-plane is supplied.
+This sharp-coefficient theorem passed its own fresh-context independent AI
+review in RECHECK-SHARP.md; previous reports do not certify it. That report
+pins its snapshot. Later edits record status, links and the clarification
+that the earlier rounded coefficients were not asserted optimal.
