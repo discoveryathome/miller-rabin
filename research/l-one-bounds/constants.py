@@ -129,6 +129,50 @@ def refined_certificate(l_min=15, additive=F(2)):
     return k_bound, F(603, 100) - k_bound, bridge
 
 
+def parameter_certificate(beta=F(8748867, 10000000), l_min=20, additive=F(2)):
+    """Uniform leading-r envelope for 13/15<=beta<=7/8 and log q>=20."""
+    beta = F(beta)
+    require(F(13, 15) <= beta <= F(7, 8), "parameter pairing strip range")
+    r, l, a, c2, bz = 1/(1-beta), F(l_min), F(31, 50), F(189, 125), F(231, 10000)
+    require(F(15, 2) <= r <= 8 and c2 > 0 and 7*c2*c2 >= 16,
+            "parameter reciprocal and paired bounds")
+    require(l > 0, "positive parameter conductor threshold")
+    y = a*l
+    require(y > 1 and y**7 > 256, "parameter kernel range")
+    y_lo = ln_bounds(y.numerator)[0]-ln_bounds(y.denominator)[1]
+    y_hi = ln_bounds(y.numerator)[1]-ln_bounds(y.denominator)[0]
+    t_lo, t_hi = F(75, 4), F(81, 4)
+    require(F(15, 2)*y_lo > t_lo and 8*y_hi < t_hi,
+            "parameter t endpoint enclosure")
+    require(t_lo > F(19, 2), "parameter uniform b/L monotonicity")
+    harmonic100 = sum((F(1, k) for k in range(1, 101)), F(0))
+    require(harmonic100-ln_bounds(101)[1] > F(57, 100) and
+            F(3, 256)+c2*F(9, 16)*bz < F(7, 100),
+            "parameter zeta constant saving")
+    c, x_lower = c2*(1/y+1/y**3), y**7
+    d = 1-c
+    require(d > 0, "parameter positive denominator")
+    b_over_l = (F(1, 2)+(t_hi-F(3, 2))/l)/d
+    k_bound = (b_over_l*l*c+8*b_over_l/(a*t_lo)
+               +bz*c+8*bz/(y*t_lo)
+               +(b_over_l*l+l/2+t_hi+5)/x_lower
+               +2/(x_lower*t_lo)+1/(3*x_lower**3*t_lo)
+               +2*t_hi/y**3)
+    require(k_bound < F(26, 5), "parameter common budget K<26/5")
+    if l_min == 20:
+        require(d == F(5226959, 5958200) and
+                b_over_l == F(17129825, 10453918), "parameter D0 and B0 arithmetic")
+    k = F(21, 5)
+    require(0 < k/t_lo < 3, "parameter exponential series range")
+    bridge = k+k*k/(2*t_lo*(1-k/(3*t_lo)))
+    require(bridge == F(8169, 1735) < 5, "parameter exponential bridge")
+    log_inv_a_lo = ln_bounds(50)[0]-ln_bounds(31)[1]
+    require(log_inv_a_lo > F(239, 500), "parameter scale logarithm")
+    require(bridge < additive+F(15, 2)*log_inv_a_lo,
+            "parameter additive envelope")
+    return k_bound, F(26, 5)-k_bound, bridge
+
+
 def failure_controls():
     for label, check in [
         ("insufficient pairing constant", lambda: budget_certificate(c2=F(3, 2))),
@@ -137,6 +181,9 @@ def failure_controls():
         ("retained GRH denominator constant", lambda: shifted_denominator_certificate(F(2))),
         ("uncharged p=2 envelope", lambda: euler_certificate(F(1, 500))),
         ("overstated additive constant", lambda: refined_certificate(additive=F(1))),
+        ("unsupported parameter strip", lambda: parameter_certificate(beta=F(9, 10))),
+        ("too small parameter threshold", lambda: parameter_certificate(l_min=19)),
+        ("overstated parameter additive constant", lambda: parameter_certificate(additive=F(1))),
     ]:
         try:
             check()
@@ -149,6 +196,11 @@ def failure_controls():
 def main():
     total, margin = budget_certificate()
     refined, refined_margin, bridge = refined_certificate()
+    parameter, parameter_margin, parameter_bridge = parameter_certificate()
+    require(parameter_certificate(beta=F(13, 15)) ==
+            parameter_certificate(beta=F(7, 8)) ==
+            (parameter, parameter_margin, parameter_bridge),
+            "closed parameter endpoint certificates")
     gap = euler_certificate()
     shifted_denominator_certificate()
     failure_controls()
@@ -158,6 +210,9 @@ def main():
     print(f"refined K margin: {refined_margin}")
     print(f"refined exponential bridge: {bridge} < 728/125")
     print("range: primitive conductor q with log(q)>=15; x=((31/50)*log q)^8")
+    print(f"parameter K upper bound: {parameter} < 26/5; margin {parameter_margin}")
+    print(f"parameter exponential bridge: {parameter_bridge} < 5")
+    print("parameter range: 13/15<=beta<=7/8, log(q)>=20; leading r=1/(1-beta)")
     print("all constants and algebraic controls pass")
 
 

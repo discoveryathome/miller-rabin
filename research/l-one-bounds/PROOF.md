@@ -1,6 +1,6 @@
 Original idea: Geoffrey Irving.
 
-# Explicit bounds for L(1, chi) under H(7/8)
+# Explicit bounds for L(1, chi) under half-plane hypotheses
 
 **Status: author-checked conditional draft, 2026-10-23.** A separate Codex
 source-research context derived this argument; the parent checked the derivation
@@ -8,6 +8,8 @@ and packaged its exact arithmetic. A separate fresh-context same-model AI
 recheck confirmed the log q>=32 certificate; see [RECHECK.md](RECHECK.md).
 The extension to log q>=15 in Section 10 passed its own fresh-context
 same-model AI recheck; see [RECHECK-REFINEMENT.md](RECHECK-REFINEMENT.md).
+The leading-r parameter theorem in Section 11 is new author-checked work
+awaiting its own fresh-context recheck.
 Source research, author checks and that independent recheck are separate
 evidence items. This is not an accepted result or a proof of H(7/8).
 Maintainer review remains pending. Text: CC BY 4.0; code: Apache-2.0.
@@ -543,7 +545,7 @@ python3 verify/check.py all
 python3 -m unittest discover -s tests
 ```
 
-Expected new-check result: `all constants and algebraic controls pass`, six
+Expected new-check result: `all constants and algebraic controls pass`, nine
 `REJECT control` lines, p=2 margin17/7200, the retained simple margin1151/108000,
 and the refined K<603/100 and bridge5637121/969800<728/125.
 The shared verifier checks its existing Miller--Rabin claims; it does not
@@ -638,3 +640,139 @@ Exponentiating the two logarithmic bounds therefore proves (T) over the
 entire range L>=15. The same class-number normalization gives (CN), and
 the imprimitive extension (8.2) now requires log f>=15. No smaller-conductor
 enumeration, omitted Euler factor or GRH-only estimate is used.
+
+## 11. A parameter theorem with leading factor r
+
+Section 11 proves the following additional conditional statement. For any
+real beta in [13/15,7/8], assume H(beta), including zeta, and let
+r=1/(1-beta). For primitive conductor q with log q>=20, put
+
+    M_beta(q)=exp(gamma)[r log log q+2].
+
+Then pi^2/(6M_beta)<=|L(1,chi)|<=M_beta, with the same class-number and
+explicitly factored imprimitive consequences. The leading factor is r
+instead of 8. The earlier H(7/8) theorem keeps its better threshold 15;
+it is not weakened by this new parameter statement.
+
+Here beta denotes the strip parameter, while A=-Re B(chi) denotes the
+quantity called b in the earlier sections. The functional equation and
+conjugation again pair rho with 1-conjugate(rho) within the same character,
+including complex characters, and give 1-beta<=Re rho<=beta.
+For an off-line pair sigma>=1/2, the AM--GM argument of accepted Lemma0'
+part2 bounds its shifted-kernel ratio by
+
+    [x^(sigma-1)+x^(-sigma)]/[2sqrt(sigma(1-sigma))]
+       <=c2[x^(beta-1)+x^(-1/2)],   c2=189/125.
+
+This holds because beta(1-beta)>=7/64 and 7*c2^2>16. Line zeros have
+ratio 2x^(-1/2), also covered. All weights and absolute summands are
+nonnegative and convergent. Termwise, the static reciprocal-square bound
+is rA<=8A. These statements apply to zeta as well. Thus
+
+    |Z_chi(x)|<=c_beta(x)A,
+    c_beta(x)=c2[x^(beta-1)+x^(-1/2)].                            (11.1)
+
+For the integrated zero term, u>=1 still gives |rho-u|>=|rho-1|.
+The reflected static bound is at most 8A, and now
+integral_1^infinity x^(beta-u)du=x^(beta-1)/t. With y=x^(1-beta),
+
+    |R_chi(x)|<=8A/(y t^2),   |R_z(x)|<=8b_z/(y t^2).            (11.2)
+
+This also justifies absolute interchange and the endpoint u=1 under the
+same declared classical contour and Hadamard inputs. The identities,
+conductor cancellation, gamma errors, Laurent pole term and finite Euler
+minimum in Sections2--4 are otherwise unchanged. In particular their
+common logarithmic error numerator is
+
+    K<= (A+b_z)[c_beta(x)+8/(yt)]
+          +(A+L/2+t+5)/x+2/(xt)+1/(3x^3t)+2t/sqrt(x).           (11.3)
+
+The last term charges the lower Euler tail. Both desired logarithmic
+inequalities are bounded using (K-1)/t, with the factor zeta(2) retained
+in the lower L-value direction. No r=8 identity is used in (11.2).
+
+For L=logq>=20, choose a=31/50, y=aL, x=y^r and t=rlogy. Since
+15/2<=r<=8 and y>1,
+
+    x>=y^7,   sqrt(x)>=y^3,
+    c_beta(x)<=c2(1/y+1/y^3).                                   (11.4)
+
+All kernels are in range: at L0=20, y0=62/5 and y0^7>256>100.
+The finite Euler minimum, including its p=2 certificate, requires only
+x>=100 and therefore still applies. H(beta) implies H(7/8), so the
+sharper principal estimate (10.2), T_z(x)<t-3/2, remains available.
+It also follows directly from the same residue identity and (11.1),
+because c_beta(x)<=c_(7/8)(x). Hence
+
+    A <=[L/2+t-3/2]/d_beta(x),
+    d_beta(x)=1+1/x-c_beta(x).
+
+At the common endpoint define
+
+    t_-=75/4 <(15/2)log(62/5),
+    t_+=81/4 >8log(62/5),
+    c0=c2(1/y0+1/y0^3),
+    D0=1-c0=5226959/5958200>0,
+    B0=[1/2+(t_+-3/2)/20]/D0=17129825/10453918.
+
+The logarithm enclosures are rational. For every fixed r in this interval,
+the derivative of (t-3/2)/L has sign r-t+3/2<0 throughout L>=20.
+The lower denominator1-c2(1/y+1/y^3) increases. Therefore A/L<=B0
+uniformly; no monotonicity of A itself is assumed.
+
+Every contribution in (11.3) now has a uniform endpoint bound. For Ac,
+use A/L<=B0 and Lc<=c2[1/a+1/(a^3L^2)], which decreases. For8A/(yt)
+retain the factor 1/a and t>=t_-. The b_z terms decrease individually.
+Replace x by its lower bound y^7 in all residual denominators and
+sqrt(x) by y^3 in the Euler tail. The terms t/y^7 and t/y^3 decrease,
+since their derivative signs are r-7t and r-3t. All remaining positive
+power and logarithmic terms also decrease on this whole domain. It follows
+that K is at most the exact rational sum
+
+    K0=B0*20*c0+8B0/(a t_-)+b_z*c0+8b_z/(y0 t_-)
+         +(20B0+10+t_++5)/y0^7
+         +2/(y0^7t_-)+1/(3y0^21t_-)+2t_+/y0^3,
+    b_z=231/10000,
+    K0=41529079804084400024857080315711576661138167507691
+         /8025592730848948716555384727022562665766912000000
+       <26/5.                                                   (11.5)
+
+The positive margin to26/5 is
+204002396330133301230920264805749200849774892309 divided by the same
+denominator. All powers of a and both integrated zero tails are retained.
+
+Take k=21/5. The same decreasing function g(t)=t(exp(k/t)-1) and
+exponential-series upper bound used in Section10 give
+
+    g(t)<=k+k^2/[2t_-(1-k/(3t_-))]=8169/1735<5.
+
+Also log(50/31)>239/500, so for every allowed r,
+
+    2+rlog(50/31)>=2+(15/2)log(50/31)>1117/200>5.
+
+Since t=rlogL-rlog(50/31), this proves
+texp(k/t)<rlogL+2. Exponentiating both common logarithmic bounds yields
+the claimed M_beta and zeta(2)/M_beta. The class-number statement is
+
+    pi sqrt(q)/(6M_beta)<=h(-q)<=M_beta sqrt(q)/pi
+
+for negative fundamental discriminants -q with logq>=20. For an imprimitive
+character, retain the exact Euler products and the two comparison products
+from Section8, replacing its envelope by M_beta and requiring logf>=20
+on the primitive inducing conductor f. A large modulus alone does not
+meet the condition. No product-free imprimitive assertion is made.
+
+At beta=8748867/10000000 the leading r is exactly 10000000/1251133;
+the frontier's Xu--Sang v2 reference is an optional source for this assumed
+half-plane, not a certified proof of it. See
+[the versioned primary theorem](https://arxiv.org/html/2610.15291v2),
+which is itself conditional on its recorded analytic inputs and H(7/8).
+The present result assumes H(beta) directly throughout the full interval.
+
+The checker retains the threshold 32 and threshold 15 certificates and their
+six controls. Three additional controls reject beta=9/10, the fixed
+endpoint enclosure at threshold 19, and additive 1 with this budget. These
+are failures of the stated certificate, not impossibility theorems for
+different truncations. The parameter theorem is author-checked and awaits
+its own fresh-context recheck. No earlier report certifies this new leading
+factor, range or uniform parameter transfer.

@@ -1,6 +1,6 @@
 **Original idea: Geoffrey Irving.**
 
-# Explicit L(1,chi) and class-number bounds under H(7/8)
+# Explicit L(1,chi) and class-number bounds under half-plane hypotheses
 
 For a primitive Dirichlet character of conductor q with log q >= 15, put
 M(q) = exp(gamma)(8 log log q + 2). This package proves, conditionally on
@@ -15,6 +15,14 @@ For a negative fundamental discriminant -q in the same range,
 
     pi sqrt(q)/(6 M(q)) <= h(-q) <= M(q) sqrt(q)/pi.
 
+Section 11 gives a new author-checked parameter theorem: for any real
+13/15<=beta<=7/8, assume H(beta), including zeta, and let r=1/(1-beta).
+For primitive conductor logq>=20, the same two-sided bounds hold with
+M_beta(q)=exp(gamma)(r loglogq+2). The class-number and explicitly factored
+imprimitive statements have that same primitive-conductor threshold.
+This extension is awaiting its own fresh-context recheck. The earlier
+H(7/8) threshold 15 result remains available.
+
 The threshold is on the **primitive conductor**, not an arbitrary large
 imprimitive modulus. PROOF.md Section 8 gives the explicit Euler factors
 needed for imprimitive characters. Smaller conductors, principal characters,
@@ -22,7 +30,7 @@ optimal constants and the truth of H(7/8) are outside the theorem.
 
 - [PROOF.md](PROOF.md): complete derivation, GRH-use audit and ranges.
 - [constants.py](constants.py): exact rational budget, polynomial identities
-  for the complex-phase Euler minimum at p=2, and six rejection controls.
+  for the complex-phase Euler minimum at p=2, and nine rejection controls.
 - [RECHECK.md](RECHECK.md): independent fresh-context same-model AI review,
   confirming the log q>=32 certificate with independently derived arithmetic.
 - [RECHECK-REFINEMENT.md](RECHECK-REFINEMENT.md): separate fresh-context
@@ -59,6 +67,7 @@ the log q>=15 extension passed separate independent AI rechecks. Maintainer
 review is pending. The first recheck independently
 reconstructed the integrated kernels, zeta pole limit, Euler minimum and
 uniform simple budget.
+The parameter theorem is new work, not covered by those earlier reviews.
 The second recheck reconstructs the sharper zeta estimate, scaled truncation,
 uniform error budget and endpoint exponential bridge. Source research is not
 counted as independent theorem verification. Each report pins its reviewed
