@@ -10,6 +10,8 @@ AI recheck; see [RECHECK-REFINEMENT.md](RECHECK-REFINEMENT.md). Both reports pin
 their reviewed snapshots. The parameter transfer and sharp coefficient in
 Section 8 passed their own fresh-context same-model AI recheck; see
 [RECHECK-SHARP.md](RECHECK-SHARP.md).
+The cutoff-64 improvement in Section 9 is new author-checked work awaiting
+its own fresh-context recheck.
 Maintainer review is pending.
 
 This builds on Bach's conditional least-prime method, Lamzouri--Li--Soundararajan
@@ -40,9 +42,12 @@ Section 8 strengthens this to the **sharp all-q coefficient**
 q=3,a=1. It also preserves the coset cutoff 80 with exponent r. In particular,
 the two original strict inequalities remain true with exponent
 10000000/1251133 under the separate assumption H(8748867/10000000).
+Section 9 further lowers the coset cutoff to 64 throughout the same b interval;
+the cutoff-80 certificate remains a positive control.
 
-There is no small-modulus computation in the coset theorem. The progression
-corollary uses an exact finite check for 3 <= q < 2048, described below.
+There is no small-modulus computation in the original cutoff-80 coset theorem.
+The cutoff-64 improvement uses the progression theorem for q<=20. That
+progression theorem has an exact finite check for 3 <= q < 2048, described below.
 The assertion excludes q = 2. No assertion about the truth of H(7/8), an
 unconditional Linnik constant, optimal coset cutoff, or a Miller--Rabin improvement
 is made.
@@ -360,7 +365,7 @@ an L-value or zero are used for these estimates.
 
 Replay: `python3 research/least-prime-progression/constants.py` from the repository
 root. It checks the rational envelopes, elementary constants, and precisely the
-finite fallback; its seven failure controls must print `REJECT control`.
+finite fallback; its ten failure controls must print `REJECT control`.
 The existing `verify/check.py` verifies its recorded Miller--Rabin claims, not
 this coset theorem. This proof has no new T1 claim or accepted-frontier change.
 
@@ -498,9 +503,99 @@ Consequently the original strict coefficient-.581 corollary is also true
 at the smaller-theta exponent. The exact expression c_b in (16), rather
 than a rounded decimal, is the sharp coefficient.
 
-The new checker runs seven rejection controls and exact endpoint budgets.
+The first seven rejection controls cover this parameter transfer and its
+predecessors; Section 9 adds three more, for a current total of ten.
 This extension and its complete finite domain are author-checked and passed
 their own separate fresh-context AI review in RECHECK-SHARP.md. Neither the
 original two reviews nor the source audit is counted as verification of this
 new theorem. The report pins its snapshot; later edits record status and
 links only. Maintainer review remains pending.
+
+## 9. A smaller all-q coset cutoff
+
+For every b in [13/15,7/8], assume H(b) including zeta and put r=1/(1-b).
+The coset bound can be improved to
+
+    P(aH,q) <max(64,h log q)^r       (q>=3, h>=2).                 (22)
+
+The sharp progression theorem and all its equality cases remain unchanged.
+This section uses its already proved small-q consequence, but no theorem
+from a separate unmerged package. The older cutoff80 remains a fully
+analytic positive control; (22) uses the progression theorem for q<=20.
+
+First sharpen the principal T sum. Before the RH estimation in the proof
+of LLS Lemma2.4, the residue identity is
+
+    T_zeta(X)=log X-(1+gamma)+log(2pi)/X-Z_zeta(X)
+              -sum_{k>=1} X^(-2k-1)/[2k(2k+1)].                 (23)
+
+All terms and signs here are unconditional; its RH estimate is replaced.
+Section8's paired bound and b<=7/8 give
+|Z_zeta(X)|<=c(X;b)|B_zeta|<=c(X;7/8)|B_zeta|. For X>=256, use the
+decreasing correction, gamma>.57, log(2pi)<3 and |B_zeta|<.0231:
+
+    log(2pi)/X+c(X;b)|B_zeta|
+      <3/256+(189/125)(1/2+1/16)(231/10000)
+      =313653/10000000 <7/100.
+
+Dropping the negative trivial-zero series in (23) proves
+
+    T_zeta(X)<log X-3/2.                                         (24)
+
+Accordingly, the orthogonality step in Section3 now yields
+sum_(chi!=chi0) A_chi* <=[(h-1)L/2+t-3/2]/d(X;b). The h-1 factor,
+complex B estimate, Euler corrections, gamma residual R and proper-power
+subtraction remain as before. In criterion (13), only the aggregate
+numerator changes from (h-1)L/2+t to (h-1)L/2+t-3/2.
+
+For q>=21, L=log q>3. Choose y=max(64,hL), X=y^r and t=log X.
+Then h<=y/3, L<=y/2, omega(q)<2L<=y, and
+
+    [(h-1)L/2+t-3/2]/y <=1/2+(8log y-3)/y.                    (25)
+
+The additional subtraction3/2 comes from the retained -L/2. The right
+side decreases for y>=64: the derivative of its variable part has sign
+11-8log y<0. Throughout the parameter interval, r>=15/2, so
+
+    sqrt(X)>=y^(15/4)>22y^3,
+
+because y>=64 and 64^3>22^4. Consequently the proper-power term is at most
+
+    h t^2/(2sqrt(X)) <=(16/33)(log y)^2/y^2.                    (26)
+
+Let f=1000001/1000000. The directed envelopes (19) and monotonicity give
+F_b(X)/X<f/y for y>=64. The denominator has the uniform lower bound
+
+    d(X;b)>=1-(189/125)(1/y+1/y^3)
+            >=31993667/32768000=:d0>0.
+
+The fully charged residual has the uniform bound
+
+    R/X <=[2t+1+y^2t^2/6
+              +(y/3)((3y/4+26)t+t^2/2+3)]/y^7.
+
+Every summand is a nonnegative multiple of (log y)^j/y^k with k>=5,j<=2,
+and decreases on this range. Since log64<104/25, its endpoint is
+102572093/549755813888000<1/10^6. The zeta error, (25) divided by d0,
+this residual and (26) therefore sum to at most
+
+    (231/10000)f/64+f[1/2+(8*(104/25)-3)/64]/d0
+       +1/10^6+(16/33)(104/25)^2/64^2
+       =675090454343806963541/675706247040000000000 <1,            (27)
+
+with positive margin 615792696193036459/675706247040000000000.
+Thus the strengthened criterion proves (22) for every q>=21.
+
+For 3<=q<=20, the sharp coefficient from Section8 obeys c_b<1:
+1-b<=2/15<1/6, 7^(1/6)<2 and log3>1. Also phi(q)<=19 and logq<3.
+For any coset choose one reduced class a in it. The already proved bound
+gives P(aH,q)<=P(a,q)<57^r<64^r. A prime at the real cutoff has zero
+logarithmic weight, so the large-q contradiction likewise supplies a prime
+strictly below its cutoff. This completes the exact all-q statement.
+
+The three additional controls reject cutoff63 with these fixed envelopes,
+removal of the zeta constant saving, and an unjustified saving2 in (24).
+They test this certificate and do not prove cutoff63 impossible. All ten
+controls and old positive certificates are retained. This improvement is
+author-checked and awaiting a fresh-context independent recheck; earlier
+reviews do not certify its changed aggregate and prime-power bounds.

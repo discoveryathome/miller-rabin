@@ -179,6 +179,40 @@ def theta_certificate(beta=SMALLER_THETA, scale=F(29, 50)):
     return coset, progression
 
 
+def coset_cutoff_certificate(y_min=64, tau=F(3, 2)):
+    """Improved cosets for q>=21; smaller q use the sharp progression theorem."""
+    bz, c2, tau = elementary_constants(), F(189, 125), F(tau)
+    require(c2 > 0 and 7*c2*c2 >= 16, "cutoff positive pairing coefficient")
+    charge = F(3, 256)+c2*F(9, 16)*bz
+    require(1+F(57, 100)-charge > tau >= 0,
+            "justified zeta constant subtraction")
+    require(ln_bounds(21)[0] > 3 and ln_bounds(20)[1] < 3,
+            "cutoff modulus split")
+    require(F(2, 15) < F(1, 6) and 7 < 2**6 and ln_bounds(3)[0] > 1,
+            "sharp progression coefficient below1")
+    y, log_hi, factor = F(y_min), F(104, 25), F(1000001, 1000000)
+    require(y > 57 and y**7 > 256 and y**3 > 22**4,
+            "cutoff small-q and square-root ranges")
+    require(ln_bounds(y_min)[1] < log_hi and ln_bounds(y_min)[0] > 2,
+            "cutoff logarithmic monotonicity")
+    d = 1-c2*(1/y+1/y**3)
+    require(d > 0 and 1+7/y**5+8/y**6 < factor, "cutoff F and d bounds")
+    t = 8*log_hi
+    residual = (2*t+1+y*y*t*t/6
+                +(y/3)*((3*y/4+26)*t+t*t/2+3))/y**7
+    require(residual < F(1, 10**6), "cutoff residual envelope")
+    total = (bz*factor/y + factor*(F(1, 2)+(t-F(3, 2)-tau)/y)/d
+             + F(16, 33)*log_hi**2/y**2 + F(1, 10**6))
+    require(total < 1, "cutoff positive full margin")
+    if y_min == 64 and tau == F(3, 2):
+        require(d == F(31993667, 32768000) and
+                residual == F(102572093, 549755813888000),
+                "cutoff exact denominator and residual")
+        require(total == F(675090454343806963541, 675706247040000000000),
+                "cutoff exact total")
+    return total
+
+
 def primes_up_to(limit):
     sieve = bytearray(b"\x01") * (limit + 1)
     sieve[:2] = b"\x00\x00"
@@ -244,6 +278,9 @@ def failure_controls():
         ("false progression coefficient", lambda: finite_certificate(trial_primes, [3], F(1, 2))),
         ("coefficient 0.58 obstruction", lambda: finite_certificate(trial_primes, [3], F(29, 50))),
         ("unsupported weaker zero-free line", lambda: theta_certificate(beta=F(9, 10))),
+        ("insufficient improved cutoff", lambda: coset_cutoff_certificate(y_min=63)),
+        ("missing zeta constant saving", lambda: coset_cutoff_certificate(tau=0)),
+        ("unjustified zeta constant saving", lambda: coset_cutoff_certificate(tau=2)),
     ]:
         try:
             check()
@@ -259,6 +296,7 @@ def main():
     primes = primes_up_to(2 ** 20)
     classes, (p, q, a) = finite_certificate(primes)
     theta_coset, sharp_subdomain = theta_certificate()
+    improved_coset = coset_cutoff_certificate()
     require(theta_certificate(beta=F(7, 8)) == (theta_coset, sharp_subdomain),
             "H(7/8) endpoint uses the same directed envelopes")
     sharp_classes, sharp_largest = finite_certificate(
@@ -286,6 +324,7 @@ def main():
     print(f"sharp fallback: q=4..{SMALL_Q_CUTOFF-1}, {sharp_classes} classes, power7")
     print("sharp coefficient: 7^(1-beta)/(2 log3), equality only at q=3,a=1")
     print("smaller theta:", SMALLER_THETA, "; exponent:", 1/(1-SMALLER_THETA))
+    print(f"coset cutoff64 normalized error: {improved_coset}; margin: {1-improved_coset}")
     print("all constants and finite checks pass")
 
 

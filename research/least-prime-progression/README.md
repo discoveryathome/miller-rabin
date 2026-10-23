@@ -25,9 +25,15 @@ bound with coefficient .58. For b=8748867/10000000, this gives exponent
 10000000/1251133, and the conservative decimal .581 still works.
 This extension passed its own fresh-context recheck in RECHECK-SHARP.md.
 
+Section 9 adds an author-checked improvement P(aH,q)<max(64,h logq)^r,
+throughout the same parameter interval, awaiting its own fresh-context review.
+It keeps the negative constant in the principal T sum, the h-1 saving and
+a sharper proper-power bound. The q<=20 step uses the sharp progression
+theorem in this package; the q>=21 estimate is uniform and analytic.
+
 - [PROOF.md](PROOF.md): theorem, complete transfer, constants, and limitations.
 - [constants.py](constants.py): exact rational recomputation and exhaustive
-  fallback, with seven deliberate rejection controls. Python standard library only.
+  fallback, with ten deliberate rejection controls. Python standard library only.
 - [SOURCE-AUDIT.md](SOURCE-AUDIT.md): primary-source audit preceding the proof;
   this is not the fresh-context recheck of the finished theorem.
 - [RECHECK.md](RECHECK.md): separate fresh-context same-model AI recheck of the
@@ -54,7 +60,8 @@ is `5385194673/5600000000 < 1`; the refined progression error bound is
 `114068220107243/115735200000000 < 1`. The new parameter coset error is
 5446184217/5600000000<1; the sharp progression subdomain error is
 5705615549587/5776800000000<1. The new fallback checks 1274558 classes
-modulo 4 through 2047 using the weaker integer exponent 7. All seven controls
+modulo 4 through 2047 using the weaker integer exponent 7. The new cutoff 64
+error is 675090454343806963541/675706247040000000000<1. All ten controls
 must reject.
 The shared verifier continues to check only its existing Miller--Rabin claims.
 The exact counterexample P(1,3)=7 rules out coefficient 0.58 in the same all-q
