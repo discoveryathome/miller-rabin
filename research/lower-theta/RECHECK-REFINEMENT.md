@@ -473,4 +473,3 @@ The final command had empty output. Before this review artifact was added,
 git status listed exactly the five frozen modifications; the report is
 the sole additional file. The five frozen hashes and HEAD were rechecked
 after writing the report.
-
