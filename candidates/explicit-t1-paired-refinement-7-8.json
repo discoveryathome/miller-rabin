@@ -1,0 +1,23 @@
+{
+  "kind": "explicit-witness-bound",
+  "theta": "7/8",
+  "C": "66/125",
+  "D": "0",
+  "n0": 3317044064679887385961981,
+  "template": {
+    "w1": "1",
+    "alpha": "10551/20000",
+    "beta": "29/1250",
+    "gamma": "4221/1000",
+    "delta": "0",
+    "y_min": "29"
+  },
+  "proof": "research/lower-theta/PROOF.md",
+  "source": "Conditional AI draft: same directed coefficient certificate at H(7/8), with C=0.528, confirmed by a separate fresh-context same-model AI review; maintainer review pending.",
+  "assumptions": [
+    "A1: H(7/8), assumed directly",
+    "A2: H(7/8) covers all Dirichlet characters needed, including zeta",
+    "A3: Lemma T1 with these constants, proved in research/lower-theta/PROOF.md; maintainer review pending",
+    "A4: Sorenson-Webster PSI_13 theorem"
+  ]
+}
