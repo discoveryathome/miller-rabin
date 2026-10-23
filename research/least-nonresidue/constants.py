@@ -13,6 +13,7 @@ from mr import is_prime_trial  # noqa: E402
 PRIME_C = F(339, 500)  # 0.678
 GENERAL_C = F(683, 1000)
 Q0 = 65536
+SMALLER_THETA = F(8748867, 10000000)
 
 
 def require(condition, message):
@@ -64,13 +65,43 @@ def least_quadratic_nonresidue(q):
     raise ValueError("no quadratic nonresidue found")
 
 
+def theta_certificate(theta=SMALLER_THETA):
+    k = 1 / (1 - theta)
+    require(F(799, 100) < k < 8, "refined exponent interval")
+    require(theta - F(1, 2) > F(11, 30), "paired main-zero range")
+    require(256 ** 11 > 7 ** 30, "integer pairing range comparison")
+    require(theta * (1 - theta) >= F(7, 64), "same positive pairing coefficient")
+    y, d, factor, t = F(7), F(77, 100), F(1001, 1000), F(16)
+    require(1 - F(189, 125) * (1 / y + 1 / y ** 3) > d, "refined d envelope")
+    require(1 + 7 / y ** 5 + 8 / y ** 6 < factor, "refined F envelope")
+    error = (factor * (F(231, 10000) / y + 1 / (2 * PRIME_C * d))
+             + ((y / (2 * PRIME_C * d) + y / (2 * PRIME_C) + 2) * t
+                + 1 + (2 * y / PRIME_C) * t ** 2) / y ** 7)
+    require(error < 1, "smaller-theta analytic margin")
+    for q, c, p in [(5, PRIME_C, 2), (6, GENERAL_C, 5), (7, PRIME_C, 7)]:
+        lo = ln_bounds(q)[0]
+        short = F((lo.numerator * 10 ** 8) // lo.denominator, 10 ** 8)
+        base = c * short
+        require(base > 1 and base ** 799 > p ** 100, f"refined q={q} endpoint")
+    require(7 ** 7 > Q0, "refined upper interval endpoint")
+    for q, c in [(5, F(677, 1000)), (6, F(341, 500))]:
+        require(c * ln_bounds(q)[0] > 1, "old obstructions transfer to k<8")
+    return k, error
+
+
 def direct_prime_checks():
     count, largest = 0, (0, 0)
     for q in range(5, Q0, 2):
         if is_prime_trial(q):
             ell = least_quadratic_nonresidue(q)
-            require(ell < (PRIME_C * ln_bounds(q)[0]) ** 8,
+            lo = ln_bounds(q)[0]
+            require(ell < (PRIME_C * lo) ** 8,
                     f"quadratic bound fails at q={q}, ell={ell}")
+            if q == 5:
+                short = F((lo.numerator * 10 ** 8) // lo.denominator, 10 ** 8)
+                require((PRIME_C * short) ** 799 > ell ** 100, "refined q=5 direct check")
+            else:
+                require(ell < (PRIME_C * lo) ** 7, f"refined direct bound fails at q={q}")
             count += 1
             largest = max(largest, (ell, q))
     return count, largest
@@ -86,6 +117,7 @@ def failure_controls():
         ("false prime coefficient", lambda: small_range_certificate(prime_c=F(677, 1000))),
         ("false general coefficient", lambda: small_range_certificate(general_c=F(341, 500))),
         ("composite Legendre modulus", lambda: least_quadratic_nonresidue(9)),
+        ("uncovered weaker zero-free line", lambda: theta_certificate(F(9, 10))),
     ]:
         try:
             check()
@@ -99,11 +131,14 @@ def main():
     error = analytic_certificate()
     require(analytic_certificate(c=GENERAL_C) < 1, "general analytic certificate")
     small_range_certificate()
+    k, theta_error = theta_certificate()
     count, (ell, q) = direct_prime_checks()
     failure_controls()
     print(f"analytic normalized error: {error} < 1")
     print(f"analytic normalized margin: {1-error}")
     print(f"general coefficient: {GENERAL_C}; prime coefficient: {PRIME_C}")
+    print(f"smaller theta: {SMALLER_THETA}; exact exponent: {k}")
+    print(f"smaller-theta error: {theta_error}; margin: {1-theta_error}")
     print(f"direct check: {count} primes q with 5 <= q < {Q0}")
     print(f"largest least quadratic nonresidue in direct range: {ell} (last at q={q})")
     print("all constants and direct checks pass")

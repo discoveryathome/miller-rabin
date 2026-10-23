@@ -7,7 +7,9 @@ fresh-context same-model AI recheck pass; see [RECHECK.md](RECHECK.md).
 The input-guard fix and its regression control were separately confirmed in
 [GUARD-RECHECK.md](GUARD-RECHECK.md). Maintainer review is pending.
 Text: CC BY 4.0; code: Apache-2.0. Reports pin their reviewed snapshots;
-subsequent edits record review status and links only.
+subsequent edits record review status and links only. The smaller-theta
+extension in Section 5 passed its own fresh-context same-model AI recheck;
+see [RECHECK-THETA.md](RECHECK-THETA.md).
 
 ## Results
 
@@ -213,7 +215,7 @@ For the negative controls, use the **upper** logarithm bounds:
     (0.682 log 6)^8 < 5 = ell(6,{1}).
 
 They prove that those proposed coefficients, and any smaller ones in the
-same domains, fail. The six rejection controls also test positivity of the pairing
+same domains, fail. The seven rejection controls also test positivity of the pairing
 constant, analytic cutoff, positive small-modulus endpoints and the invalid
 use of Euler's criterion with a composite modulus.
 
@@ -228,7 +230,7 @@ python3 verify/check.py all
 python3 -m unittest discover -s tests
 ```
 
-Expected new-check result: `all constants and direct checks pass`, six
+Expected new-check result: `all constants and direct checks pass`, seven
 `REJECT control` lines, and 6540 directly checked prime moduli. The shared
 verifier checks its recorded Miller--Rabin claims; the new theorem is
 supported by this written proof and its separate exact checker.
@@ -242,3 +244,82 @@ recorded above; maintainer acceptance remains separate.
 Open next questions: sharpen the gaps between the impossible and sufficient
 constants, or obtain a coefficient nearer 1/2 above a new explicit cutoff
 while keeping a complete piecewise bound for the smaller moduli.
+
+## 5. The exact smaller-theta exponent
+
+Assume instead H(theta), where theta=8748867/10000000 and
+
+    r=1/(1-theta)=10000000/1251133.
+
+This is an explicit assumption, corresponding to the Xu--Sang reference point
+A1b in the frontier, not a certification of that unreviewed preprint or its
+analytic inputs. Under this assumption the same constants and domains above
+hold with exponent **r instead of 8**, including the quadratic corollary and
+the q=6 exception. The H(7/8) statements remain separate results.
+
+Here is the required parameter transfer, proved from the accepted pairing
+argument rather than assuming an unmerged sibling theorem. The functional
+equation places the zeros in 1-theta<=Re rho<=theta. In the proof of Lemma0'
+part1, use R=7, since theta/(1-theta)=r-1<7. The two fractional-linear
+endpoint ratios are bounded by
+g(sigma)=X^sigma+7X^(1-sigma). Convexity reduces to sigma=1/2 or theta.
+Writing u=X^(theta-1/2),
+
+    [g(theta)-g(1/2)]/sqrt(X)=(u-1)(u-7)/u >= 0
+
+for X>=256: theta-1/2>11/30 and 256^11>7^30 imply u>=7. Thus the main
+paired sum is at most (X^theta+7X^(1-theta))A. In part2, the same c2=189/125
+is safe because theta(1-theta)>=7/64. The constant zero sum costs rA<=8A.
+Both results also hold for zeta. They follow from the same nonnegative
+zero-pair regrouping, including complex characters, as the accepted proof.
+
+Set y=X^(1-theta), so X=y^r exactly. We have 799/100<r<8. For y>=7,
+
+    X^(theta-1)=1/y,   X^(-1/2)=y^(-r/2)<=y^(-3),
+    X^(theta-1)+7X^(-theta)+8/X
+       <= 1/y+7/y^6+8/y^7 < (1001/1000)/y,
+    d(X)>=1-c2(1/y+1/y^3)>77/100,
+    X>=y^7,   log X=r log y<=8 log y.                              (8)
+
+The main-zero part of the third bound uses r*theta=r-1>6. Every
+fractional power has been bounded in the safe direction by an integer
+power; there is no floating-point evaluation of X or r.
+
+The character reduction, both S corrections, T correction, conductor saving
+and gamma signs in Sections 1--2 are unchanged. Their criterion (6) holds
+with F(X)=X^theta+7X^(1-theta)+8 and the new d(X). Choose X=(C log q)^r,
+C=0.678. For q>=65536, y=C log q>7, so (8) gives the uniform error bound
+
+    (1001/1000)[(231/10000)/7+1/(2C*(77/100))]
+      +[(7/(2C*(77/100))+7/(2C)+2)*16+1+(14/C)*16^2]/7^7
+      =29748536893681951/30709918470000000 < 1.                     (9)
+
+The positive margin is 961381576318049/30709918470000000. The derivative
+argument still applies: residual summands have denominator powers at least6
+and log powers at most2, and they decrease for y>=7. Increasing C helps.
+
+For the interval [7,65536], (C log q)^r/q again has a single interior
+maximum, now at log q=r. Its endpoints exceed1: at the upper endpoint
+C log65536>7 and 7^r>7^7>65536. For q=5,6,7, use r>799/100 and a
+downward-rounded rational lower enclosure l_q for log q, retaining eight
+decimal places. Exact integer-power comparisons certify
+
+    (0.678*l_5)^799>2^100,
+    (0.683*l_6)^799>5^100,
+    (0.678*l_7)^799>7^100.
+
+All three bases exceed1. These comparisons establish the q=5 and6 cases
+and the lower interval endpoint without evaluating a noninteger power.
+The unconditional p<q argument and the quadratic subgroup argument finish
+the same complete domains as before. The direct check also verifies the new
+bound for all6540 small prime moduli, using the weaker integer exponent7
+for q>=7 and the displayed rational exponent bound for q=5.
+
+The old small-modulus obstructions persist: each bad base exceeds1 and
+r<8, so the old upper bound with exponent8 remains an upper bound for the
+new power. Coefficients0.677 and0.682 therefore still fail in their
+respective domains. The seventh rejection control prevents applying these
+fixed envelopes to an unsupported weaker zero-free line.
+
+This extension is author-checked and separately independently AI-rechecked.
+It does not verify H(theta), Xu--Sang's proof, a Lean replay or optimality.

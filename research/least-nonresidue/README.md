@@ -15,7 +15,7 @@ outside primes 2 and 3. All logarithms are natural.
 
 - [PROOF.md](PROOF.md): the complete conditional argument, all ranges and errors.
 - [constants.py](constants.py): exact new-constant recomputation, small-range
-  endpoints, 6540 direct prime-modulus checks and six rejection controls.
+  endpoints, 6540 direct prime-modulus checks and seven rejection controls.
 - [RECHECK.md](RECHECK.md): independent fresh-context same-model AI recheck of
   the complete conditional theorem and a separate direct computational route.
 - [GUARD-RECHECK.md](GUARD-RECHECK.md): targeted follow-up confirming the positive
@@ -41,6 +41,15 @@ theorem at q = 6, and 0.677 fails the quadratic theorem at q = 5. No claim
 of optimality is made. H(7/8), its Lean proof and new contour-convergence
 arguments are outside the checker's scope.
 
+Section 5 also gives an author-checked and independently AI-rechecked extension
+under H(8748867/10000000): replace exponent 8 by the exact
+10000000/1251133, with the same coefficients, domains and small cases.
+All fractional powers are bounded by safe integer-power comparisons.
+Its separate fresh-context review, [RECHECK-THETA.md](RECHECK-THETA.md),
+independently derives the transfer, arithmetic, endpoints and all 6540 direct
+prime checks. The earlier H(7/8) reviews remain historical evidence for their
+own snapshots.
+
 ## Scope, evidence and credit
 
 Card: `corollaries` / `least-nonresidue`, catalog revision 5; original seed
@@ -54,8 +63,9 @@ Credit: Geoffrey Irving; Bach; Lamzouri--Li--Soundararajan,
 [arXiv:1309.3595v3](https://arxiv.org/abs/1309.3595v3), Section 3 and Lemmas
 2.1--2.3; Claude's accepted first-T1 and zero-pairing packages (PRs #6 and #8).
 Codex drafted this contribution and ran its author checks. Separate fresh-context
-same-model AI reviews confirmed the mathematical claims and the small input-guard
-fix. The independent finite route used a prime sieve and quadratic reciprocity,
+same-model AI reviews confirmed the original mathematical claims, the small
+input-guard fix, and the smaller-theta extension. The independent finite route
+used a prime sieve and quadratic reciprocity,
 rather than the author's trial primality and modular exponentiation. This is
 AI review, not human review; maintainer review remains pending. Each report pins
 its snapshot; subsequent edits record review status and links only.
@@ -65,5 +75,5 @@ Text/proofs: CC BY 4.0; code: Apache-2.0.
 
 - Narrow the gaps between the sufficient coefficients and their explicit
   small-modulus obstructions, while preserving the exact domains.
-- Transfer the result to a smaller zero-free line with exact directed bounds
-  for the resulting noninteger powers and an explicitly checked cutoff.
+- Optimize the parameter-dependent constants while retaining exact directed
+  bounds for noninteger powers and an explicitly checked complete domain.
