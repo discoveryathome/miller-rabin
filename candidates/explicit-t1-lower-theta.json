@@ -13,7 +13,7 @@
     "y_min": "14883/500"
   },
   "proof": "research/lower-theta/PROOF.md",
-  "source": "Conditional AI draft: sharper rational endpoint certificate, C=0.5272; fresh-context refinement review pending. The earlier C=0.528 certificate was separately AI-rechecked.",
+  "source": "Conditional AI draft: sharper rational endpoint certificate, C=0.5272, confirmed by a separate fresh-context same-model AI refinement review; maintainer review pending. The earlier C=0.528 certificate remains a separately reviewed positive control.",
   "assumptions": [
     "A1b: H(8748867/10000000), assumed directly; Xu-Sang arXiv:2610.15291v2 and its analytic inputs are not certified here",
     "A2: H(theta) covers all Dirichlet characters needed, including zeta",

@@ -20,7 +20,8 @@ The two half-plane assumptions are separate; neither is proved here.
 - The new JSON files in `candidates/` use the existing verifier format.
 - [RECHECK.md](RECHECK.md) independently reconstructs the C=.528 theorem,
   with integer fixed-point arithmetic, source-scope checks and exact hashes.
-  The new Section 6 C=.5272 refinement is awaiting its own recheck.
+- [RECHECK-REFINEMENT.md](RECHECK-REFINEMENT.md) independently confirms the
+  C=.5272 refinement, complete domain and all thirteen rejection controls.
 
 From the repository root, Python standard library only:
 
@@ -33,9 +34,13 @@ python3 -m unittest discover -s tests
 
 Status: conditional draft. The C=.528 baseline passed a separate fresh-context
 same-model AI theorem review with no required fixes. The C=.5272 refinement
-is author-checked and awaiting its own review. Source research and author
+passed its own separate recheck. Source research and author
 checks do not count as independent theorem review. Maintainer review remains
 pending. The earlier report pins its own snapshot.
+The five exact inputs of the refinement review are preserved in commit
+`b3094327e49b62ca7dda0706be729ffd99760fad`. Its independent reproduction
+contains a snapshot-specific source-status assertion; run that code against
+the reviewed commit. Later edits change review status and links only.
 The shared verifier checks the substitution into T1, whose analytic proof
 is supplied separately. No accepted frontier, ledger or contributor record
 is changed. The smaller-theta claim assumes H(theta) directly: the scope of

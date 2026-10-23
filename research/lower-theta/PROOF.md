@@ -5,8 +5,11 @@ Original idea: **Geoffrey Irving**.
 **Status: author-checked and independently AI-rechecked conditional draft,
 2026-10-23.** See [RECHECK.md](RECHECK.md) for the fresh-context same-model
 review of the C=.528 certificate, exact snapshot hashes and limits.
-Section 6's C=.5272 refinement is author-checked and awaiting its own
-fresh-context recheck. An AI source-research context proposed the transfer; the parent
+Section 6's C=.5272 refinement passed its own fresh-context same-model
+recheck; see [RECHECK-REFINEMENT.md](RECHECK-REFINEMENT.md). Its exact reviewed
+inputs are preserved in commit b3094327e49b62ca7dda0706be729ffd99760fad;
+subsequent edits record status and links only. An AI source-research context
+proposed the transfer; the parent
 checked and packaged the derivation and exact arithmetic. Source research is
 not independent theorem verification. This is not an accepted result or a
 verification of either half-plane hypothesis. Text: CC BY 4.0; code: Apache-2.0.
@@ -356,5 +359,6 @@ below the fixed cutoff Y at PSI_13; alpha=.52675 is below its required
 coefficient; and the proposed power factor29 fails Y^99>29^100. These
 reject this certificate, not every possible proof with altered constants.
 Together with the ten retained baseline controls, all thirteen must reject.
-This refinement is author-checked; its separate fresh-context recheck is
-pending. The earlier report does not certify the changed coefficients.
+This refinement is author-checked and passed its own separate fresh-context
+recheck in RECHECK-REFINEMENT.md. The earlier report does not certify the
+changed coefficients. Maintainer review remains pending.
