@@ -13,6 +13,9 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "verify"))
 from check import ln_bounds  # noqa: E402
 
+PROGRESSION_C = F(581, 1000)
+SMALL_Q_CUTOFF = 2048
+
 
 def require(condition, message):
     if not condition:
@@ -98,6 +101,30 @@ def analytic_certificate(y_min=80, c2=F(189, 125)):
     return complex_denominator, total
 
 
+def progression_certificate(scale=PROGRESSION_C):
+    """Charge (13) at y=scale*phi(q)*log(q), uniformly for q>=2048."""
+    require(0 < scale <= 1, "progression coefficient range")
+    y, log_hi, c2 = F(400), F(6), F(189, 125)
+    require(ln_bounds(400)[1] < log_hi, "log 400 < 6")
+    require(1 - c2 * (1 / y + 1 / y ** 4) > F(249, 250), "refined d(X) envelope")
+    require(1 + 7 / y ** 6 + 8 / y ** 7 < F(1001, 1000), "refined F(X) envelope")
+    # phi(q)^3 >= 2 q^2/9; phi(q)>96 and log(q)>22/3 for q>=2^11.
+    require(9 * 96 ** 3 < 2 * SMALL_Q_CUTOFF ** 2, "cubic totient endpoint")
+    require(11 * ln_bounds(2)[0] > F(22, 3), "refined logarithm endpoint")
+    require(scale * 96 * F(22, 3) > y, "refined cutoff reaches y=400")
+    f_factor, t = F(1001, 1000), 8 * log_hi
+    zero_error = f_factor * (1 / (2 * scale) + t / y) / F(249, 250)
+    zeta_error = F(231, 10000) * f_factor / y
+    power_error = 32 * log_hi ** 2 / (scale * y ** 3)
+    residual = (2 * t + 1 + y ** 2 * t ** 2 / (2 * scale ** 2)
+                + (y / scale) * ((3 * y / (4 * scale) + 26) * t + t ** 2 / 2 + 3)) / y ** 8
+    require(residual < F(1, 10 ** 9), "refined residual envelope")
+    total = zero_error + zeta_error + power_error + F(1, 10 ** 9)
+    require(total < 1, "refined analytic margin")
+    require((F(29, 50) * 2 * ln_bounds(3)[1]) ** 8 < 7, "coefficient 0.58 obstruction")
+    return total
+
+
 def primes_up_to(limit):
     sieve = bytearray(b"\x01") * (limit + 1)
     sieve[:2] = b"\x00\x00"
@@ -107,28 +134,40 @@ def primes_up_to(limit):
     return [p for p in range(2, limit + 1) if sieve[p]]
 
 
-def least_primes(q, primes):
-    reduced = {a for a in range(1, q) if math.gcd(a, q) == 1}
-    first = {}
+def totients_below(limit):
+    values = list(range(limit))
+    for p in range(2, limit):
+        if values[p] == p:
+            for n in range(p, limit, p):
+                values[n] -= values[n] // p
+    return values
+
+
+def largest_least_prime(q, primes, phi):
+    seen = bytearray(q)
+    remaining = phi
     for p in primes:
+        if q % p == 0:
+            continue
         a = p % q
-        if a in reduced and a not in first:
-            first[a] = p
-        if len(first) == len(reduced):
-            return first
+        if not seen[a]:
+            seen[a] = 1
+            remaining -= 1
+            if remaining == 0:
+                return p, a
     raise ValueError(f"prime list does not cover every reduced class modulo {q}")
 
 
-def finite_certificate(primes, moduli=range(3, 512), scale=F(1)):
+def finite_certificate(primes, moduli=range(3, SMALL_Q_CUTOFF), scale=PROGRESSION_C):
+    phis = totients_below(max(moduli) + 1)
     classes = 0
     largest = (0, 0, 0)
     for q in moduli:
-        first = least_primes(q, primes)
-        phi = len(first)
+        phi = phis[q]
+        p, a = largest_least_prime(q, primes, phi)
         bound_lo = (scale * phi * ln_bounds(q)[0]) ** 8
-        for a, p in first.items():
-            require(p < bound_lo, f"progression bound fails at q={q}, a={a}, p={p}")
-            largest = max(largest, (p, q, a))
+        require(p < bound_lo, f"progression bound fails at q={q}, a={a}, p={p}")
+        largest = max(largest, (p, q, a))
         classes += phi
     return classes, largest
 
@@ -137,12 +176,16 @@ def failure_controls():
     trial_primes = [n for n in range(2, 513)
                     if all(n % d for d in range(2, math.isqrt(n) + 1))]
     require(primes_up_to(512) == trial_primes, "sieve versus trial division")
-    require(least_primes(3, trial_primes) == {2: 2, 1: 7}, "q=3 positive control")
+    phis = totients_below(513)
+    require(all(phis[q] == sum(math.gcd(a, q) == 1 for a in range(1, q))
+                for q in range(2, 513)), "totient sieve versus reduced-class counts")
+    require(largest_least_prime(3, trial_primes, 2) == (7, 1), "q=3 positive control")
     for label, check in [
         ("insufficient pairing constant", lambda: analytic_certificate(c2=F(3, 2))),
         ("too small analytic cutoff", lambda: analytic_certificate(y_min=64)),
-        ("missing reduced class", lambda: least_primes(3, [2, 3, 5])),
+        ("missing reduced class", lambda: largest_least_prime(3, [2, 3, 5], 2)),
         ("false progression coefficient", lambda: finite_certificate(trial_primes, [3], F(1, 2))),
+        ("coefficient 0.58 obstruction", lambda: finite_certificate(trial_primes, [3], F(29, 50))),
     ]:
         try:
             check()
@@ -154,12 +197,16 @@ def failure_controls():
 
 def main():
     denominator, total = analytic_certificate()
-    classes, (p, q, a) = finite_certificate(primes_up_to(65536))
+    refined = progression_certificate()
+    classes, (p, q, a) = finite_certificate(primes_up_to(2 ** 20))
     failure_controls()
     print(f"complex B denominator: {denominator} > 3/5")
     print(f"normalized total error bound: {total} < 1")
     print(f"positive normalized margin: {1 - total}")
-    print(f"finite fallback: q=3..511, {classes} reduced classes checked exactly")
+    print(f"progression coefficient: {PROGRESSION_C}")
+    print(f"refined normalized error: {refined} < 1")
+    print(f"refined positive margin: {1 - refined}")
+    print(f"finite fallback: q=3..{SMALL_Q_CUTOFF-1}, {classes} reduced classes checked exactly")
     print(f"largest least prime in fallback: p={p}, q={q}, a={a}")
     print("all constants and finite checks pass")
 

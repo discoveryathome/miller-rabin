@@ -51,8 +51,9 @@ F1--F2 from [`../first-explicit-t1/PROOF.md`](../first-explicit-t1/PROOF.md).
    This is also replaced by the same elementary proper-power envelope.
 
 The new argument does not use LLS's finite check below q = 20000 or its
-special range X <= (q log q)^2 in Section 4.3. It proves its own analytic
-range and checks precisely 3 <= q < 512 for the progression corollary.
+special range X <= (q log q)^2 in Section 4.3. The initial coefficient-1
+snapshot checked 3 <= q < 512. The later coefficient-0.581 refinement has
+its own q < 2048 fallback; see PROOF.md Section 7 and RECHECK-REFINEMENT.md.
 
 ## Exact identities and complex characters
 
@@ -90,7 +91,8 @@ using all p dividing q/f is an upper bound. The primitive conductor and
 ambient modulus must remain distinct, including f = 3 and q/f = 1 or 2.
 
 The source audit checked these structural dependencies and derived a
-conservative provisional inequality. The final constant 80, coefficient 1,
-exact arithmetic script, and finite fallback were subsequently authored
-by the parent and require their own recheck. Neither audit nor proof
-verifies H(7/8), replays a Lean proof, or reproves the cited contour shifts.
+conservative provisional inequality. The initial constant 80, coefficient 1,
+exact script and fallback were subsequently authored by the parent and
+rechecked in RECHECK.md. The later 0.581 refinement is outside this audit;
+its separate review is RECHECK-REFINEMENT.md. Neither audit nor proof verifies
+H(7/8), replays a Lean proof, or reproves the cited contour shifts.

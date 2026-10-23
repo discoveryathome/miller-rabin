@@ -3,9 +3,11 @@
 # Least primes in cosets and progressions under H(7/8)
 
 AI-authored conditional research draft (Codex), 2026-10-23. Text: CC BY 4.0;
-code: Apache-2.0. Author checks and a separate fresh-context same-model AI
-recheck pass; see [RECHECK.md](RECHECK.md). Maintainer review is pending.
-The report pins the reviewed snapshot; later proof edits record review status only.
+code: Apache-2.0. The coset theorem and original coefficient-1 corollary passed
+a separate fresh-context same-model AI recheck; see [RECHECK.md](RECHECK.md).
+The coefficient-0.581 refinement also passed a separate fresh-context same-model
+AI recheck; see [RECHECK-REFINEMENT.md](RECHECK-REFINEMENT.md). Both reports pin
+their reviewed snapshots. Maintainer review is pending.
 
 This builds on Bach's conditional least-prime method, Lamzouri--Li--Soundararajan
 (LLS), and the accepted AI-authored first-T1 and zero-pairing packages by Claude
@@ -27,10 +29,10 @@ For any a in G, let P(aH,q) be the least prime whose residue lies in aH.
 >
 > **Arithmetic-progression corollary.** For every q >= 3 and gcd(a,q) = 1,
 >
-> P(a,q) < (phi(q) log q)^8.
+> P(a,q) < (0.581 phi(q) log q)^8.
 
 There is no small-modulus computation in the coset theorem. The progression
-corollary uses an exact finite check for 3 <= q < 512, described below.
+corollary uses an exact finite check for 3 <= q < 2048, described below.
 The assertion excludes q = 2. No assertion about the truth of H(7/8), an
 unconditional Linnik constant, optimal constants, or a Miller--Rabin improvement
 is made.
@@ -251,24 +253,68 @@ the coset theorem for every q >= 3 and h >= 2.
 
 ## 7. The progression corollary and its finite fallback
 
-Take H = {1}, so h = phi(q). The elementary bound phi(q) >= sqrt(q/2)
-follows by multiplying the factors
+Take H = {1}, h = phi(q), and C = 581/1000. We use the full criterion (13)
+with y = C h L, X = y^8. The uniform coset theorem remains unchanged.
 
-    phi(q)^2/q = product_{p^a || q} p^(a-2)(p-1)^2:
+First, the elementary bound
 
-every odd-prime factor is at least 1, and the 2-factor is at least 1/2.
-For q >= 512, phi(q) >= 16 and log q >= 9 log 2 > 6. Thus h log q > 96 > 80,
-and the coset theorem gives the stated corollary without a cutoff term.
+    phi(q)^3 >= 2q^2/9                                                  (14)
 
-For 3 <= q < 512, `constants.py` sieves all primes through 65536, records
-the first prime in each reduced residue class, and requires that every class
-was reached. Each recorded prime is compared to the **lower** rational bound
-(phi(q) * ln_bounds(q)[0])^8. All 79594 reduced classes pass; the largest
-least prime in this range is 37363, in class 22 modulo 461. The sieve is
-cross-checked against trial division through 512; the script also rejects an
-incomplete prime list and a false coefficient on the known q = 3 case.
-This is finite exhaustive evidence for precisely the stated fallback, not a
-finite substitute for the analytic proof at larger moduli.
+follows from phi(q)^3/q^2 = product_{p^a || q} p^(a-3)(p-1)^3.
+The least 2-factor is 1/4 and the least 3-factor is 8/9. For p >= 5,
+(p-1)^3/p^2 >= (4/5)^3 p >= 64/25 > 1; increasing a only increases a factor.
+Omitting the 2- or 3-factor also increases this lower bound.
+
+For q >= 2048 = 2^11, (14) gives h > 96, since
+9*96^3 < 2*2048^2. Also L >= 11 log 2 > 22/3. Consequently
+
+    y = C h L > C*96*(22/3) = 51128/125 > 400.
+
+For every y >= 400 the bounds used in (13) can be charged with
+
+    h <= y/C,  L <= y/(2C),  omega(q) < 2L <= y/C,
+    d(X) > 249/250,   F(X)/X < 1001/(1000y),
+    [(h-1)L/2+t]/y <= 1/(2C) + 8 log y/y < 1/(2C) + 3/25,
+
+where t = 8 log y, log 400 < 6, and log y/y decreases in this range.
+In particular, the factors of 1/C also enter the residual and prime-power
+errors. The replacements for the last two terms of (13) are
+
+    R/X <= [2t+1+y^2 t^2/(2C^2)
+             +(y/C)((3y/(4C)+26)t+t^2/2+3)]/y^8,
+    h t^2/(2 sqrt(X)) <= 32(log y)^2/(C y^3).
+
+Every residual summand decreases for y >= 400 by the same derivative argument
+as in Section 6. Substituting y = 400 and t < 48 gives R/X < 1/10^9.
+Thus the four errors in (13) have sum less than or equal to
+
+    (231/10000)(1001/1000)/400
+      + (1001/1000)(1/(2C)+3/25)/(249/250)
+      + 1/10^9 + 32*6^2/(C*400^3)
+      = 114068220107243/115735200000000 < 1.                             (15)
+
+The positive normalized margin is 1666979892757/115735200000000. This proves
+the progression corollary for every q >= 2048.
+
+For 3 <= q < 2048, `constants.py` sieves primes through 2^20 and computes
+phi(q) by the integer totient sieve. In increasing prime order it marks each
+new reduced residue class, skipping primes dividing q, until exactly phi(q)
+classes have been reached. The last marked prime is the largest least prime
+for that q. Comparing it to the **lower** rational bound
+(C*phi(q)*ln_bounds(q)[0])^8 certifies every class at once; an incomplete prime
+list is rejected. All 1274560 reduced classes pass. The largest least prime
+is 169937, in class 722 modulo 1945. The prime sieve is cross-checked by trial
+division and the totient sieve by direct gcd counts through 512.
+These finite checks cover precisely the stated fallback; large moduli are
+proved analytically by (15).
+
+There is a concrete obstruction to lowering this all-q coefficient much
+further: P(1,3) = 7, while exact upper logarithm bounds give
+
+    ((29/50)*phi(3)*log 3)^8 < 7.
+
+Thus coefficient 0.58, or any smaller coefficient in this same statement,
+is impossible. Coefficient 0.581 is sufficient; no optimality is asserted.
 
 ## Appendix: exact elementary constants and gamma bounds
 
@@ -304,7 +350,7 @@ an L-value or zero are used for these estimates.
 
 Replay: `python3 research/least-prime-progression/constants.py` from the repository
 root. It checks the rational envelopes, elementary constants, and precisely the
-finite fallback; its four failure controls must print `REJECT control`.
+finite fallback; its five failure controls must print `REJECT control`.
 The existing `verify/check.py` verifies its recorded Miller--Rabin claims, not
 this coset theorem. This proof has no new T1 claim or accepted-frontier change.
 
@@ -314,8 +360,8 @@ any finite search over all large q or all subgroups. An independent source
 audit preceded this proof; the separate completed theorem recheck is recorded in
 [RECHECK.md](RECHECK.md), with its exact scope and classical-input limitations.
 
-Open next question: can one reduce the progression coefficient from 1 while
-retaining all q >= 3? First keep (13), exploit h = phi(q) and its elementary
-lower bound, and check a proposed rational coefficient with exact endpoints
-and an explicitly bounded finite fallback. A prime-power-only positive coset
-count does not pass the success test.
+Open next questions: narrow the gap between the impossible coefficient 0.58
+and sufficient coefficient 0.581, or improve the coset cutoff 80 without
+weakening its all-q domain. Keep (13), the full complex-character estimate,
+and proper-prime-power subtraction; positivity of the smoothed coset count
+alone is insufficient.
